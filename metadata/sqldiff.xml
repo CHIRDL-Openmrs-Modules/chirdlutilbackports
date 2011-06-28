@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqldiff PUBLIC "-//OpenMRS//DTD OpenMRS SQL Diff Config 1.0//EN" "http://resources.openmrs.org/doctype/sqldiff-1.0.dtd">
+
+<sqldiff version="1.0">
+	<help>
+		USE:
+			The diffs are ordered by datamodel version number.
+			The script can be run in a top down fashion and is
+			expected to not fail or overwrite old data
+		
+		EXPECT:
+			- "use business-database-name;" was called prior to
+			   calling this script
+	</help>
+	
+	<diff>
+		<version>1.0.0</version>
+		<author>Tammy Dugan</author>
+		<date>Nov 11 2009</date>
+		<description>
+			Initial database setup.
+		</description>
+		<sql>	
+	
+CREATE TABLE `chirdlutilbackports_location_attribute` (
+  `location_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`location_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_location_attribute_value` (
+  `location_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  `location_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `location_attribute_id` int(11) NOT NULL,
+  PRIMARY KEY (`location_attribute_value_id`),
+  KEY `chirdlutilbackports_location_value_fk_attr` (`location_attribute_id`),
+  KEY `chirdlutilbackports_loc_att_fk_loc` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_loc_att_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_location_value_fk_attr` FOREIGN KEY (`location_attribute_id`) REFERENCES `chirdlutilbackports_location_attribute`
+(`location_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_location_tag_attribute` (
+  `location_tag_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`location_tag_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_location_tag_attribute_value` (
+  `location_tag_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  `location_tag_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `location_tag_attribute_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`location_tag_attribute_value_id`),
+  KEY `chirdlutilbackports_location_tag_value_fk_location_tag` (`location_tag_id`),
+  KEY `chirdlutilbackports_location_tag_value_fk_attr` (`location_tag_attribute_id`),
+  KEY `chirdlutilbackports_loc_tag_att_fk_loc` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_loc_tag_att_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_location_tag_value_fk_attr` FOREIGN KEY (`location_tag_attribute_id`) REFERENCES 
+`chirdlutilbackports_location_tag_attribute` (`location_tag_attribute_id`),
+  CONSTRAINT `chirdlutilbackports_location_tag_value_fk_location_tag` FOREIGN KEY (`location_tag_id`) REFERENCES `location_tag` 
+(`location_tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_form_attribute` (
+  `form_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`form_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_form_attribute_value` (
+  `form_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  `form_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `form_attribute_id` int(11) NOT NULL,
+  `location_tag_id` int(11) NOT NULL DEFAULT '1',
+  `location_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`form_attribute_value_id`),
+  KEY `chirdlutilbackports_form_value_fk_form` (`form_id`),
+  KEY `chirdlutilbackports_form_value_fk_attr` (`form_attribute_id`),
+  KEY `chirdlutilbackports_form_value_fk_loc_tag` (`location_tag_id`),
+  KEY `chirdlutilbackports_form_value_fk_loc` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_form_value_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_form_value_fk_loc_tag` FOREIGN KEY (`location_tag_id`) REFERENCES `location_tag` 
+
+(`location_tag_id`),
+  CONSTRAINT `chirdlutilbackports_form_value_fk_attr` FOREIGN KEY (`form_attribute_id`) REFERENCES 
+
+`chirdlutilbackports_form_attribute` (`form_attribute_id`),
+  CONSTRAINT `chirdlutilbackports_form_value_fk_form` FOREIGN KEY (`form_id`) REFERENCES `form` (`form_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7775 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_form_instance` (
+  `form_id` int(11) NOT NULL,
+  `form_instance_id` int(11) NOT NULL AUTO_INCREMENT,
+  `location_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`form_id`,`form_instance_id`,`location_id`),
+  KEY `chirdlutilbackports_form_inst_fk_loc` (`location_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_session` (
+  `session_id` int(11) NOT NULL AUTO_INCREMENT,
+  `encounter_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`session_id`),
+  KEY `chirdlutilbackports_session_fk_encounter` (`encounter_id`),
+  CONSTRAINT `chirdlutilbackports_session_fk_encounter` FOREIGN KEY (`encounter_id`) REFERENCES `encounter` (`encounter_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_state_action` (
+  `state_action_id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_name` varchar(255) NOT NULL,
+  `action_description` varchar(255) DEFAULT NULL,
+  `date_changed` datetime DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `action_class` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`state_action_id`),
+  KEY `chirdlutilbackports_state_action_fk_creator` (`creator`),
+  KEY `chirdlutilbackports_state_action_fk_changed` (`changed_by`),
+  CONSTRAINT `chirdlutilbackports_state_action_fk_changed` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `chirdlutilbackports_state_action_fk_creator` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_state` (
+  `state_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `state_action_id` int(11) DEFAULT NULL,
+  `date_changed` datetime DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `form_name` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`state_id`),
+  KEY `chirdlutilbackports_state_fk_action` (`state_action_id`),
+  KEY `chirdlutilbackports_state_fk_creator` (`creator`),
+  KEY `chirdlutilbackports_state_fk_changed` (`changed_by`),
+  CONSTRAINT `chirdlutilbackports_state_fk_action` FOREIGN KEY (`state_action_id`) REFERENCES 
+
+`chirdlutilbackports_state_action` (`state_action_id`),
+  CONSTRAINT `chirdlutilbackports_state_fk_changed` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `chirdlutilbackports_state_fk_creator` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_program` (
+  `program_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `version` varchar(255) NOT NULL,
+  `date_changed` datetime DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `start_state` int(11) DEFAULT NULL,
+  `end_state` int(11) DEFAULT NULL,
+  PRIMARY KEY (`program_id`),
+  KEY `chirdlutilbackports_program_fk_creator` (`creator`),
+  KEY `chirdlutilbackports_program_fk_changed` (`changed_by`),
+  KEY `chirdlutilbackports_program_fk_start_state` (`start_state`),
+  KEY `chirdlutilbackports_program_fk_end_state` (`end_state`),
+  CONSTRAINT `chirdlutilbackports_program_fk_end_state` FOREIGN KEY (`end_state`) REFERENCES `chirdlutilbackports_state` 
+
+(`state_id`),
+  CONSTRAINT `chirdlutilbackports_program_fk_start_state` FOREIGN KEY (`start_state`) REFERENCES `chirdlutilbackports_state` 
+
+(`state_id`),
+  CONSTRAINT `chirdlutilbackports_program_fk_changed` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `chirdlutilbackports_program_fk_creator` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_state_mapping` (
+  `initial_state` int(11) NOT NULL,
+  `next_state` int(11) NOT NULL,
+  `state_mapping_id` int(11) NOT NULL AUTO_INCREMENT,
+  `date_changed` datetime DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `creator` int(11) DEFAULT NULL,
+  `program_id` int(11) NOT NULL,
+  PRIMARY KEY (`state_mapping_id`),
+  KEY `chirdlutilbackports_state_map_fk_initial` (`initial_state`),
+  KEY `chirdlutilbackports_state_map_fk_next` (`next_state`),
+  KEY `chirdlutilbackports_state_map_fk_program` (`program_id`),
+  KEY `chirdlutilbackports_state_map_fk_creator` (`creator`),
+  KEY `chirdlutilbackports_state_map_fk_changed` (`changed_by`),
+  CONSTRAINT `chirdlutilbackports_state_map_fk_changed` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `chirdlutilbackports_state_map_fk_creator` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `chirdlutilbackports_state_map_fk_initial` FOREIGN KEY (`initial_state`) REFERENCES `chirdlutilbackports_state` 
+
+(`state_id`),
+  CONSTRAINT `chirdlutilbackports_state_map_fk_next` FOREIGN KEY (`next_state`) REFERENCES `chirdlutilbackports_state` 
+
+(`state_id`),
+  CONSTRAINT `chirdlutilbackports_state_map_fk_program` FOREIGN KEY (`program_id`) REFERENCES `chirdlutilbackports_program` 
+
+(`program_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_program_tag_map` (
+  `program_tag_map_id` int(11) NOT NULL AUTO_INCREMENT,
+  `program_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `location_tag_id` int(11) NOT NULL,
+  PRIMARY KEY (`program_tag_map_id`),
+  KEY `chirdlutilbackports_prog_tag_map_fk_prog` (`program_id`),
+  KEY `chirdlutilbackports_prog_tag_map_fk_loc` (`location_id`),
+  KEY `chirdlutilbackports_prog_tag_map_fk_tag` (`location_tag_id`),
+  CONSTRAINT `chirdlutilbackports_prog_tag_map_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
+  CONSTRAINT `chirdlutilbackports_prog_tag_map_fk_prog` FOREIGN KEY (`program_id`) REFERENCES `chirdlutilbackports_program` 
+
+(`program_id`),
+  CONSTRAINT `chirdlutilbackports_prog_tag_map_fk_tag` FOREIGN KEY (`location_tag_id`) REFERENCES `location_tag` 
+
+(`location_tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_patient_state` (
+  `patient_state_id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) NOT NULL,
+  `state` int(11) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `session_id` int(11) NOT NULL,
+  `form_instance_id` int(11) DEFAULT NULL,
+  `form_id` int(11) DEFAULT NULL,
+  `retired` bit(1) NOT NULL DEFAULT b'0',
+  `date_retired` datetime DEFAULT NULL,
+  `location_tag_id` int(11) NOT NULL DEFAULT '1',
+  `location_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`patient_state_id`),
+  KEY `chirdlutilbackports_pat_state_fk_pat` (`patient_id`),
+  KEY `chirdlutilbackports_pat_state_fk_form` (`form_id`),
+  KEY `chirdlutilbackports_pat_state_fk_state` (`state`),
+  KEY `chirdlutilbackports_pat_state_fk_loc_tag` (`location_tag_id`),
+  KEY `chirdlutilbackports_pat_state_fk_loc` (`location_id`),
+  KEY `chirdlutilbackports_pat_state_fk_session` (`session_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=491 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_error_category` (
+  `error_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`error_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `chirdlutilbackports_error` (
+  `error_id` int(11) NOT NULL AUTO_INCREMENT,
+  `error_category_id` int(11) DEFAULT NULL,
+  `level` varchar(50) DEFAULT NULL,
+  `session_id` int(11) DEFAULT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  `details` mediumtext,
+  `date_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`error_id`),
+  KEY `chirdlutilbackports_error_category_id` (`error_category_id`),
+  KEY `chirdlutilbackports_err_fk_session` (`session_id`),
+  CONSTRAINT `chirdlutilbackports_error_ibfk_1` FOREIGN KEY (`error_category_id`) REFERENCES 
+
+`chirdlutilbackports_error_category` (`error_category_id`),
+  CONSTRAINT `chirdlutilbackports_err_fk_session` FOREIGN KEY (`session_id`) REFERENCES `chirdlutilbackports_session` 
+
+(`session_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8;
+		</sql>
+	</diff>
+
+</sqldiff>
