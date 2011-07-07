@@ -5,6 +5,7 @@ package org.openmrs.module.chirdlutilbackports;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +16,10 @@ import org.openmrs.module.ModuleClassLoader;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.chirdlutilbackports.action.ProcessStateAction;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateAction;
+import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 
 /**
  * @author tmdugan
@@ -86,4 +90,36 @@ public class BaseStateActionHandler implements StateActionHandler {
 		}
 	}
 	
+	public static void changeState(Patient patient, Integer sessionId, State currState, StateAction action,
+	                               HashMap<String, Object> parameters, Integer locationTagId, Integer locationId) {
+		ChirdlUtilBackportsService chirdlutilbackportsService = Context.getService(ChirdlUtilBackportsService.class);
+		List<org.openmrs.module.chirdlutilbackports.hibernateBeans.Error> errors = null;
+		// change to error state if fatal error exists for session
+		//only look up errors for consume state, for now
+		if (action != null && action.getActionName().equalsIgnoreCase("CONSUME FORM INSTANCE")) {
+			errors = chirdlutilbackportsService.getErrorsByLevel("Fatal", sessionId);
+		}
+		if (errors != null && errors.size() > 0) {
+			//open an error state
+			currState = chirdlutilbackportsService.getStateByName("ErrorState");
+			chirdlutilbackportsService.addPatientState(patient, currState, sessionId, locationTagId, locationId);
+		} else {
+			Program program = chirdlutilbackportsService.getProgram(locationTagId, locationId);
+			StateManager.changeState(patient, sessionId, currState, program, parameters, locationTagId, locationId,
+			    BaseStateActionHandler.getInstance());
+		}
+	}
+	
+	public void changeState(PatientState patientState, HashMap<String, Object> parameters) {
+		StateAction stateAction = patientState.getState().getAction();
+		if (stateAction == null) {
+			return;
+		}
+		
+		ProcessStateAction processStateAction = loadProcessStateAction(stateAction);
+		
+		if (processStateAction != null) {
+			processStateAction.changeState(patientState, parameters);
+		}
+	}
 }
