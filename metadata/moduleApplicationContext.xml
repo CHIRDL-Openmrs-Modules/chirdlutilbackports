@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <!-- Beans to add to the current Application context definition -->
   
@@ -40,5 +40,9 @@
 			</list>
 		</property>
 	</bean>
-
+	<bean autowire-candidate="false" id="logicInMemoryObsDAO" class="org.openmrs.module.chirdlutilbackports.datasource.LogicInMemoryObsDAO"/>
+    
+    <bean id="obsInmemoryDataSource" class="org.openmrs.module.chirdlutilbackports.datasource.ObsInMemoryDatasource">
+        <property name="logicObsDAO"><ref bean="logicInMemoryObsDAO"></ref></property>
+    </bean>
 </beans>
