@@ -4,15 +4,11 @@
 package org.openmrs.module.chirdlutilbackports;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.logic.LogicService;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
@@ -69,7 +65,8 @@ public class StateManager
 		patientState = chirdlUtilBackportsService.addPatientState(patient, currState,
 				sessionId,locationTagId,locationId);
 
-		processStateAction(currState.getAction(), patient, patientState, program, parameters, stateActionHandler);
+		processStateAction(currState.getAction(), patient, patientState, 
+			program, parameters, stateActionHandler, currMapping);
 
 		if (currMapping == null)
 		{
@@ -81,14 +78,17 @@ public class StateManager
 
 	private static void processStateAction(StateAction stateAction,
 			Patient patient, PatientState patientState,Program program,
-			HashMap<String,Object> parameters,StateActionHandler stateActionHandler)
+			HashMap<String,Object> parameters,StateActionHandler stateActionHandler, 
+			StateMapping currMapping)
 	{
 		if (stateAction == null)
 		{
 			endState(patientState);
-			changeState(patient, patientState.getSessionId(), patientState
-					.getState(),program,parameters,patientState.getLocationTagId(),
-					patientState.getLocationId(),stateActionHandler);
+			if (currMapping != null) {
+				changeState(patient, patientState.getSessionId(), patientState
+						.getState(),program,parameters,patientState.getLocationTagId(),
+						patientState.getLocationId(),stateActionHandler);
+			}
 			return;
 		}
 		stateActionHandler.processAction(stateAction,patient,patientState,parameters);
