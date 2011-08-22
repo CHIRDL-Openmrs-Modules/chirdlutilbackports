@@ -7,8 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.context.ContextAuthenticationException;
-import org.openmrs.module.Activator;
+import org.openmrs.module.BaseModuleActivator;
 
 /**
  * Purpose: Checks that module specific global properties have been set 
@@ -16,14 +15,14 @@ import org.openmrs.module.Activator;
  * @author Tammy Dugan
  *
  */
-public class ChirdlUtilBackportsActivator implements Activator {
+public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
 	/**
-	 * @see org.openmrs.module.Activator#startup()
+	 * @see org.openmrs.module.BaseModuleActivator#started()
 	 */
-	public void startup() {
+	public void started() {
 		this.log.info("Starting ChirdlUtilBackports Module");
 		
 		//check that all the required global properties are set
@@ -36,8 +35,8 @@ public class ChirdlUtilBackportsActivator implements Activator {
 		{
 			AdministrationService adminService = Context.getAdministrationService();
 			Context.authenticate(adminService
-					.getGlobalProperty("scheduler.username"), adminService
-					.getGlobalProperty("scheduler.password"));
+				.getGlobalProperty("scheduler.username"), adminService
+				.getGlobalProperty("scheduler.password"));
 			Iterator<GlobalProperty> properties = adminService
 					.getAllGlobalProperties().iterator();
 			GlobalProperty currProperty = null;
@@ -58,7 +57,7 @@ public class ChirdlUtilBackportsActivator implements Activator {
 					}
 				}
 			}
-		} catch (ContextAuthenticationException e)
+		} catch (Exception e)
 		{
 			this.log.error("Error checking global properties for chirdlutilbackports module");
 			this.log.error(e.getMessage(),e);
@@ -67,9 +66,9 @@ public class ChirdlUtilBackportsActivator implements Activator {
 	}
 	
 	/**
-	 * @see org.openmrs.module.Activator#shutdown()
+	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
-	public void shutdown() {
+	public void stopped() {
 		this.log.info("Shutting down ChirdlUtilBackports Module");
 	}
 
