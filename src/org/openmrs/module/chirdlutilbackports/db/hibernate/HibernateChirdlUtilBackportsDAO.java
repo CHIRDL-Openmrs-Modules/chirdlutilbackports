@@ -1,10 +1,8 @@
 package org.openmrs.module.chirdlutilbackports.db.hibernate;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -549,33 +547,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public PatientState addUpdatePatientState(PatientState patientState) {
-		StatelessSession sess = this.sessionFactory.openStatelessSession();
-		Transaction tx = null;
-		try {
-			tx = sess.beginTransaction();
-			
-			//if there is no patient state id, that means this
-			//is a new state that needs to be inserted
-			//otherwise update
-			if (patientState.getPatientStateId() == null) {
-				sess.insert(patientState);
-			} else {
-				sess.update(patientState);
-			}
-			
-			tx.commit();
-		}
-		catch (Exception e) {
-			if (tx != null)
-				tx.rollback();
-			log.error("", e);
-		}
-		finally {
-			if (sess != null) {
-				sess.close();
-			}
-		}
-		
+		this.sessionFactory.getCurrentSession().saveOrUpdate(patientState);		
 		return patientState;
 	}
 	
@@ -594,30 +566,20 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public List<PatientState> getPatientStateByEncounterState(Integer encounterId, Integer stateId) {
-		StatelessSession sess = this.sessionFactory.openStatelessSession();
-		Transaction tx = null;
 		try {
-			tx = sess.beginTransaction();
 			String sql = "select a.* from chirdlutilbackports_patient_state a inner join chirdlutilbackports_session b on a.session_id=b.session_id "
 			        + " where b.encounter_id=? and " + "a.state=? order by start_time desc, end_time desc";
-			SQLQuery qry = sess.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, encounterId);
 			qry.setInteger(1, stateId);
 			qry.addEntity(PatientState.class);
 			
 			return qry.list();
-			
 		}
 		catch (Exception e) {
-			if (tx != null)
-				tx.rollback();
 			log.error("", e);
 		}
-		finally {
-			if (sess != null) {
-				sess.close();
-			}
-		}
+		
 		return null;
 	}
 	
@@ -728,17 +690,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state) {
-		StatelessSession sess = this.sessionFactory.openStatelessSession();
-		Transaction tx = null;
 		try {
-			tx = sess.beginTransaction();
-			
 			Integer stateId = state.getStateId();
 			// limit to states for the session that match the form id
 			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=? "
 			        + "and form_id=? and location_id=? and retired=? and state=? "
 			        + "order by start_time desc, end_time desc";
-			SQLQuery qry = sess.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, formInstance.getFormInstanceId());
 			qry.setInteger(1, formInstance.getFormId());
 			qry.setInteger(2, formInstance.getLocationId());
@@ -749,15 +707,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			if (tx != null)
-				tx.rollback();
 			log.error("", e);
 		}
-		finally {
-			if (sess != null) {
-				sess.close();
-			}
-		}
+		
 		return null;
 	}
 	
