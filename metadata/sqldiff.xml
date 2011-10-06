@@ -269,5 +269,17 @@ CREATE TABLE `chirdlutilbackports_error` (
 ) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8;
 		</sql>
 	</diff>
+	<diff>
+        <version>1.0.1</version>
+        <author>Steve McKee</author>
+        <date>October 5, 2011</date>
+        <description>
+            Add indexes to the new chirdlutilbackports_patient_state table.
+        </description>
+        <sql>
+            create index cub_pat_state_idx_location on chirdlutilbackports_patient_state (location_id,location_tag_id,retired,state);
+            create index cub_pat_state_idx_instance on chirdlutilbackports_patient_state (location_id,form_id,form_instance_id,retired);
+        </sql>
+    </diff>
 
 </sqldiff>
