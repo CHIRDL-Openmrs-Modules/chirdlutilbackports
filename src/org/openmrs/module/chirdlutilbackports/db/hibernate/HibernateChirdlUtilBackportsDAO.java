@@ -294,7 +294,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return 0;
 	}
 	
-	public FormInstance addFormInstance(Integer formId, Integer locationId) {
+	public synchronized FormInstance addFormInstance(Integer formId, Integer locationId) {
 		PreparedStatement stmt = null;
 		Transaction tx = null;
 		StatelessSession session = null;
@@ -309,8 +309,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				tx = session.beginTransaction();
 				Connection con = session.connection();
 				String sql = "select max(form_instance_id) as form_instance_id,"
-				        + "? as form_id,location_id from chirdlutilbackports_form_instance where location_id=? "
-				        + "and form_id in (select form_id from form where name=?) " + "group by location_id";
+				        + "? as form_id,location_id from chirdlutilbackports_form_instance " 
+				        + "inner join form f using (form_id) where location_id=? "
+				        + "and f.name=? group by location_id";
 				
 				stmt = con.prepareStatement(sql);
 				stmt.setInt(1, formId);
