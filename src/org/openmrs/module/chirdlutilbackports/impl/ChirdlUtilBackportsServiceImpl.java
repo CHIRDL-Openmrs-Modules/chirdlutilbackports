@@ -15,6 +15,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
@@ -299,4 +301,46 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	public FormAttribute getFormAttributeByName(String formAttributeName){
 		return getChirdlUtilBackportsDAO().getFormAttributeByName(formAttributeName);
 	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getObsAttributeByName(java.lang.String)
+	 */
+    public ObsAttribute getObsAttributeByName(String obsAttributeName) {
+	    return getChirdlUtilBackportsDAO().getObsAttributeByName(obsAttributeName);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getObsAttributesByName(java.lang.String)
+	 */
+    public List<ObsAttributeValue> getObsAttributesByName(String attributeName) {
+	    return getChirdlUtilBackportsDAO().getObsAttributesByName(attributeName);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getObsAttributesByNameAsString(java.lang.String)
+	 */
+    public List<String> getObsAttributesByNameAsString(String attributeName) {
+	    return getChirdlUtilBackportsDAO().getObsAttributesByNameAsString(attributeName);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getObsAttributeValue(java.lang.Integer, java.lang.String)
+	 */
+    public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName) {
+	    return getChirdlUtilBackportsDAO().getObsAttributeValue(obsId, obsAttributeName);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getObsAttributeValuesByValue(java.lang.String)
+	 */
+    public List<ObsAttributeValue> getObsAttributeValuesByValue(String value) {
+	    return getChirdlUtilBackportsDAO().getObsAttributeValuesByValue(value);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#saveObsAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue)
+	 */
+    public void saveObsAttributeValue(ObsAttributeValue value) {
+		getChirdlUtilBackportsDAO().saveObsAttributeValue(value);
+    }
 }

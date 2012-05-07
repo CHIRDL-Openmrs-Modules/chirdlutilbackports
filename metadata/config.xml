@@ -6,7 +6,7 @@
 	<!-- chirdlutilbackports Module Properties -->
 	<id>chirdlutilbackports</id>
 	<name>chirdlutilbackports</name>
-	<version>1.0.2</version>
+	<version>1.1.0</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>Tammy Dugan</author>
 	<description>
@@ -50,6 +50,8 @@
 		error_category.hbm.xml
 		error.hbm.xml
 		program_tag_map.hbm.xml
+		obs_attribute_value.hbm.xml
+		obs_attribute.hbm.xml
 	</mappingFiles>
 	
 </module>

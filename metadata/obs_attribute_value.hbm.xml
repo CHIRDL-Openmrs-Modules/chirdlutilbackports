@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.chirdlutilbackports">
+
+    <class name="org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue" table="chirdlutilbackports_obs_attribute_value">
+        
+        <id name="obsAttributeValueId" type="java.lang.Integer" column="obs_attribute_value_id">
+            <generator class="native" />
+        </id>
+    
+        <property name="obsId" type="java.lang.Integer" column="obs_id" />
+        <property name="obsAttributeId" type="java.lang.Integer" column="obs_attribute_id" />
+        <property name="value" type="java.lang.String" column="value" />
+        
+    </class>
+    
+</hibernate-mapping>
