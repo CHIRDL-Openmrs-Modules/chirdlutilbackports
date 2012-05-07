@@ -8,15 +8,17 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateAction;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -152,4 +154,52 @@ public interface ChirdlUtilBackportsDAO {
 	public FormAttribute getFormAttributeByName(String formAttributeName);
 
 	public void saveFormAttributeValue(FormAttributeValue value);
+	
+	/**
+	 * Retrieves an observation attribute by observation attribute name.
+	 * 
+	 * @param obsAttributeName The observation attribute name used to do the lookup.
+	 * @return ObsAttribute object or null if cannot be found matching the provided observation attribute name.
+	 */
+	public ObsAttribute getObsAttributeByName(String obsAttributeName);
+	
+	/**
+	 * Retrieves a list of observation attributes by observation attribute name.
+	 * 
+	 * @param attributeName The observation attribute name used to do the lookup.
+	 * @return List of ObsAttribute objects or null if an error occurs.
+	 */
+	public List<ObsAttributeValue> getObsAttributesByName(String attributeName);
+	
+	/**
+	 * Retrieves a list of observation attribute names as strings by observation attribute name.
+	 * 
+	 * @param attributeName The observation attribute name used to do the lookup.
+	 * @return List of String objects or null if an error occurs.
+	 */
+	public List<String> getObsAttributesByNameAsString(String attributeName);
+	
+	/**
+	 * Retrieves an observation attribute value.
+	 * 
+	 * @param obsId The observation ID.
+	 * @param obsAttributeName The observation attribute name.
+	 * @return ObsAttributeValue object or null if a match cannot be found.
+	 */
+	public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName);
+	
+	/**
+	 * Retrieves a list of observation attribute values.
+	 * 
+	 * @param value The value of the of the observation attribute value.
+	 * @return List of ObsAttributeValue objects or null if an error occurs.
+	 */
+	public List<ObsAttributeValue> getObsAttributeValuesByValue(String value);
+
+	/**
+	 * Saves an observation attribute value.
+	 * 
+	 * @param value The observations attribute value to save.
+	 */
+	public void saveObsAttributeValue(ObsAttributeValue value);
 }

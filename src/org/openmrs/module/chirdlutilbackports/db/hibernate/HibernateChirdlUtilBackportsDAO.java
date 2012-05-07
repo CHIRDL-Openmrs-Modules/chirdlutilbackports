@@ -29,6 +29,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
@@ -1153,4 +1155,126 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		return null;
 	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeByName(java.lang.String)
+	 */
+    public ObsAttribute getObsAttributeByName(String obsAttributeName) {
+		try {
+			String sql = "select * from chirdlutilbackports_obs_attribute where name=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setString(0, obsAttributeName);
+			qry.addEntity(ObsAttribute.class);
+			
+			List<ObsAttribute> list = qry.list();
+			
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributesByName(java.lang.String)
+	 */
+    public List<ObsAttributeValue> getObsAttributesByName(String attributeName) {
+    	try {
+			String sql = "select * from chirdlutilbackports_obs_attribute_value where obs_attribute_id in "
+			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=?)";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.addEntity(ObsAttributeValue.class);
+			qry.setString(0, attributeName);
+			return qry.list();
+			
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributesByNameAsString(java.lang.String)
+	 */
+    public List<String> getObsAttributesByNameAsString(String attributeName) {
+    	try {
+			String sql = "select distinct value from chirdlutilbackports_obs_attribute_value where obs_attribute_id in "
+			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=?)";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.addScalar("value");
+			qry.setString(0, attributeName);
+			List<String> list = qry.list();
+			
+			ArrayList<String> attributes = new ArrayList<String>();
+			for (String currResult : list) {
+				attributes.add(currResult);
+			}
+			
+			return attributes;
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeValue(java.lang.Integer, java.lang.String)
+	 */
+    public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName) {
+    	try {
+			ObsAttribute obsAttribute = this.getObsAttributeByName(obsAttributeName);
+			
+			if (obsAttribute != null) {
+				Integer obsAttributeId = obsAttribute.getObsAttributeId();
+				
+				String sql = "select * from chirdlutilbackports_obs_attribute_value where obs_id=? "
+				        + "and obs_attribute_id=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, obsId);
+				qry.setInteger(1, obsAttributeId);
+				qry.addEntity(ObsAttributeValue.class);
+				
+				List<ObsAttributeValue> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeValuesByValue(java.lang.String)
+	 */
+    public List<ObsAttributeValue> getObsAttributeValuesByValue(String value) {
+    	try {
+			String sql = "select * from chirdlutilbackports_obs_attribute_value where value=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setString(0, value);
+			qry.addEntity(ObsAttributeValue.class);
+			return qry.list();
+		}
+		catch (Exception e) {
+			this.log.error(e);
+		}
+		return null;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveObsAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue)
+	 */
+    public void saveObsAttributeValue(ObsAttributeValue value) {
+    	sessionFactory.getCurrentSession().saveOrUpdate(value);
+    }
 }

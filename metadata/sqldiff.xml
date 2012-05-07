@@ -281,5 +281,37 @@ CREATE TABLE `chirdlutilbackports_error` (
             create index cub_pat_state_idx_instance on chirdlutilbackports_patient_state (location_id,form_id,form_instance_id,retired);
         </sql>
     </diff>
+    <diff>
+        <version>1.0.2</version>
+        <author>Steve McKee</author>
+        <date>March 29, 2011</date>
+        <description>
+            Create new chirdlutilbackports_obs_attribute and chirdlutilbackports_obs_attribute_value tables.
+        </description>
+        <sql>
+            CREATE TABLE `chirdlutilbackports_obs_attribute` (
+			  `obs_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `name` varchar(255) NOT NULL,
+			  `description` varchar(255) DEFAULT NULL,
+			  PRIMARY KEY (`obs_attribute_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			
+			CREATE TABLE `chirdlutilbackports_obs_attribute_value` (
+			  `obs_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `obs_id` int(11) NOT NULL,
+			  `value` varchar(255) NOT NULL,
+			  `obs_attribute_id` int(11) NOT NULL,
+			  PRIMARY KEY (`obs_attribute_value_id`),
+			  KEY `chirdlutilbackports_obs_value_fk_obs` (`obs_id`),
+			  KEY `chirdlutilbackports_obs_value_fk_obs_attr` (`obs_attribute_id`),
+			  CONSTRAINT `chirdlutilbackports_obs_value_fk_obs_attr` 
+			     FOREIGN KEY (`obs_attribute_id`) 
+			     REFERENCES `chirdlutilbackports_obs_attribute` (`obs_attribute_id`),
+			  CONSTRAINT `chirdlutilbackports_obs_value_fk_obs` 
+			     FOREIGN KEY (`obs_id`) 
+			     REFERENCES `obs` (`obs_id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        </sql>
+    </diff>
 
 </sqldiff>
