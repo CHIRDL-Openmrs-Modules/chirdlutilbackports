@@ -130,7 +130,8 @@ public PatientState getPatientState(Integer patientStateId);
 		String stateName,Integer sessionId);
 	
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state);
-	
+	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired);
+
 	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired);
 
 	public List<PatientState> getPatientStatesBySession(Integer sessionId,boolean isRetired);

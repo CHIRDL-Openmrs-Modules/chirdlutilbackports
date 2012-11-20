@@ -693,18 +693,33 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state) {
+		return getPatientStateByFormInstanceState(formInstance,state,false);
+	}
+
+	
+	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired) {
 		try {
 			Integer stateId = state.getStateId();
+			String retiredString = " ";
+			
+			if(!includeRetired){
+				retiredString = " and retired=? ";
+			}
 			// limit to states for the session that match the form id
 			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=? "
-			        + "and form_id=? and location_id=? and retired=? and state=? "
+			        + "and form_id=? and location_id=?"+retiredString+"and state=? "
 			        + "order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, formInstance.getFormInstanceId());
 			qry.setInteger(1, formInstance.getFormId());
 			qry.setInteger(2, formInstance.getLocationId());
-			qry.setBoolean(3, false);
-			qry.setInteger(4, stateId);
+			if(includeRetired){
+				qry.setInteger(3, stateId);
+			}else{
+				qry.setBoolean(3, false);
+				qry.setInteger(4, stateId);
+			}
+			
 			qry.addEntity(PatientState.class);
 			
 			return qry.list();
