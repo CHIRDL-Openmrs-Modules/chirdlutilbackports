@@ -274,6 +274,9 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state) {
 		return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceState(formInstance, state);
 	}
+	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired) {
+		return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceState(formInstance, state,includeRetired);
+	}
 	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired) {
 		return getChirdlUtilBackportsDAO().getPatientStatesByFormInstance(formInstance, isRetired);
 	}
