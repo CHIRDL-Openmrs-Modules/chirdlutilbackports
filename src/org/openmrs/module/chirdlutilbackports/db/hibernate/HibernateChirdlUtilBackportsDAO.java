@@ -25,6 +25,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
@@ -1291,5 +1293,120 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 */
     public void saveObsAttributeValue(ObsAttributeValue value) {
     	sessionFactory.getCurrentSession().saveOrUpdate(value);
+    }
+
+	@Override
+    public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
+		try {
+			String sql = "select * from chirdlutilbackports_form_instance_attribute where name=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setString(0, formInstanceAttributeName);
+			qry.addEntity(FormInstanceAttribute.class);
+			
+			List<FormInstanceAttribute> list = qry.list();
+			
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	@Override
+    public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName) {
+		try {
+			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where "
+					+ "form_instance_attribute_id in "
+			        + "(select form_instance_attribute_id from chirdlutilbackports_form_instance_attribute where name=?)";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.addEntity(FormInstanceAttributeValue.class);
+			qry.setString(0, attributeName);
+			return qry.list();
+			
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	@Override
+    public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
+		try {
+			String sql = "select distinct value from chirdlutilbackports_form_instance_attribute_value where "
+					+ "form_instance_attribute_id in "
+			        + "(select form_instance_attribute_id from chirdlutilbackports_form_instance_attribute where name=?)";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.addScalar("value");
+			qry.setString(0, attributeName);
+			List<String> list = qry.list();
+			
+			ArrayList<String> attributes = new ArrayList<String>();
+			for (String currResult : list) {
+				attributes.add(currResult);
+			}
+			
+			return attributes;
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	@Override
+    public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
+                                                                    Integer locationId, String formInstanceAttributeName) {
+		try {
+			FormInstanceAttribute formInstanceAttribute = this.getFormInstanceAttributeByName(formInstanceAttributeName);
+			
+			if (formInstanceAttribute != null) {
+				Integer formInstanceAttributeId = formInstanceAttribute.getFormInstanceAttributeId();
+				
+				String sql = "select * from chirdlutilbackports_form_instance_attribute_value where form_id=? "
+				        + "and form_instance_id=? and location_id=? and form_instance_attribute_id=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, formId);
+				qry.setInteger(1, formInstanceId);
+				qry.setInteger(2, locationId);
+				qry.setInteger(3, formInstanceAttributeId);
+				qry.addEntity(FormInstanceAttributeValue.class);
+				
+				List<FormInstanceAttributeValue> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+			log.error(e);
+		}
+		return null;
+    }
+
+	@Override
+    public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
+		try {
+			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where value=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setString(0, value);
+			qry.addEntity(FormInstanceAttributeValue.class);
+			return qry.list();
+		}
+		catch (Exception e) {
+			this.log.error(e);
+		}
+		return null;
+    }
+
+	@Override
+    public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
+		sessionFactory.getCurrentSession().saveOrUpdate(value);
     }
 }

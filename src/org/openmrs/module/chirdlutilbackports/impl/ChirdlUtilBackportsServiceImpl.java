@@ -12,6 +12,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
@@ -345,5 +347,37 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	 */
     public void saveObsAttributeValue(ObsAttributeValue value) {
 		getChirdlUtilBackportsDAO().saveObsAttributeValue(value);
+    }
+
+	@Override
+    public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
+		return getChirdlUtilBackportsDAO().getFormInstanceAttributeByName(formInstanceAttributeName);
+    }
+
+	@Override
+    public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName) {
+		return getChirdlUtilBackportsDAO().getFormInstanceAttributesByName(attributeName);
+    }
+
+	@Override
+    public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
+		return getChirdlUtilBackportsDAO().getFormInstanceAttributesByNameAsString(attributeName);
+    }
+
+	@Override
+    public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
+                                                                    Integer locationId, String formInstanceAttributeName) {
+		return getChirdlUtilBackportsDAO().getFormInstanceAttributeValue(formId, formInstanceId, locationId, 
+			formInstanceAttributeName);
+    }
+
+	@Override
+    public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
+		return getChirdlUtilBackportsDAO().getFormInstanceAttributeValuesByValue(value);
+    }
+
+	@Override
+    public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
+		getChirdlUtilBackportsDAO().saveFormInstanceAttributeValue(value);
     }
 }
