@@ -313,5 +313,49 @@ CREATE TABLE `chirdlutilbackports_error` (
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
         </sql>
     </diff>
+    <diff>
+        <version>1.0.3</version>
+        <author>Steve McKee</author>
+        <date>January 03, 2012</date>
+        <description>
+            Create new chirdlutilbackports_form_instance_attribute and chirdlutilbackports_form_instance_attribute_value tables.
+        </description>
+        <sql>
+            CREATE TABLE `chirdlutilbackports_form_instance_attribute` (
+              `form_instance_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+              `name` varchar(255) NOT NULL,
+              `description` varchar(255) DEFAULT NULL,
+              PRIMARY KEY (`form_instance_attribute_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+            
+            CREATE TABLE `chirdlutilbackports_form_instance_attribute_value` (
+              `form_instance_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+              `form_id` int(11) NOT NULL,
+              `form_instance_id` int(11) NOT NULL,
+              `location_id` int(11) NOT NULL,
+              `value` varchar(255) NOT NULL,
+              `form_instance_attribute_id` int(11) NOT NULL,
+              PRIMARY KEY (`form_instance_attribute_value_id`),
+              KEY `chirdlutilbackports_form_inst_value_fk_form_id` (`form_id`),
+              KEY `chirdlutilbackports_form_inst_value_fk_form_inst_id` (`form_instance_id`),
+              KEY `chirdlutilbackports_form_inst_value_fk_location_id` (`location_id`),
+              KEY `chirdlutilbackports_form_inst_value_fk_form_inst_attr_id` (`form_instance_attribute_id`),
+              CONSTRAINT `chirdlutilbackports_form_inst_value_fk_form_id` 
+                 FOREIGN KEY (`form_id`) 
+                 REFERENCES `chirdlutilbackports_form_instance` (`form_id`),
+              CONSTRAINT `chirdlutilbackports_form_inst_value_fk_form_inst_id` 
+                 FOREIGN KEY (`form_instance_id`) 
+                 REFERENCES `chirdlutilbackports_form_instance` (`form_instance_id`),
+              CONSTRAINT `chirdlutilbackports_form_inst_value_fk_location_id` 
+                 FOREIGN KEY (`location_id`) 
+                 REFERENCES `chirdlutilbackports_form_instance` (`location_id`),
+              CONSTRAINT `chirdlutilbackports_form_inst_value_fk_form_inst_attr_id` 
+                 FOREIGN KEY (`form_instance_attribute_id`) 
+                 REFERENCES `chirdlutilbackports_form_instance_attribute` (`form_instance_attribute_id`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+            
+            insert into chirdlutilbackports_form_instance_attribute(name, description) values('medium', 'The medium which the form instance was populated.');
+        </sql>
+    </diff>
 
 </sqldiff>

@@ -8,6 +8,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
@@ -204,4 +206,55 @@ public interface ChirdlUtilBackportsDAO {
 	 * @param value The observations attribute value to save.
 	 */
 	public void saveObsAttributeValue(ObsAttributeValue value);
+	
+	/**
+	 * Retrieves a form instance attribute by form instance attribute name.
+	 * 
+	 * @param formInstanceAttributeName The form instance attribute name used to do the lookup.
+	 * @return FormInstanceAttribute object or null if cannot be found matching the provided form instance attribute name.
+	 */
+	public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName);
+	
+	/**
+	 * Retrieves a list of form instance attribute values by form instance attribute name.
+	 * 
+	 * @param attributeName The form instance attribute name used to do the lookup.
+	 * @return List of FormInstanceAttributeValue objects or null if an error occurs.
+	 */
+	public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName);
+	
+	/**
+	 * Retrieves a list of form instance attribute value names as strings by form instance attribute name.
+	 * 
+	 * @param attributeName The form instance attribute name used to do the lookup.
+	 * @return List of String objects or null if an error occurs.
+	 */
+	public List<String> getFormInstanceAttributesByNameAsString(String attributeName);
+	
+	/**
+	 * Retrieves a form instance attribute value.
+	 * 
+	 * @param formId The form ID.
+	 * @param formInstanceId The form instance ID.
+	 * @param locationId The location ID.
+	 * @param formInstanceAttributeName The form instance attribute name.
+	 * @return FormInstanceAttributeValue object or null if a match cannot be found.
+	 */
+	public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId, 
+	                                                                Integer locationId, String formInstanceAttributeName);
+	
+	/**
+	 * Retrieves a list of form instance attribute values.
+	 * 
+	 * @param value The value of the form instance attribute value.
+	 * @return List of FormInstanceAttributeValue objects or null if an error occurs.
+	 */
+	public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value);
+
+	/**
+	 * Saves a form instance attribute value.
+	 * 
+	 * @param value The form instance attribute value to save.
+	 */
+	public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value);
 }
