@@ -10,6 +10,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
@@ -17,6 +18,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateAction;
@@ -257,4 +259,78 @@ public interface ChirdlUtilBackportsDAO {
 	 * @param value The form instance attribute value to save.
 	 */
 	public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value);
+	
+	/**
+	 * Returns all available programs.
+	 * 
+	 * @return List of Program objects.
+	 */
+	public List<Program> getAllPrograms();
+	
+	/**
+	 * Returns a location attribute by name.  This will return null if one is not found by the name provided.
+	 * 
+	 * @param locationAttributeName
+	 * @return LocationAttribute object
+	 */
+	public LocationAttribute getLocationAttribute(String locationAttributeName);
+	
+	/**
+	 * Returns a program by name.
+	 * 
+	 * @param name The name of the program.
+	 * @return Program by the name specified or null if one is not found by that name.
+	 */
+	public Program getProgram(String name);
+	
+	/**
+	 * Saves a new program or updates an existing program.
+	 * 
+	 * @param program The program to save or update.
+	 * @return The updated program.
+	 */
+	public Program saveProgram(Program program);
+	
+	/**
+	 * Deletes a program.
+	 * 
+	 * @param program The program to delete.
+	 */
+	public void deleteProgram(Program program);
+	
+	/**
+	 * Saves a new program tag map or updates an existing program tag map.
+	 * 
+	 * @param programTagMap The program tag map to save or update.
+	 * @return The updated program tag map.
+	 */
+	public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap);
+	
+	/**
+	 * Deletes a program tag map.
+	 * 
+	 * @param programTagMap The program tag map to delete.
+	 */
+	public void deleteProgramTagMap(ProgramTagMap programTagMap);
+	
+	/**
+	 * Returns all location attributes.
+	 * 
+	 * @return List containing all location attributes.
+	 */
+	public List<LocationAttribute> getAllLocationAttributes();
+	
+	/**
+	 * Returns all location tag attributes.
+	 * 
+	 * @return List containing all location tag attributes.
+	 */
+	public List<LocationTagAttribute> getAllLocationTagAttributes();
+	
+	/**
+	 * Returns all form attributes.
+	 * 
+	 * @return List containing all form attributes.
+	 */
+	public List<FormAttribute> getAllFormAttributes();
 }

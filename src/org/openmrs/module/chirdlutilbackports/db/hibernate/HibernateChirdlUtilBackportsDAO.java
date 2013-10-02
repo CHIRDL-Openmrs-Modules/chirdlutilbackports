@@ -17,6 +17,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
 import org.openmrs.Form;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
@@ -122,7 +123,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public LocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
 		try {
-			LocationAttribute locationAttribute = this.getLocationAttributeByName(locationAttributeName);
+			LocationAttribute locationAttribute = this.getLocationAttribute(locationAttributeName);
 			
 			if (locationAttribute != null) {
 				Integer locationAttributeId = locationAttribute.getLocationAttributeId();
@@ -148,7 +149,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-	private LocationAttribute getLocationAttributeByName(String locationAttributeName) {
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getLocationAttribute(java.lang.String)
+	 */
+	public LocationAttribute getLocationAttribute(String locationAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_location_attribute " + "where name=?";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
@@ -1295,6 +1299,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     	sessionFactory.getCurrentSession().saveOrUpdate(value);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeByName(java.lang.String)
+     */
     public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute where name=?";
@@ -1314,6 +1321,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributesByName(java.lang.String)
+     */
 	public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where "
@@ -1331,6 +1341,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributesByNameAsString(java.lang.String)
+	 */
     public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
 		try {
 			String sql = "select distinct value from chirdlutilbackports_form_instance_attribute_value where "
@@ -1354,6 +1367,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeValue(java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String)
+     */
     public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
                                                                     Integer locationId, String formInstanceAttributeName) {
 		try {
@@ -1386,6 +1402,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeValuesByValue(java.lang.String)
+     */
     public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where value=?";
@@ -1400,7 +1419,90 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveFormInstanceAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue)
+     */
     public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllPrograms()
+	 */
+    public List<Program> getAllPrograms() {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Program.class);
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
+	 */
+    public Program saveProgram(Program program) {
+		sessionFactory.getCurrentSession().saveOrUpdate(program);
+		return program;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
+	 */
+    public void deleteProgram(Program program) {
+		sessionFactory.getCurrentSession().delete(program);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
+	 */
+    public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap) {
+		sessionFactory.getCurrentSession().saveOrUpdate(programTagMap);
+		return programTagMap;
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
+	 */
+    public void deleteProgramTagMap(ProgramTagMap programTagMap) {
+		sessionFactory.getCurrentSession().delete(programTagMap);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgram(java.lang.String)
+	 */
+    public Program getProgram(String name) {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Program.class).add(
+		    Expression.eq("name", name));
+		
+		List<Program> programs = criteria.list();
+		if (null == programs || programs.isEmpty()) {
+			return null;
+		}
+		return programs.get(0);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllLocationAttributes()
+	 */
+    public List<LocationAttribute> getAllLocationAttributes() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationAttribute.class);
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllLocationTagAttributes()
+	 */
+    public List<LocationTagAttribute> getAllLocationTagAttributes() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class);
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllFormAttributes()
+	 */
+    public List<FormAttribute> getAllFormAttributes() {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttribute.class);
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
     }
 }
