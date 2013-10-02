@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -14,6 +12,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
@@ -21,6 +20,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
@@ -32,8 +32,6 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  * @author Tammy Dugan
  */
 public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsService {
-	
-	private Log log = LogFactory.getLog(this.getClass());
 	
 	private ChirdlUtilBackportsDAO dao;
 	
@@ -349,29 +347,117 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 		getChirdlUtilBackportsDAO().saveObsAttributeValue(value);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormInstanceAttributeByName(java.lang.String)
+     */
     public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
 		return getChirdlUtilBackportsDAO().getFormInstanceAttributeByName(formInstanceAttributeName);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormInstanceAttributesByName(java.lang.String)
+     */
     public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName) {
 		return getChirdlUtilBackportsDAO().getFormInstanceAttributesByName(attributeName);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormInstanceAttributesByNameAsString(java.lang.String)
+     */
     public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
 		return getChirdlUtilBackportsDAO().getFormInstanceAttributesByNameAsString(attributeName);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormInstanceAttributeValue(java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String)
+     */
     public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
                                                                     Integer locationId, String formInstanceAttributeName) {
 		return getChirdlUtilBackportsDAO().getFormInstanceAttributeValue(formId, formInstanceId, locationId, 
 			formInstanceAttributeName);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormInstanceAttributeValuesByValue(java.lang.String)
+     */
     public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
 		return getChirdlUtilBackportsDAO().getFormInstanceAttributeValuesByValue(value);
     }
 
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#saveFormInstanceAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue)
+     */
     public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
 		getChirdlUtilBackportsDAO().saveFormInstanceAttributeValue(value);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getAllPrograms()
+	 */
+    public List<Program> getAllPrograms() {
+	    return getChirdlUtilBackportsDAO().getAllPrograms();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getLocationAttribute(java.lang.String)
+	 */
+    public LocationAttribute getLocationAttribute(String locationAttributeName) {
+	    return getChirdlUtilBackportsDAO().getLocationAttribute(locationAttributeName);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#saveProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
+	 */
+    public Program saveProgram(Program program) {
+	    return getChirdlUtilBackportsDAO().saveProgram(program);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#deleteProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
+	 */
+    public void deleteProgram(Program program) {
+	    getChirdlUtilBackportsDAO().deleteProgram(program);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#saveProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
+	 */
+    public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap) {
+	    return getChirdlUtilBackportsDAO().saveProgramTagMap(programTagMap);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#deleteProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
+	 */
+    public void deleteProgramTagMap(ProgramTagMap programTagMap) {
+	    getChirdlUtilBackportsDAO().deleteProgramTagMap(programTagMap);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getProgram(java.lang.String)
+	 */
+    public Program getProgram(String name) {
+	    return getChirdlUtilBackportsDAO().getProgram(name);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getAllLocationAttributes()
+	 */
+    public List<LocationAttribute> getAllLocationAttributes() {
+	    return getChirdlUtilBackportsDAO().getAllLocationAttributes();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getAllLocationTagAttributes()
+	 */
+    public List<LocationTagAttribute> getAllLocationTagAttributes() {
+	    return getChirdlUtilBackportsDAO().getAllLocationTagAttributes();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getAllFormAttributes()
+	 */
+    public List<FormAttribute> getAllFormAttributes() {
+	    return getChirdlUtilBackportsDAO().getAllFormAttributes();
     }
 }
