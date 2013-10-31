@@ -97,7 +97,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in method getLocationTagAttributeValue", e);
 		}
 		return null;
 	}
@@ -116,7 +116,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in method getLocationTagAttributeByName", e);
 		}
 		return null;
 	}
@@ -144,7 +144,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in method getLocationAttributeValue", e);
 		}
 		return null;
 	}
@@ -166,7 +166,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in method getLocationAttribute", e);
 		}
 		return null;
 	}
@@ -186,7 +186,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error in method getLocationTagAttributeValueById", e);
 		}
 		return null;
 	}
@@ -297,7 +297,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method insertFormInstance", e);
 		}
 		return 0;
 	}
@@ -338,7 +338,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method addFormInstance", e);
 		}
 		finally {
 			try {
@@ -373,7 +373,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormAttributeByName", e);
 		}
 		return null;
 	}
@@ -392,7 +392,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getStateByName", e);
 		}
 		return null;
 	}
@@ -424,7 +424,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormAttributeValue", e);
 		}
 		return null;
 	}
@@ -438,7 +438,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (Session) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getSession", e);
 		}
 		return null;
 	}
@@ -455,7 +455,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStatesWithForm", e);
 		}
 		return null;
 	}
@@ -483,7 +483,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPrevPatientStateByAction", e);
 		}
 		
 		return null;
@@ -499,7 +499,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (StateMapping) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getStateMapping", e);
 		}
 		return null;
 	}
@@ -514,7 +514,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getProgramByNameVersion", e);
 		}
 		return null;
 	}
@@ -528,7 +528,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getProgram", e);
 		}
 		return null;
 	}
@@ -539,7 +539,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return session;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method addSession", e);
 		}
 		return null;
 	}
@@ -550,7 +550,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return session;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method updateSession", e);
 		}
 		return null;
 	}
@@ -569,7 +569,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (StateAction) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getStateActionByName", e);
 		}
 		return null;
 	}
@@ -586,7 +586,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error("", e);
+			log.error("Error in method getPatientStateByEncounterState", e);
 		}
 		
 		return null;
@@ -606,7 +606,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStateBySessionState", e);
 		}
 		return null;
 	}
@@ -624,7 +624,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStatesBySession", e);
 		}
 		return null;
 	}
@@ -652,7 +652,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStateByEncounterFormAction", e);
 		}
 		return null;
 	}
@@ -673,7 +673,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStatesByFormInstance", e);
 		}
 		return null;
 	}
@@ -693,7 +693,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientStateByFormInstanceAction", e);
 		}
 		return null;
 	}
@@ -731,7 +731,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error("", e);
+			log.error("Error in method getPatientStateByFormInstanceState", e);
 		}
 		
 		return null;
@@ -760,7 +760,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getUnfinishedPatientStateByStateName", e);
 		}
 		return null;
 	}
@@ -780,7 +780,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getUnfinishedPatientStateByStateSession", e);
 		}
 		return null;
 	}
@@ -806,7 +806,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getUnfinishedPatientStatesAllPatients", e);
 		}
 		return null;
 	}
@@ -826,7 +826,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return null;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getLastUnfinishedPatientState", e);
 		}
 		return null;
 	}
@@ -846,7 +846,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return null;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getLastPatientState", e);
 		}
 		return null;
 	}
@@ -861,7 +861,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (State) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getState", e);
 		}
 		return null;
 	}
@@ -965,7 +965,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getLastPatientStateAllPatients", e);
 		}
 		return null;
 	}
@@ -981,7 +981,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormAttributesByName", e);
 		}
 		return null;
 	}
@@ -1003,7 +1003,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return exportDirectories;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormAttributesByNameAsString", e);
 		}
 		return null;
 	}
@@ -1018,7 +1018,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getStatesByActionName", e);
 		}
 		return null;
 	}
@@ -1032,7 +1032,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return (PatientState) qry.uniqueResult();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getPatientState", e);
 		}
 		return null;
 	}
@@ -1049,7 +1049,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getAllRetiredPatientStatesWithForm", e);
 		}
 		return null;
 	}
@@ -1064,7 +1064,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getSessionsByEncounter", e);
 		}
 		return null;
 	}
@@ -1084,7 +1084,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getProgram", e);
 		}
 		return null;
 	}
@@ -1116,7 +1116,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			this.sessionFactory.getCurrentSession().save(error);
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method saveError", e);
 		}
 	}
 	
@@ -1130,7 +1130,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method getErrorsByLevel", e);
 		}
 		return null;
 	}
@@ -1144,7 +1144,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method getFormAttributeValuesByValue", e);
 		}
 		return null;
 	}
@@ -1167,12 +1167,12 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 			}
 			catch (Exception e) {
-
+				log.error("Error in method getErrorCategoryIdByName", e);
 			}
 			return null;
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method getErrorCategoryIdByName", e);
 		}
 		return null;
 	}
@@ -1194,7 +1194,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getObsAttributeByName", e);
 		}
 		return null;
     }
@@ -1213,7 +1213,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getObsAttributesByName", e);
 		}
 		return null;
     }
@@ -1238,7 +1238,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return attributes;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getObsAttributesByNameAsString", e);
 		}
 		return null;
     }
@@ -1270,7 +1270,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getObsAttributeValue", e);
 		}
 		return null;
     }
@@ -1287,7 +1287,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method getObsAttributeValuesByValue", e);
 		}
 		return null;
     }
@@ -1316,7 +1316,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormInstanceAttributeByName", e);
 		}
 		return null;
     }
@@ -1336,7 +1336,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormInstanceAttributesByName", e);
 		}
 		return null;
     }
@@ -1362,7 +1362,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return attributes;
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormInstanceAttributesByNameAsString", e);
 		}
 		return null;
     }
@@ -1397,7 +1397,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 		}
 		catch (Exception e) {
-			log.error(e);
+			log.error("Error in method getFormInstanceAttributeValue", e);
 		}
 		return null;
     }
@@ -1414,7 +1414,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return qry.list();
 		}
 		catch (Exception e) {
-			this.log.error(e);
+			log.error("Error in method getFormInstanceAttributeValuesByValue", e);
 		}
 		return null;
     }
