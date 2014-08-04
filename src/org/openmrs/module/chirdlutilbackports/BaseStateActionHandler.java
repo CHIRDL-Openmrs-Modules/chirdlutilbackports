@@ -15,6 +15,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleClassLoader;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.chirdlutilbackports.action.ProcessStateAction;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
@@ -101,8 +102,10 @@ public class BaseStateActionHandler implements StateActionHandler {
 		}
 		if (errors != null && errors.size() > 0) {
 			//open an error state
+			FormInstance formInstance = (FormInstance)parameters.get("formInstance");
 			currState = chirdlutilbackportsService.getStateByName("ErrorState");
-			chirdlutilbackportsService.addPatientState(patient, currState, sessionId, locationTagId, locationId);
+			chirdlutilbackportsService.addPatientState(patient, currState, sessionId, locationTagId, locationId, 
+				formInstance);
 		} else {
 			Program program = chirdlutilbackportsService.getProgram(locationTagId, locationId);
 			StateManager.changeState(patient, sessionId, currState, program, parameters, locationTagId, locationId,

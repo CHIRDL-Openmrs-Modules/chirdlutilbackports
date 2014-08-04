@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.FieldType;
+import org.openmrs.Form;
+import org.openmrs.FormField;
 import org.openmrs.Patient;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -68,7 +71,7 @@ public interface ChirdlUtilBackportsService {
 	
 	public Session getSession(int sessionId);
 	
-	public PatientState addPatientState(Patient patient,State initialState, int sessionId,Integer locationTagId,Integer locationId);
+	public PatientState addPatientState(Patient patient,State initialState, int sessionId,Integer locationTagId,Integer locationId,FormInstance formInstance);
 	
 	public PatientState updatePatientState(PatientState patientState);
 
@@ -323,4 +326,15 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return List containing all form attributes.
 	 */
 	public List<FormAttribute> getAllFormAttributes();
+	
+	/**
+	 * Returns all FormFields for a specified form with the specified field types.
+	 * 
+	 * @param form The form containing the form fields wanted.
+	 * @param fieldTypes The fields with the field types to return.
+	 * @param ordered If true, the form fields will be ordered by field number.
+	 * 
+	 * @return List containing FormField objects.
+	 */
+	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
 }

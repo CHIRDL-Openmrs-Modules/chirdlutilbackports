@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.FieldType;
+import org.openmrs.Form;
+import org.openmrs.FormField;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -333,4 +336,15 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return List containing all form attributes.
 	 */
 	public List<FormAttribute> getAllFormAttributes();
+	
+	/**
+	 * Returns all FormFields for a specified form with the specified field types.
+	 * 
+	 * @param form The form containing the form fields wanted.
+	 * @param fieldTypes The fields with the field types to return.
+	 * @param ordered If true, the form fields will be ordered by field number.
+	 * 
+	 * @return List containing FormField objects.
+	 */
+	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
 }
