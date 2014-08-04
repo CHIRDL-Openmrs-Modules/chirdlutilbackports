@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.FieldType;
+import org.openmrs.Form;
+import org.openmrs.FormField;
 import org.openmrs.Patient;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -135,7 +138,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	}
 	
 	public PatientState addPatientState(Patient patient,State initialState,
-			int sessionId,Integer locationTagId,Integer locationId)
+			int sessionId,Integer locationTagId,Integer locationId,FormInstance formInstance)
 	{
 		PatientState patientState = new PatientState();
 		patientState.setStartTime(new java.util.Date());
@@ -144,6 +147,10 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 		patientState.setSessionId(sessionId);
 		patientState.setLocationId(locationId);
 		patientState.setLocationTagId(locationTagId);
+		if (formInstance != null) {
+			patientState.setFormInstance(formInstance);
+		}
+		
 		return getChirdlUtilBackportsDAO().addUpdatePatientState(patientState);
 	}
 	
@@ -459,5 +466,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	 */
     public List<FormAttribute> getAllFormAttributes() {
 	    return getChirdlUtilBackportsDAO().getAllFormAttributes();
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormFields(org.openmrs.Form, java.util.List, boolean)
+	 */
+    public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered) {
+	    return getChirdlUtilBackportsDAO().getFormFields(form, fieldTypes, ordered);
     }
 }

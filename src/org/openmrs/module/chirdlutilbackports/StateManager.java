@@ -5,10 +5,9 @@ package org.openmrs.module.chirdlutilbackports;
 
 import java.util.HashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
@@ -24,8 +23,6 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  */
 public class StateManager
 {
-	private static Log log = LogFactory.getLog(StateManager.class);
-		
 	/**
 	 * Changes from the current state to the next state
 	 * as determined by the chirdlutilbackports_state_mapping table
@@ -62,8 +59,13 @@ public class StateManager
 
 		currMapping = chirdlUtilBackportsService.getStateMapping(currState,program);
 
+		FormInstance formInstance = null;
+		if (parameters != null) {
+			formInstance = (FormInstance)parameters.get("formInstance");
+		}
+		
 		patientState = chirdlUtilBackportsService.addPatientState(patient, currState,
-				sessionId,locationTagId,locationId);
+				sessionId, locationTagId, locationId, formInstance);
 
 		processStateAction(currState.getAction(), patient, patientState, 
 			program, parameters, stateActionHandler, currMapping);
@@ -102,8 +104,13 @@ public class StateManager
 		ChirdlUtilBackportsService chirdlUtilBackportsService = Context
 			.getService(ChirdlUtilBackportsService.class);
 		StateAction stateAction = currState.getAction();
+		FormInstance formInstance = null;
+		if (parameters != null) {
+			formInstance = (FormInstance)parameters.get("formInstance");
+		}
+		
 		PatientState patientState = chirdlUtilBackportsService.addPatientState(patient,
-				currState, sessionId,locationTagId,locationId);
+				currState, sessionId, locationTagId, locationId, formInstance);
 
 		stateActionHandler.processAction(stateAction, patient, patientState,parameters);
 		return patientState;

@@ -8,10 +8,12 @@ package org.openmrs.module.chirdlutilbackports.hibernateBeans;
  */
 public class FormInstance implements java.io.Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
 	// Fields
-	private Integer formInstanceId = null;
-	private Integer formId = null;
-	private Integer locationId = null;
+	protected Integer formInstanceId = null;
+	protected Integer formId = null;
+	protected Integer locationId = null;
 
 	// Constructors
 

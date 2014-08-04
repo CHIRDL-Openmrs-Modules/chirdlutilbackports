@@ -8,17 +8,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.openmrs.FieldType;
 import org.openmrs.Form;
+import org.openmrs.FormField;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
@@ -908,6 +913,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 */
 	public List<PatientState> getLastPatientStateAllPatients(Date optionalDateRestriction, Integer programId,
 	                                                         String startStateName, Integer locationTagId, Integer locationId) {
+		LinkedHashMap<Integer, LinkedHashMap<String, PatientState>> patientStateMap = new LinkedHashMap<Integer, LinkedHashMap<String, PatientState>>();
+		Map<Integer, Integer> sessionToEncounterMap = new HashMap<Integer, Integer>();
+		
 		try {
 			ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 			List<PatientState> patientStates = new ArrayList<PatientState>();
@@ -931,12 +939,14 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 			qry.addEntity(PatientState.class);
 			List<PatientState> states = qry.list();
-			LinkedHashMap<Integer, LinkedHashMap<String, PatientState>> patientStateMap = new LinkedHashMap<Integer, LinkedHashMap<String, PatientState>>();
-			LinkedHashMap<String, PatientState> stateNameMap = null;
 			for (PatientState patientState : states) {
 				Integer sessionId = patientState.getSessionId();
-				Integer encounterId = chirdlUtilBackportsService.getSession(sessionId).getEncounterId();
-				stateNameMap = patientStateMap.get(encounterId);
+				Integer encounterId = sessionToEncounterMap.get(sessionId);
+				if (encounterId == null) {
+					encounterId = chirdlUtilBackportsService.getSession(sessionId).getEncounterId();
+					sessionToEncounterMap.put(sessionId, encounterId);
+				}
+				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
 				if (stateNameMap == null) {
 					stateNameMap = new LinkedHashMap<String, PatientState>();
 				}
@@ -951,7 +961,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			//look at the state chain in reverse order
 			//find the latest unfinished state in the chain for the given patient
 			for (Integer encounterId : patientStateMap.keySet()) {
-				stateNameMap = patientStateMap.get(encounterId);
+				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
 				for (int i = mappedStateNames.size() - 1; i >= 0; i--) {
 					String currStateName = mappedStateNames.get(i);
 					PatientState currPatientState = stateNameMap.get(currStateName);
@@ -960,12 +970,18 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 						break;
 					}
 				}
+				
+				stateNameMap.clear();
 			}
+			
 			return patientStates;
 			
 		}
 		catch (Exception e) {
 			log.error("Error in method getLastPatientStateAllPatients", e);
+		} finally {
+			patientStateMap.clear();
+			sessionToEncounterMap.clear();
 		}
 		return null;
 	}
@@ -1505,4 +1521,23 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
     }
+    
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormFields(org.openmrs.Form, java.util.List, boolean)
+     */
+	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered) {
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(FormField.class, "formField");
+		criteria.createAlias("formField.field", "field");
+		criteria.add(Restrictions.eq("form", form));
+		if (fieldTypes != null && fieldTypes.size() > 0) {
+			criteria.add(Restrictions.in("field.fieldType", fieldTypes));
+		}
+		
+		if (ordered) {
+			criteria.addOrder(Order.asc("fieldNumber"));
+		}
+		
+		criteria.setFetchMode("field", FetchMode.JOIN);
+		return criteria.list();
+	}
 }
