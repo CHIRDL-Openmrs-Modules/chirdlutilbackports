@@ -3,6 +3,7 @@ package org.openmrs.module.chirdlutilbackports.db;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.openmrs.FieldType;
 import org.openmrs.Form;
@@ -56,15 +57,32 @@ public interface ChirdlUtilBackportsDAO {
 	public void deleteLocationTagAttribute(LocationTagAttribute value);
 	
 	public void deleteLocationTagAttributeValue(LocationTagAttributeValue value);
+	
+	public void deleteFormAttributeValue(FormAttributeValue fav);
+	
+
 
 	/**
 	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table
-	 * @param formId id of the form to find an attribute for
+	 * @param formId form id
 	 * @param formAttributeName name of the form attribute
+	 * @param locationTagId locationTag id
+	 * @param locationId location id
 	 * @return FormAttributeValue value of the attribute for the given form
 	 */
 	public FormAttributeValue getFormAttributeValue(Integer formId, String formAttributeName,Integer locationTagId, Integer locationId);
 	
+	/**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table
+	 * @param formId form id
+	 * @param formAttributeId id of the form attribute
+	 * @param locationTagId locationTag id
+	 * @param locationId location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+	public FormAttributeValue getFormAttributeValue(Integer formId, Integer formAttributeId,Integer locationTagId, Integer locationId);
+	
+	public List<FormAttributeValue> getFormAttributeValues(Integer formId, Integer formAttributeId,Integer locationTagId, Integer locationId);
 	/**
 	 * Get state by name
 	 * 
@@ -347,4 +365,19 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return List containing FormField objects.
 	 */
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
+	
+	/**
+	 * Returns all the FormAttributes that are editable for administrator.
+	 * 
+	 * 
+	 * @return List containing FormAttribute objects.
+	 */
+	public List<FormAttribute> getEditableFormAttributes();
+	
+	/**
+	 * For a given FormAttribute fa, get all the FormAttributeValues that are existed in database for fa
+	 * @param fa
+	 * @return a Set of FormAttributeValues that is existed in database for fa.
+	 */
+	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa);
 }

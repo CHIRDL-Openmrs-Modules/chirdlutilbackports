@@ -34,6 +34,9 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
  */
 public interface ChirdlUtilBackportsService {
 	
+	final static int OPERATION_SUCCESS=1;
+	final static int OPERATION_FAIL=0;
+	
 	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId);
 	
@@ -55,6 +58,9 @@ public interface ChirdlUtilBackportsService {
 	
 	public void deleteLocationTagAttributeValue(LocationTagAttributeValue value);
 	
+	public int deleteFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId, Integer locationId, String formAttributeValue);
+	
+	public int deleteFormAttributeValue(FormAttributeValue fav);
 	/**
 	 * Get state by state name
 	 * 
@@ -109,7 +115,7 @@ public interface ChirdlUtilBackportsService {
 	
 	public State getState(Integer stateId);
 
-public PatientState getPatientState(Integer patientStateId);
+	public PatientState getPatientState(Integer patientStateId);
 	
 	public List<PatientState> getPatientStateBySessionState(Integer sessionId,
 			Integer stateId);
@@ -150,8 +156,25 @@ public PatientState getPatientState(Integer patientStateId);
 	
 	public void unretireStatesBySessionId(Integer sessionId);
 	
+	/**
+	 * save or update the FormAttributeValue object according to form id, form attribute id, location id, location tag id as in-fact primary key
+	 * @param value
+	 */
 	public void saveFormAttributeValue(FormAttributeValue value);
 	
+	/**
+	 * save the form attribute value by form id, form attribute name, location tag id and location id.
+	 * 
+	 * @param formId form id
+	 * @param formAttributeName formAttribute name
+	 * @param locationTagId locationTag id
+	 * @param locationId locationTag id
+	 * @return an integer sign to show whether the value is stored successfully. value ChirdlUtilBackportsService.OPERATION_SUCCESS
+	 * means success and ChirdlUtilBackportsService.FAIL means failed.
+	 */
+	public int saveFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId, Integer locationId, String formAttributeValue);
+	
+
 	public FormAttribute getFormAttributeByName(String formAttributeName);
 	
 	/**
@@ -337,4 +360,17 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return List containing FormField objects.
 	 */
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
+	
+	/**
+	 * return all FormAttributes that are eligible to edit for administrators
+	 * @return a list of FormAttributes 
+	 */
+	public List<FormAttribute> getAllEditableFormAttributes();
+	
+	/**
+	 * For a given FormAttribute fa, get all the FormAttributeValues that are existed in database for fa
+	 * @param fa
+	 * @return a Set of FormAttributeValues that is existed in database for fa.
+	 */
+	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa);
 }
