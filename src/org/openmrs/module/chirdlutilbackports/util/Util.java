@@ -15,7 +15,6 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  * @author Tammy Dugan
  *
  */
-// Test comment sjm
 public class Util
 {
 	public static String getFormAttributeValue(Integer formId,
