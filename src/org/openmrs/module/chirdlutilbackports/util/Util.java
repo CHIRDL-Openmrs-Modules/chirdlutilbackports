@@ -40,6 +40,8 @@ public class Util
 	 * 
 	 * @throws NumberFormatException if one of the values in the String is not an Integer.
 	 * @throws NoSuchElementException if the incorrect number of values are in the String.
+	 * 
+	 * @deprecated This static method has been moved to the FormInstanceTag class.
 	 */
 	public static FormInstanceTag parseFormInstanceTag(String formInstanceTag) 
 			throws NumberFormatException, NoSuchElementException
