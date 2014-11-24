@@ -28,6 +28,7 @@ import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ErrorCategory;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
@@ -1170,27 +1171,24 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public Integer getErrorCategoryIdByName(String name) {
-		try {
-			Connection con = this.sessionFactory.getCurrentSession().connection();
-			String sql = "select error_category_id from chirdlutilbackports_error_category where name=?";
-			try {
-				PreparedStatement stmt = con.prepareStatement(sql);
-				stmt.setString(1, name);
-				ResultSet rs = stmt.executeQuery();
-				if (rs.next()) {
-					return rs.getInt(1);
+		
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ErrorCategory.class).add(
+				    Expression.eq("name", name));
+				try {
+					List<ErrorCategory> categories = criteria.list();
+					for (ErrorCategory category : categories){
+						Integer id = category.getErrorCategoryId();
+						return id;
+					}
+					
+					log.warn("No error categories found with name: " + name);
+					
+				}catch (Exception e){
+					log.error("Exception getting ErrorCategoryId by name", e);
 				}
-				
-			}
-			catch (Exception e) {
-				log.error("Error in method getErrorCategoryIdByName", e);
-			}
+			
 			return null;
-		}
-		catch (Exception e) {
-			log.error("Error in method getErrorCategoryIdByName", e);
-		}
-		return null;
+	
 	}
 
 	/**
