@@ -1,5 +1,8 @@
 package org.openmrs.module.chirdlutilbackports.hibernateBeans;
 
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 /**
  * Extension of the FormInstance class. This class provides the additional location tag information.
  * 
@@ -15,6 +18,17 @@ public class FormInstanceTag extends FormInstance {
 	 * Default constructor
 	 */
 	public FormInstanceTag() {
+	}
+	
+	/**
+	 * Constructor method
+	 * 
+	 * @param formInstance
+	 * @param locationTagId
+	 */
+	public FormInstanceTag(FormInstance formInstance, Integer locationTagId) {
+		super(formInstance.getLocationId(), formInstance.getFormId(), formInstance.getFormInstanceId());
+		this.locationTagId = locationTagId;
 	}
 	
 	/**
@@ -112,5 +126,34 @@ public class FormInstanceTag extends FormInstance {
 	@Override
 	public String toString() {
 		return this.locationId+"_"+this.locationTagId+"_"+this.formId+"_"+this.formInstanceId;
+	}
+	
+	
+	/**
+	 * Parses a String into a FormInstanceTag object.  The String must be in the format: 
+	 * locationId_locationTagId_formId_formInstanceId.
+	 * 
+	 * @param formInstanceTag String containing the information to parse.
+	 * @return FormInstanceTag object.
+	 * 
+	 * @throws NumberFormatException if one of the values in the String is not an Integer.
+	 * @throws NoSuchElementException if the incorrect number of values are in the String.
+	 */
+	public static FormInstanceTag parseFormInstanceTag(String formInstanceTag) 
+			throws NumberFormatException, NoSuchElementException {
+		if (formInstanceTag == null || formInstanceTag.trim().length() == 0) {
+			throw new IllegalArgumentException(
+				"formInstanceTag argument must be non-null and have a length greater than 0.");
+		}
+		
+		//parse the location_id, location_tag_id, form_id, and form_instance_id
+		//from the selected form
+		StringTokenizer tokenizer = new StringTokenizer(formInstanceTag, "_");
+		Integer locationId = Integer.parseInt(tokenizer.nextToken());
+		Integer locationTagId = Integer.parseInt(tokenizer.nextToken());
+		Integer formId = Integer.parseInt(tokenizer.nextToken());
+		Integer formInstanceId = Integer.parseInt(tokenizer.nextToken());
+		
+		return new FormInstanceTag(locationId, formId, formInstanceId, locationTagId);
 	}
 }
