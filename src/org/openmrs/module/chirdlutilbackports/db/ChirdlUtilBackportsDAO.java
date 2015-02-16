@@ -3,7 +3,6 @@ package org.openmrs.module.chirdlutilbackports.db;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.openmrs.FieldType;
 import org.openmrs.Form;
@@ -60,8 +59,6 @@ public interface ChirdlUtilBackportsDAO {
 	
 	public void deleteFormAttributeValue(FormAttributeValue fav);
 	
-
-
 	/**
 	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table
 	 * @param formId form id

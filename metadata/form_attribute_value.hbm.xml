@@ -10,7 +10,7 @@
 		<id name="formAttributeValueId" type="java.lang.Integer" column="form_attribute_value_id">
 			<generator class="native" />
 		</id>
-		
+	
 		<property name="formId" type="java.lang.Integer" column="form_id" />
 		<property name="formAttributeId" type="java.lang.Integer" column="form_attribute_id" />
 		<property name="value" type="java.lang.String" column="value" />

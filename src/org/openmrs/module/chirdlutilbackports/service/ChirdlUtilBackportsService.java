@@ -115,7 +115,7 @@ public interface ChirdlUtilBackportsService {
 	
 	public State getState(Integer stateId);
 
-	public PatientState getPatientState(Integer patientStateId);
+public PatientState getPatientState(Integer patientStateId);
 	
 	public List<PatientState> getPatientStateBySessionState(Integer sessionId,
 			Integer stateId);
