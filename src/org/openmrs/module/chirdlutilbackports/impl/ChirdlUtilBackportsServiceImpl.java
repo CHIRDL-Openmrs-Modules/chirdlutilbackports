@@ -8,6 +8,7 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -473,5 +474,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	 */
     public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered) {
 	    return getChirdlUtilBackportsDAO().getFormFields(form, fieldTypes, ordered);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPersonAttributeByValue(java.lang.String, java.lang.String)
+	 */
+    public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {
+	    return getChirdlUtilBackportsDAO().getPersonAttributeByValue(personAttributeTypeName, value);
     }
 }

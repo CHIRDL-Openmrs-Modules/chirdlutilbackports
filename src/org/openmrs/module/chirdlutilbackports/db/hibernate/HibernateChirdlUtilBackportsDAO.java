@@ -24,6 +24,8 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
@@ -1538,4 +1540,35 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		criteria.setFetchMode("field", FetchMode.JOIN);
 		return criteria.list();
 	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPersonAttributeByValue(java.lang.String, java.lang.String)
+	 */
+    public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {		
+		try {
+			PersonAttributeType pat = Context.getPersonService().getPersonAttributeTypeByName(personAttributeTypeName);
+			
+			if (pat != null) {
+				Integer personAttrTypeId = pat.getPersonAttributeTypeId();
+				
+				String sql = "select * from person_attribute where person_attribute_type_id=? and value=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, personAttrTypeId);
+				qry.setString(1, value);
+				qry.addEntity(PersonAttribute.class);
+				
+				List<PersonAttribute> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+			log.error("Error in method getPersonAttributeByValue", e);
+		}
+		return null;
+    }
 }

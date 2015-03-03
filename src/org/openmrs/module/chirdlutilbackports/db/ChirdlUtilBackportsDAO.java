@@ -7,6 +7,7 @@ import java.util.List;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.PersonAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -347,4 +348,13 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return List containing FormField objects.
 	 */
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
+	
+	/**
+	 * Retrieves a person attribute by value.
+	 * 
+	 * @param personAttributeTypeName The person attribute type.
+	 * @param value The value to match.
+	 * @return PersonAttribute object or null if a match cannot be found.
+	 */
+	public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value);
 }
