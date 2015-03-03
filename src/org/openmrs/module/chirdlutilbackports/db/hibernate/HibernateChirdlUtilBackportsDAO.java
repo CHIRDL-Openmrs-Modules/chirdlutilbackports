@@ -409,27 +409,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	                                                Integer locationId) {
 		try {
 			FormAttribute formAttribute = this.getFormAttributeByName(formAttributeName);
-			
-			if (formAttribute != null) {
-				Integer formAttributeId = formAttribute.getFormAttributeId();
-				
-				String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
-				        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
-				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-				
-				qry.setInteger(0, formId);
-				qry.setInteger(1, formAttributeId);
-				qry.setInteger(2, locationTagId);
-				qry.setInteger(3, locationId);
-				qry.addEntity(FormAttributeValue.class);
-				
-				List<FormAttributeValue> list = qry.list();
-				
-				if (list != null && list.size() > 0) {
-					return list.get(0);
-				}
-				
+			if (formAttribute == null) {
+				return null;
 			}
+			
+			return getFormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId);
 		}
 		catch (Exception e) {
 			log.error("Error in method getFormAttributeValue", e);
@@ -1570,5 +1554,53 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			log.error("Error in method getPersonAttributeByValue", e);
 		}
 		return null;
+    }
+	
+    /**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttributeId id of the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+	private FormAttributeValue getFormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId,
+	                                                    Integer locationId) {
+		String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
+		        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		
+		qry.setInteger(0, formId);
+		qry.setInteger(1, formAttributeId);
+		qry.setInteger(2, locationTagId);
+		qry.setInteger(3, locationId);
+		qry.addEntity(FormAttributeValue.class);
+		
+		List<FormAttributeValue> list = qry.list();
+		
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttribute the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+    public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
+                                                    Integer locationId) {
+    	if (formId == null || formAttribute == null || locationTagId == null || locationId == null) {
+	    	return null;
+	    }
+	    
+	    return getFormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId);
     }
 }

@@ -357,4 +357,15 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return PersonAttribute object or null if a match cannot be found.
 	 */
 	public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value);
+	
+	/**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttribute the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+	public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId, Integer locationId);
 }

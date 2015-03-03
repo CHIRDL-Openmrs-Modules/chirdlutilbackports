@@ -482,4 +482,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {
 	    return getChirdlUtilBackportsDAO().getPersonAttributeByValue(personAttributeTypeName, value);
     }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormAttributeValue(java.lang.Integer, org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute, java.lang.Integer, java.lang.Integer)
+	 */
+    public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
+                                                    Integer locationId) {
+	    return getChirdlUtilBackportsDAO().getFormAttributeValue(formId, formAttribute, locationTagId, locationId);
+    }
 }
