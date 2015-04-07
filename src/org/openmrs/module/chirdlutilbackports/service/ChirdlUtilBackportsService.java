@@ -373,4 +373,25 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return a Set of FormAttributeValues that is existed in database for fa.
 	 */
 	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa);
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * Given a formId, return a list of form attribute values, which includes form name,
+	 * location name, location tag name, attribute name, and attribute value
+	 * 
+	 * @param formId
+	 * @return List containing FormAttributeValue objects
+	 */
+	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId);
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * Given a formAttributeId, return a FormAttribute object
+	 * 
+	 * @param formAttributeId
+	 * @return the FormAttribute object
+	 */
+	public FormAttribute getFormAttributeById(Integer formAttributeId);
 }
