@@ -6,13 +6,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -557,5 +555,25 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 		return this.getChirdlUtilBackportsDAO().getCurrentFormAttributeValueStrCollection(fa);
 	}
 	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllFormAttributeValuesByFormId(Integer)
+	 */
+	@Override
+	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId)
+	{
+		return this.getChirdlUtilBackportsDAO().getAllFormAttributeValuesByFormId(formId);
+	}
 	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributeById(Integer)
+	 */
+	@Override
+	public FormAttribute getFormAttributeById(Integer formAttributeId)
+	{
+		return this.getChirdlUtilBackportsDAO().getFormAttributeById(formAttributeId);
+	}
 }
