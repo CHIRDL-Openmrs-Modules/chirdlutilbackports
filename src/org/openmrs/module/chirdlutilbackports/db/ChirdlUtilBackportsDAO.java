@@ -8,6 +8,8 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.PersonAttribute;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -368,4 +370,13 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return FormAttributeValue value of the attribute for the given form
 	 */
 	public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId, Integer locationId);
+	
+	/**
+	 * Returns a list of Users with the provided Role.
+	 * 
+	 * @param role The Role used to filter the list of users.
+	 * @param includeRetired If true, all users with the provided role will be returned.  If false, only non-retired users will be returned.
+	 * @return List of User objects containing the provided role.
+	 */
+	public List<User> getUsersByRole(Role role, boolean includeRetired);
 }

@@ -9,6 +9,8 @@ import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -489,5 +491,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
                                                     Integer locationId) {
 	    return getChirdlUtilBackportsDAO().getFormAttributeValue(formId, formAttribute, locationTagId, locationId);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getUsersByRole(org.openmrs.Role, boolean)
+	 */
+    public List<User> getUsersByRole(Role role, boolean includeRetired) {
+	    return getChirdlUtilBackportsDAO().getUsersByRole(role, includeRetired);
     }
 }

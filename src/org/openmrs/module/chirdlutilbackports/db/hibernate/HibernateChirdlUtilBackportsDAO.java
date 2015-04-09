@@ -26,6 +26,8 @@ import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
@@ -1603,4 +1605,20 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	    
 	    return getFormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId);
     }
+    
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getUsersByRole(org.openmrs.Role, boolean)
+     */
+    @SuppressWarnings("unchecked")
+    public List<User> getUsersByRole(Role role, boolean includeRetired) {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
+    	if (!includeRetired) {
+    		criteria.add(Expression.eq("u.retired", Boolean.FALSE));
+    	}
+    	
+		List<User> users = criteria.createCriteria("roles", "r")
+		        .add(Expression.eq("r.role", role.getRole())).list();
+		
+		return users;
+	}
 }
