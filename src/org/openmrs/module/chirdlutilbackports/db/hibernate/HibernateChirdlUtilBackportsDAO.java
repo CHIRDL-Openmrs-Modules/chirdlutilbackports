@@ -1647,10 +1647,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	@Override
 	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId)
 	{
+		List<FormAttributeValue> returnList = new ArrayList<FormAttributeValue>();
+		
 		try
 		{
-			List<FormAttributeValue> returnList = new ArrayList<FormAttributeValue>();
-
 			String sql = "SELECT distinct a.form_id AS formId, " +
 						 	"c.form_attribute_id AS formAttributeId, lt.location_tag_id AS locationTagId, " +
 						 	"l.location_id AS locationId, b.value AS formAttributeValue " +
@@ -1677,15 +1677,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			{
 				returnList.add(new FormAttributeValue((Integer)objArray[0], (Integer)objArray[1], (Integer)objArray[2], (Integer)objArray[3], (String)objArray[4]));
 			}
-			
-			return returnList;
 		}
 		catch(Exception e)
 		{
 			log.error("Error in method getAllFormAttributeValuesByFormId. Error loading FormAttributeValue list (formId = " + formId + ")", e);
 		}
 		
-		return null;	
+		return returnList;	
 	}
 	
 	/**
@@ -1707,7 +1705,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			if (list != null && list.size() > 0) 
 			{
-				return list.get(0);
+				return (FormAttribute)qry.uniqueResult();
 			}
 		}
 		catch(Exception e)
@@ -1715,6 +1713,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			log.error("Error in method getFormAttributeById. Error loading FormAttribute (form_attribute_id = " + formAttributeId + ")", e);
 		}
 		
-		return null;
+		return new FormAttribute();
 	}
 }
