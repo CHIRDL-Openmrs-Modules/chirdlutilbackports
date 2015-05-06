@@ -2,6 +2,7 @@ package org.openmrs.module.chirdlutilbackports.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
