@@ -977,7 +977,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName) {
 		try {
-			String sql = "select * from chirdlutilbackports_form_attribute_value where form_attribute_id in "
+			String sql = "select * from chirdlutilbackports_form_attribute_value where form_attribute_id = "
 			        + "(select form_attribute_id from chirdlutilbackports_form_attribute where name=?)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.addEntity(FormAttributeValue.class);
@@ -987,6 +987,30 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		catch (Exception e) {
 			log.error("Error in method getFormAttributesByName", e);
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributes(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+    public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
+		try {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
+			    Expression.eq("formAttributeId", attributeId));
+			if (locationId != null) {
+				criteria = criteria.add(Expression.eq("locationId", locationId));
+			}
+			
+			if (locationTagId != null) {
+				criteria = criteria.add(Expression.eq("locationTagId", locationTagId));
+			}
+			
+			return criteria.list();
+		}
+		catch (Exception e) {
+			log.error("Error in method getFormAttributeValues", e);
 		}
 		return null;
 	}

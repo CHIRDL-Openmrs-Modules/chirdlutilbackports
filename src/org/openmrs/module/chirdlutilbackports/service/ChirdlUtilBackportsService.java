@@ -369,4 +369,14 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return List of User objects containing the provided role.
 	 */
 	public List<User> getUsersByRole(Role role, boolean includeRetired);
+	
+	/**
+	 * Retrieves form attribute values
+	 * 
+	 * @param attributeId The attribute identifier.  This is a required parameter.
+	 * @param locationId The location identifier.  This is an optional parameter.
+	 * @param locationTagId The location tag identifier.  This is an optional parameter.
+	 * @return List of FormAttributeValue objects
+	 */
+	public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId);
 }

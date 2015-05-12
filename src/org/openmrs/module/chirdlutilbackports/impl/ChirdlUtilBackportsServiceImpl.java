@@ -499,4 +499,11 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     public List<User> getUsersByRole(Role role, boolean includeRetired) {
 	    return getChirdlUtilBackportsDAO().getUsersByRole(role, includeRetired);
     }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormAttributeValues(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
+    public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
+	    return getChirdlUtilBackportsDAO().getFormAttributeValues(attributeId, locationId, locationTagId);
+    }
 }
