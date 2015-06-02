@@ -8,6 +8,9 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -337,4 +340,43 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return List containing FormField objects.
 	 */
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
+	
+	/**
+	 * Retrieves a person attribute by value.
+	 * 
+	 * @param personAttributeTypeName The person attribute type.
+	 * @param value The value to match.
+	 * @return PersonAttribute object or null if a match cannot be found.
+	 */
+	public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value);
+	
+	/**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttribute the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+	public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttributeId, Integer locationTagId, Integer locationId);
+	
+	/**
+	 * Returns a list of Users with the provided Role.
+	 * 
+	 * @param role The Role used to filter the list of users.
+	 * @param includeRetired If true, all users with the provided role will be returned.  If false, only non-retired users will be returned.
+	 * @return List of User objects containing the provided role.
+	 */
+	public List<User> getUsersByRole(Role role, boolean includeRetired);
+	
+	/**
+	 * Retrieves form attribute values
+	 * 
+	 * @param attributeId The attribute identifier.  This is a required parameter.
+	 * @param locationId The location identifier.  This is an optional parameter.
+	 * @param locationTagId The location tag identifier.  This is an optional parameter.
+	 * @return List of FormAttributeValue objects
+	 */
+	public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId);
 }

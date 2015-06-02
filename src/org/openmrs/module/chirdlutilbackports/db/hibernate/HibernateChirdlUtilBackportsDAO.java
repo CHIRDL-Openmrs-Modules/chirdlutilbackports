@@ -24,6 +24,10 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
@@ -407,27 +411,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	                                                Integer locationId) {
 		try {
 			FormAttribute formAttribute = this.getFormAttributeByName(formAttributeName);
-			
-			if (formAttribute != null) {
-				Integer formAttributeId = formAttribute.getFormAttributeId();
-				
-				String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
-				        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
-				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-				
-				qry.setInteger(0, formId);
-				qry.setInteger(1, formAttributeId);
-				qry.setInteger(2, locationTagId);
-				qry.setInteger(3, locationId);
-				qry.addEntity(FormAttributeValue.class);
-				
-				List<FormAttributeValue> list = qry.list();
-				
-				if (list != null && list.size() > 0) {
-					return list.get(0);
-				}
-				
+			if (formAttribute == null) {
+				return null;
 			}
+			
+			return getFormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId);
 		}
 		catch (Exception e) {
 			log.error("Error in method getFormAttributeValue", e);
@@ -989,7 +977,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName) {
 		try {
-			String sql = "select * from chirdlutilbackports_form_attribute_value where form_attribute_id in "
+			String sql = "select * from chirdlutilbackports_form_attribute_value where form_attribute_id = "
 			        + "(select form_attribute_id from chirdlutilbackports_form_attribute where name=?)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.addEntity(FormAttributeValue.class);
@@ -999,6 +987,30 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		catch (Exception e) {
 			log.error("Error in method getFormAttributesByName", e);
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributes(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+    public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
+		try {
+			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
+			    Expression.eq("formAttributeId", attributeId));
+			if (locationId != null) {
+				criteria = criteria.add(Expression.eq("locationId", locationId));
+			}
+			
+			if (locationTagId != null) {
+				criteria = criteria.add(Expression.eq("locationTagId", locationTagId));
+			}
+			
+			return criteria.list();
+		}
+		catch (Exception e) {
+			log.error("Error in method getFormAttributeValues", e);
 		}
 		return null;
 	}
@@ -1537,5 +1549,100 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		criteria.setFetchMode("field", FetchMode.JOIN);
 		return criteria.list();
+	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPersonAttributeByValue(java.lang.String, java.lang.String)
+	 */
+    public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {		
+		try {
+			PersonAttributeType pat = Context.getPersonService().getPersonAttributeTypeByName(personAttributeTypeName);
+			
+			if (pat != null) {
+				Integer personAttrTypeId = pat.getPersonAttributeTypeId();
+				
+				String sql = "select * from person_attribute where person_attribute_type_id=? and value=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, personAttrTypeId);
+				qry.setString(1, value);
+				qry.addEntity(PersonAttribute.class);
+				
+				List<PersonAttribute> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+			log.error("Error in method getPersonAttributeByValue", e);
+		}
+		return null;
+    }
+	
+    /**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttributeId id of the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+	private FormAttributeValue getFormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId,
+	                                                    Integer locationId) {
+		String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
+		        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		
+		qry.setInteger(0, formId);
+		qry.setInteger(1, formAttributeId);
+		qry.setInteger(2, locationTagId);
+		qry.setInteger(3, locationId);
+		qry.addEntity(FormAttributeValue.class);
+		
+		List<FormAttributeValue> list = qry.list();
+		
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
+	 * 
+	 * @param formId id of the form to find an attribute for
+	 * @param formAttribute the form attribute to use to find the value
+	 * @param locationTagId the location tag id
+	 * @param locationId the location id
+	 * @return FormAttributeValue value of the attribute for the given form
+	 */
+    public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
+                                                    Integer locationId) {
+    	if (formId == null || formAttribute == null || locationTagId == null || locationId == null) {
+	    	return null;
+	    }
+	    
+	    return getFormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId);
+    }
+    
+    /**
+     * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getUsersByRole(org.openmrs.Role, boolean)
+     */
+    @SuppressWarnings("unchecked")
+    public List<User> getUsersByRole(Role role, boolean includeRetired) {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
+    	if (!includeRetired) {
+    		criteria.add(Expression.eq("u.retired", Boolean.FALSE));
+    	}
+    	
+		List<User> users = criteria.createCriteria("roles", "r")
+		        .add(Expression.eq("r.role", role.getRole())).list();
+		
+		return users;
 	}
 }
