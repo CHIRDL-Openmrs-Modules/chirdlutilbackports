@@ -2,8 +2,12 @@ package org.openmrs.module.chirdlutilbackports.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -40,7 +44,7 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
 public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsService {
 	
 	private ChirdlUtilBackportsDAO dao;
-	
+	protected final Log log = LogFactory.getLog(getClass());
 	/**
 	 * Empty constructor
 	 */
@@ -306,8 +310,16 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 			this.updatePatientState(patientState);
 		}
 	}
-	
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveFormAttributeValue(FormAttributeValue value)
+	 */
 	public void saveFormAttributeValue(FormAttributeValue value){
+		List<FormAttributeValue> valuesStored = dao.getFormAttributeValues(value.getFormId(), value.getFormAttributeId(), value.getLocationTagId(), value.getLocationId());
+		if(valuesStored!=null){
+			for(FormAttributeValue fav: valuesStored){
+				dao.deleteFormAttributeValue(fav);
+			}
+		}
 		getChirdlUtilBackportsDAO().saveFormAttributeValue(value);
 	}
 	
@@ -477,6 +489,97 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered) {
 	    return getChirdlUtilBackportsDAO().getFormFields(form, fieldTypes, ordered);
     }
+    
+	/**
+	 * save the form attribute value by form id, form attribute name, location tag id and location id.
+	 * 
+	 * @param formId form id
+	 * @param formAttributeName formAttribute name
+	 * @param locationTagId locationTag id
+	 * @param locationId locationTag id
+	 * @return an integer sign to show whether the value is stored successfully. value ChirdlUtilBackportsService.OPERATION_SUCCESS
+	 * means success and ChirdlUtilBackportsService.FAIL means failed.
+	 */
+	@Override
+	public int saveFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId, Integer locationId, String formAttributeValue) {
+		FormAttribute formAttribute = getFormAttributeByName(formAttributeName);
+		if(formAttribute==null){
+			return ChirdlUtilBackportsService.OPERATION_FAIL;
+		}
+		Integer formAttributeId = formAttribute.getFormAttributeId();
+		FormAttributeValue item = new FormAttributeValue(formId, formAttributeId, locationTagId, locationId, formAttributeValue);
+		saveFormAttributeValue(item);
+		
+		return ChirdlUtilBackportsService.OPERATION_SUCCESS;
+	}
+
+	@Override
+	public int deleteFormAttributeValue(Integer formId,
+			String formAttributeName, Integer locationTagId,
+			Integer locationId, String formAttributeValue) {
+		FormAttribute formAttribute = this.getFormAttributeByName(formAttributeName);
+		if(formAttribute==null){
+			return OPERATION_FAIL;
+		}
+		FormAttributeValue fav = new FormAttributeValue(formId, formAttribute.getFormAttributeId(), locationTagId, locationId, formAttributeValue);
+		try{
+			getChirdlUtilBackportsDAO().deleteFormAttributeValue(fav);		
+		}
+		catch(HibernateException e){
+			return OPERATION_FAIL;
+		}
+		return OPERATION_SUCCESS;
+	}
+
+	@Override
+	public int deleteFormAttributeValue(FormAttributeValue fav) {
+		if(fav==null){
+			return OPERATION_FAIL;
+		}
+		try{
+			getChirdlUtilBackportsDAO().deleteFormAttributeValue(fav);		
+		}
+		catch(HibernateException e){
+			return OPERATION_FAIL;
+		}
+		return OPERATION_SUCCESS;
+	}
+
+	@Override
+	public List<FormAttribute> getAllEditableFormAttributes() {
+		return this.getChirdlUtilBackportsDAO().getEditableFormAttributes();
+	}
+
+	
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEditableFormAttributes(FormAttribute fa)
+	 */
+	@Override
+	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa) {
+		return this.getChirdlUtilBackportsDAO().getCurrentFormAttributeValueStrCollection(fa);
+	}
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllFormAttributeValuesByFormId(Integer)
+	 */
+	@Override
+	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId)
+	{
+		return this.getChirdlUtilBackportsDAO().getAllFormAttributeValuesByFormId(formId);
+	}
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributeById(Integer)
+	 */
+	@Override
+	public FormAttribute getFormAttributeById(Integer formAttributeId)
+	{
+		return this.getChirdlUtilBackportsDAO().getFormAttributeById(formAttributeId);
+	}
 
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPersonAttributeByValue(java.lang.String, java.lang.String)
