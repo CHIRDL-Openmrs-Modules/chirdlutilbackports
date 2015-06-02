@@ -12,6 +12,9 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
+import org.openmrs.Role;
+import org.openmrs.User;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -577,4 +580,33 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	{
 		return this.getChirdlUtilBackportsDAO().getFormAttributeById(formAttributeId);
 	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPersonAttributeByValue(java.lang.String, java.lang.String)
+	 */
+    public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {
+	    return getChirdlUtilBackportsDAO().getPersonAttributeByValue(personAttributeTypeName, value);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormAttributeValue(java.lang.Integer, org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute, java.lang.Integer, java.lang.Integer)
+	 */
+    public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
+                                                    Integer locationId) {
+	    return getChirdlUtilBackportsDAO().getFormAttributeValue(formId, formAttribute, locationTagId, locationId);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getUsersByRole(org.openmrs.Role, boolean)
+	 */
+    public List<User> getUsersByRole(Role role, boolean includeRetired) {
+	    return getChirdlUtilBackportsDAO().getUsersByRole(role, includeRetired);
+    }
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getFormAttributeValues(java.lang.Integer, java.lang.Integer, java.lang.Integer)
+	 */
+    public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
+	    return getChirdlUtilBackportsDAO().getFormAttributeValues(attributeId, locationId, locationTagId);
+    }
 }
