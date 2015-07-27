@@ -43,6 +43,6 @@
 	<bean autowire-candidate="false" id="logicInMemoryObsDAO" class="org.openmrs.module.chirdlutilbackports.datasource.LogicInMemoryObsDAO"/>
     
     <bean id="obsInmemoryDataSource" class="org.openmrs.module.chirdlutilbackports.datasource.ObsInMemoryDatasource">
-        <property name="logicObsDAO"><ref bean="logicInMemoryObsDAO"></ref></property>
+        <property name="logicObsInMemoryDAO"><ref bean="logicInMemoryObsDAO"></ref></property>
     </bean>
 </beans>
