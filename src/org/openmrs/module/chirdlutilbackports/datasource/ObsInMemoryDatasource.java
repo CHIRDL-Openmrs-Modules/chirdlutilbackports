@@ -17,14 +17,15 @@ public class ObsInMemoryDatasource extends ObsDataSource
 {
 	public static final String NAME = "RMRS";
 	
-	private LogicInMemoryObsDAO logicObsDAO;
+	private LogicInMemoryObsDAO logicObsInMemoryDAO;
 	
-	public void setLogicObsDAO(LogicInMemoryObsDAO logicObsDAO) {
-		this.logicObsDAO = logicObsDAO;
+	public void setLogicObsInMemoryDAO(LogicInMemoryObsDAO logicObsInMemoryDAO) {
+		this.logicObsInMemoryDAO = logicObsInMemoryDAO;
 	}
 	
+	@Override
 	public LogicInMemoryObsDAO getLogicObsDAO() {
-		return logicObsDAO;
+		return logicObsInMemoryDAO;
 	}
 	
 	public void deleteObsByPatientId(Integer patientId)
