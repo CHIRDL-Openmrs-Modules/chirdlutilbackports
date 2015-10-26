@@ -1623,7 +1623,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	@Override
 	public List<FormAttribute> getEditableFormAttributes(){
 		try{
-		String sql = "select * from chirdlutilbackports_form_attribute where name not in ('defaultMergeDirectory','defaultExportDirectory','formInstanceIdTag','formInstanceIdTag2','medRecNumberTag','medRecNumberTag2','imageDirectory','numQuestions')";
+		String sql = "select * from chirdlutilbackports_form_attribute";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 		qry.addEntity(FormAttribute.class);
 		return qry.list();
