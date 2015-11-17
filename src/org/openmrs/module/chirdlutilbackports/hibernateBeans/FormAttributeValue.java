@@ -20,6 +20,14 @@ public class FormAttributeValue implements java.io.Serializable {
 	/** default constructor */
 	public FormAttributeValue() {
 	}
+	
+	public FormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId, Integer locationId, String formAttributeValue){
+		this.formId = formId;
+		this.formAttributeId = formAttributeId;
+		this.locationTagId = locationTagId;
+		this.locationId = locationId;
+		this.value = formAttributeValue;
+	}
 
 	/**
 	 * @return the formAttributeId
