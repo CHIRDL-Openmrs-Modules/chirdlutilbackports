@@ -14,6 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
@@ -407,6 +409,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	/**
+	 * 	@see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId,Integer locationId)
+	 **/
+	@Override
 	public FormAttributeValue getFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId,
 	                                                Integer locationId) {
 		try {
@@ -423,6 +429,60 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	/**
+	 * 	@see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId,Integer locationId)
+	 **/
+	@Override
+	public FormAttributeValue getFormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId, Integer locationId) {
+		try {	
+				String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
+				        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, formId);
+				qry.setInteger(1, formAttributeId);
+				qry.setInteger(2, locationTagId);
+				qry.setInteger(3, locationId);
+				qry.addEntity(FormAttributeValue.class);
+				
+				List<FormAttributeValue> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			
+		}
+		catch (Exception e) {
+			log.error("Error in method getFormAttributeValue", e);
+		}
+		return null;
+	}
+	
+	
+
+	@Override
+	public List<FormAttributeValue> getFormAttributeValues(Integer formId, Integer formAttributeId, Integer locationTagId, Integer locationId) {
+		try {
+			String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? " + "and form_attribute_id=? and location_tag_id=? and location_id=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+
+			qry.setInteger(0, formId);
+			qry.setInteger(1, formAttributeId);
+			qry.setInteger(2, locationTagId);
+			qry.setInteger(3, locationId);
+			qry.addEntity(FormAttributeValue.class);
+
+			List<FormAttributeValue> list = qry.list();
+			
+			return list;
+
+		} catch (Exception e) {
+			log.error("Error in method getFormAttributeValue", e);
+		}
+		return null;
+	}
+
 	public Session getSession(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_session where session_id=?";
@@ -1184,24 +1244,24 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public Integer getErrorCategoryIdByName(String name) {
 		
-			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ErrorCategory.class).add(
-				    Expression.eq("name", name));
-				try {
-					List<ErrorCategory> categories = criteria.list();
-					for (ErrorCategory category : categories){
-						Integer id = category.getErrorCategoryId();
-						return id;
-					}
-					
-					log.warn("No error categories found with name: " + name);
-					
-				}catch (Exception e){
-					log.error("Exception getting ErrorCategoryId by name", e);
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ErrorCategory.class).add(
+			    Expression.eq("name", name));
+			try {
+				List<ErrorCategory> categories = criteria.list();
+				for (ErrorCategory category : categories){
+					Integer id = category.getErrorCategoryId();
+					return id;
 				}
-			
-			return null;
-	
-	}
+				
+				log.warn("No error categories found with name: " + name);
+				
+			}catch (Exception e){
+				log.error("Exception getting ErrorCategoryId by name", e);
+			}
+		
+		return null;
+
+}
 
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeByName(java.lang.String)
@@ -1550,7 +1610,47 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		criteria.setFetchMode("field", FetchMode.JOIN);
 		return criteria.list();
 	}
+	
+	@Override
+	public void deleteFormAttributeValue(FormAttributeValue fav) throws HibernateException {
+		this.sessionFactory.getCurrentSession().delete(FormAttributeValue.class.getName(), fav);
+	}
 
+	
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEditableFormAttributes()
+	 */
+	@Override
+	public List<FormAttribute> getEditableFormAttributes(){
+		try{
+		String sql = "select * from chirdlutilbackports_form_attribute";
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		qry.addEntity(FormAttribute.class);
+		return qry.list();
+		}
+		catch(Exception e){
+			log.error("Error in method HibernateChirdlUtilBackportsDAO.getEditableFormAttributes", e);
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa) {
+		List<String> valuesCollection;
+		try{
+			String sql = "select distinct value from chirdlutilbackports_form_attribute_value where form_attribute_id=? ";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setParameter(0, fa.getFormAttributeId());
+			qry.addScalar("value", Hibernate.STRING);
+			valuesCollection = qry.list();
+			return valuesCollection;
+		}
+		catch(Exception e){
+			log.error("Error in method HibernateChirdlUtilBackportsDAO.getCurrentFormAttributeValueCollection", e);
+		}
+		return null;
+	}
+	
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPersonAttributeByValue(java.lang.String, java.lang.String)
 	 */
@@ -1582,36 +1682,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
     }
 	
-    /**
-	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
-	 * 
-	 * @param formId id of the form to find an attribute for
-	 * @param formAttributeId id of the form attribute to use to find the value
-	 * @param locationTagId the location tag id
-	 * @param locationId the location id
-	 * @return FormAttributeValue value of the attribute for the given form
-	 */
-	private FormAttributeValue getFormAttributeValue(Integer formId, Integer formAttributeId, Integer locationTagId,
-	                                                    Integer locationId) {
-		String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=? "
-		        + "and form_attribute_id=? and location_tag_id=? and location_id=?";
-		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		
-		qry.setInteger(0, formId);
-		qry.setInteger(1, formAttributeId);
-		qry.setInteger(2, locationTagId);
-		qry.setInteger(3, locationId);
-		qry.addEntity(FormAttributeValue.class);
-		
-		List<FormAttributeValue> list = qry.list();
-		
-		if (list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		
-		return null;
-	}
-
 	/**
 	 * Returns the value of a form attribute from the chirdlutilbackports_form_attribute_value table.
 	 * 
@@ -1644,5 +1714,82 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		        .add(Expression.eq("r.role", role.getRole())).list();
 		
 		return users;
+	}
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllFormAttributeValuesByFormId(Integer)
+	 */
+	@Override
+	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId)
+	{
+		List<FormAttributeValue> returnList = new ArrayList<FormAttributeValue>();
+		
+		try
+		{
+			String sql = "SELECT distinct a.form_id AS formId, " +
+						 	"c.form_attribute_id AS formAttributeId, lt.location_tag_id AS locationTagId, " +
+						 	"l.location_id AS locationId, b.value AS formAttributeValue " +
+						 "FROM form a " +
+						 "INNER JOIN chirdlutilbackports_form_attribute_value b ON a.form_id = b.form_id " +
+						 "INNER JOIN location l ON b.location_id = l.location_id " +
+						 "INNER JOIN location_tag lt ON b.location_tag_id = lt.location_tag_id " + 
+						 "INNER JOIN chirdlutilbackports_form_attribute c ON b.form_attribute_id = c.form_attribute_id " +
+						 "WHERE a.form_id=?";
+			
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.addScalar("formId");
+			qry.addScalar("formAttributeId");
+			qry.addScalar("locationTagId");
+			qry.addScalar("locationId");
+			qry.addScalar("formAttributeValue");
+				
+			qry.setInteger(0, formId);
+		
+			List<Object[]> list = qry.list();
+			
+			// Add FormAttributeValue objects to the return list
+			for(Object[] objArray : list)
+			{
+				returnList.add(new FormAttributeValue((Integer)objArray[0], (Integer)objArray[1], (Integer)objArray[2], (Integer)objArray[3], (String)objArray[4]));
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("Error in method getAllFormAttributeValuesByFormId. Error loading FormAttributeValue list (formId = " + formId + ")", e);
+		}
+		
+		return returnList;	
+	}
+	
+	/**
+	 * DWE CHICA-334 3/27/15
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributeById(Integer)
+	 */
+	@Override
+	public FormAttribute getFormAttributeById(Integer formAttributeId)
+	{
+		try 
+		{
+			String sql = "SELECT * FROM chirdlutilbackports_form_attribute WHERE form_attribute_id=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setInteger(0, formAttributeId);
+			qry.addEntity(FormAttribute.class);
+			
+			List<FormAttribute> list = qry.list();
+			
+			if (list != null && list.size() > 0) 
+			{
+				return (FormAttribute)qry.uniqueResult();
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("Error in method getFormAttributeById. Error loading FormAttribute (form_attribute_id = " + formAttributeId + ")", e);
+		}
+		
+		return new FormAttribute();
 	}
 }
