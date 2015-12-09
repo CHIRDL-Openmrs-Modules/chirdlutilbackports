@@ -1206,9 +1206,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public void saveError(Error error) {
 		try {
-			if (error != null && error.getMessage() != null){
-				error.setMessage(error.getMessage().substring(start_index, end_index));
-				this.sessionFactory.getCurrentSession().save(error);
+			//MESHELEY - CHICA-659: limit error message string size to less than size of message column
+			if (error != null ){
+			   String message = error.getMessage();
+			   if (message != null && message.length() > (end_index - start_index)){
+				   error.setMessage(message.substring(start_index, end_index));
+			   }
+			   this.sessionFactory.getCurrentSession().save(error);
 			}
 		}
 		catch (Exception e) {
