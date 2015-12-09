@@ -62,6 +62,10 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  */
 public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
+	private static final int start_index = 0;
+
+	private static final int end_index = 250;
+
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	/**
@@ -1202,7 +1206,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public void saveError(Error error) {
 		try {
-			this.sessionFactory.getCurrentSession().save(error);
+			if (error != null && error.getMessage() != null){
+				error.setMessage(error.getMessage().substring(start_index, end_index));
+				this.sessionFactory.getCurrentSession().save(error);
+			}
 		}
 		catch (Exception e) {
 			log.error("Error in method saveError", e);
