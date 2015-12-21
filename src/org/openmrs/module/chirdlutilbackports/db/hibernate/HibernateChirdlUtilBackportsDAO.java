@@ -62,6 +62,10 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  */
 public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
+	private static final int start_index = 0;
+
+	private static final int end_index = 250;
+
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	/**
@@ -1202,7 +1206,14 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public void saveError(Error error) {
 		try {
-			this.sessionFactory.getCurrentSession().save(error);
+			//MESHELEY - CHICA-659: limit error message string size to less than size of message column
+			if (error != null ){
+			   String message = error.getMessage();
+			   if (message != null && message.length() > (end_index - start_index)){
+				   error.setMessage(message.substring(start_index, end_index));
+			   }
+			   this.sessionFactory.getCurrentSession().save(error);
+			}
 		}
 		catch (Exception e) {
 			log.error("Error in method saveError", e);
