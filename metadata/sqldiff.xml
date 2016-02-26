@@ -311,6 +311,10 @@ CREATE TABLE `chirdlutilbackports_error` (
 			     FOREIGN KEY (`obs_id`) 
 			     REFERENCES `obs` (`obs_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			
+			insert into chirdlutilbackports_obs_attribute (name, description) values ('primaryHeading', 'Primary heading attribute used for constructing the physician note.');
+			insert into chirdlutilbackports_obs_attribute (name, description) values ('ruleId', 'Rule ID attribute pertaining the to the rule that stored the obs.');
+			insert into chirdlutilbackports_obs_attribute (name, description) values ('resourceRank', 'The rank of the GIS resource');
         </sql>
     </diff>
     <diff>
@@ -355,6 +359,7 @@ CREATE TABLE `chirdlutilbackports_error` (
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
             
             insert into chirdlutilbackports_form_instance_attribute(name, description) values('medium', 'The medium which the form instance was populated.');
+            insert into chirdlutilbackports_form_instance_attribute(name, description) values('trigger', 'The trigger that requested the form creation');
         </sql>
     </diff>
 
