@@ -33,6 +33,8 @@ import org.openmrs.User;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ErrorCategory;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -1802,5 +1804,79 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		
 		return new FormAttribute();
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeByName(String)
+	 */
+	@Override
+	public ChirdlutilbackportsEncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException
+	{
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlutilbackportsEncounterAttribute.class)
+				.add(Expression.eq("name", encounterAttributeName));
+
+		List<ChirdlutilbackportsEncounterAttribute> list = criteria.list();
+		
+		if (list != null && list.size() > 0) 
+		{
+			return (ChirdlutilbackportsEncounterAttribute)criteria.uniqueResult();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveEncounterAttributeValue(ChirdlutilbackportsEncounterAttributeValue)
+	 */
+	@Override
+	public ChirdlutilbackportsEncounterAttributeValue saveEncounterAttributeValue(ChirdlutilbackportsEncounterAttributeValue chirdlutilbackportsEncounterAttributeValue) throws HibernateException
+	{
+		sessionFactory.getCurrentSession().saveOrUpdate(chirdlutilbackportsEncounterAttributeValue);
+		return chirdlutilbackportsEncounterAttributeValue;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttributeName(Integer, String)
+	 */
+	@Override
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttributeName(Integer encounterId, String encounterAttributeName) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(ChirdlutilbackportsEncounterAttributeValue.class, "encounterAttributeValue");
+		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
+		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
+		
+		List<ChirdlutilbackportsEncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (ChirdlutilbackportsEncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttribute(Integer, ChirdlutilbackportsEncounterAttributeValue)
+	 */
+	@Override
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(ChirdlutilbackportsEncounterAttributeValue.class, "encounterAttributeValue");
+		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
+		criteria.add(Expression.eq("encounterAttribute", encounterAttribute));
+
+		List<ChirdlutilbackportsEncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (ChirdlutilbackportsEncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
 	}
 }
