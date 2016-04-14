@@ -634,21 +634,21 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     
     /**
      * DWE CHICA-633
-     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByEncounterAttributeName(Integer, String)
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByName(Integer, String)
      */
     @Override
-    public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttributeName(Integer encounterId, String encounterAttributeName) throws HibernateException
+    public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException
     {
-    	return getChirdlUtilBackportsDAO().getEncounterAttributeValueByEncounterAttributeName(encounterId, encounterAttributeName);
+    	return getChirdlUtilBackportsDAO().getEncounterAttributeValueByName(encounterId, encounterAttributeName);
     }
 
     /**
      * DWE CHICA-633
-     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByEncounterAttribute(Integer, ChirdlutilbackportsEncounterAttribute)
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByAttribute(Integer, ChirdlutilbackportsEncounterAttribute)
      */
 	@Override
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException 
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException 
 	{
-		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByEncounterAttribute(encounterId, encounterAttribute);
+		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByAttribute(encounterId, encounterAttribute);
 	}   
 }

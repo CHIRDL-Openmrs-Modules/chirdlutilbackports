@@ -462,7 +462,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param encounterAttributeName
 	 * @return ChirdlutilbackportsEncounterAttributeValue
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttributeName(Integer encounterId, String encounterAttributeName) throws HibernateException;
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
 	
 	/**
 	 * DWE CHICA-633
@@ -471,5 +471,5 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param encounterAttribute
 	 * @return ChirdlutilbackportsEncounterAttributeValue
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException;
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException;
 }

@@ -1842,7 +1842,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttributeName(Integer, String)
 	 */
 	@Override
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttributeName(Integer encounterId, String encounterAttributeName) throws HibernateException 
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException 
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(ChirdlutilbackportsEncounterAttributeValue.class, "encounterAttributeValue");
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
@@ -1861,10 +1861,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	/**
 	 * DWE CHICA-633
-	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttribute(Integer, ChirdlutilbackportsEncounterAttributeValue)
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByAttribute(Integer, ChirdlutilbackportsEncounterAttributeValue)
 	 */
 	@Override
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByEncounterAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException 
+	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException 
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(ChirdlutilbackportsEncounterAttributeValue.class, "encounterAttributeValue");
 		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
