@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -441,4 +444,37 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return List of FormAttributeValue objects
 	 */
 	public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId);
+	
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttribute
+	 * @param encounterAttributeName
+	 * @return EncounterAttribute
+	 */
+	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-633
+	 * Saves or updates a EncounterAttributeValue
+	 * @param encounterAttributeValue
+	 */
+	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
+	 * @param encounterId
+	 * @param encounterAttributeName
+	 * @return EncounterAttributeValue
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
+
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
+	 * @param encounterId
+	 * @param encounterAttribute
+	 * @return EncounterAttributeValue
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException;
 }
