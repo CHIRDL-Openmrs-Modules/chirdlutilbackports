@@ -54,8 +54,8 @@
 		obs_attribute.hbm.xml
 		form_instance_attribute_value.hbm.xml
         form_instance_attribute.hbm.xml
-        chirdlutilbackports_encounter_attribute_value.hbm.xml
-       	chirdlutilbackports_encounter_attribute.hbm.xml
+        encounter_attribute_value.hbm.xml
+       	encounter_attribute.hbm.xml
 	</mappingFiles>
 	
 </module>

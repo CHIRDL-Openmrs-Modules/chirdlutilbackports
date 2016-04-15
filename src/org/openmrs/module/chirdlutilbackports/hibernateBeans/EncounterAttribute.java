@@ -4,7 +4,7 @@ package org.openmrs.module.chirdlutilbackports.hibernateBeans;
  * DWE CHICA-633
  * Encounter level attributes stored in chirdlutilbackports_encounter_attribute table
  */
-public class ChirdlutilbackportsEncounterAttribute implements java.io.Serializable 
+public class EncounterAttribute implements java.io.Serializable 
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -18,7 +18,7 @@ public class ChirdlutilbackportsEncounterAttribute implements java.io.Serializab
 	/**
 	 * Default constructor
 	 */
-	public ChirdlutilbackportsEncounterAttribute()
+	public EncounterAttribute()
 	{
 		
 	}

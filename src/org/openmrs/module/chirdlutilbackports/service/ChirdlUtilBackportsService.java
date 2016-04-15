@@ -13,8 +13,8 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -443,33 +443,33 @@ public PatientState getPatientState(Integer patientStateId);
 	
 	/**
 	 * DWE CHICA-633
-	 * Gets a ChirdlutilbackportsEncounterAttribute
-	 * @param chirdlutilbackportsEncounterAttribute
+	 * Gets a EncounterAttribute
+	 * @param encounterAttribute
 	 */
-	public ChirdlutilbackportsEncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException;
+	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException;
 	
 	/**
 	 * DWE CHICA-633
-	 * Saves or updates a ChirdlutilbackportsEncounterAttributeValue
-	 * @param chirdlutilbackportsEncounterAttributeValue
+	 * Saves or updates a EncounterAttributeValue
+	 * @param encounterAttributeValue
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue saveEncounterAttributeValue(ChirdlutilbackportsEncounterAttributeValue chirdlutilbackportsEncounterAttributeValue) throws HibernateException;
+	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
 	
 	/**
 	 * DWE CHICA-633
-	 * Gets a ChirdlutilbackportsEncounterAttributeValue for the encounterId and encounterAttributeName
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
 	 * @param encounterId
 	 * @param encounterAttributeName
-	 * @return ChirdlutilbackportsEncounterAttributeValue
+	 * @return EncounterAttributeValue
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
 	
 	/**
 	 * DWE CHICA-633
-	 * Gets a ChirdlutilbackportsEncounterAttributeValue for the encounterId and encounterAttribute
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
 	 * @param encounterId
 	 * @param encounterAttribute
-	 * @return ChirdlutilbackportsEncounterAttributeValue
+	 * @return EncounterAttributeValue
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, ChirdlutilbackportsEncounterAttribute encounterAttribute) throws HibernateException;
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException;
 }

@@ -6,7 +6,7 @@
 <!-- DWE CHICA-633 Created new chirdlutilbackports_encounter_attribute table -->
 <hibernate-mapping package="org.openmrs.module.chirdlutilbackports">
 
-	<class name="org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttribute" table="chirdlutilbackports_encounter_attribute">
+	<class name="org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute" table="chirdlutilbackports_encounter_attribute">
 		
 		<id name="encounterAttributeId" type="java.lang.Integer" column="encounter_attribute_id">
 			<generator class="native" />

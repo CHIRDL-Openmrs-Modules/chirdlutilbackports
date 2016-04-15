@@ -6,13 +6,13 @@ import org.openmrs.BaseOpenmrsData;
  * DWE CHICA-633
  * Stores the value for encounter level attributes
  */
-public class ChirdlutilbackportsEncounterAttributeValue extends BaseOpenmrsData implements java.io.Serializable
+public class EncounterAttributeValue extends BaseOpenmrsData implements java.io.Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
 	// Fields
 	private Integer encounterAttributeValueId;
-	private ChirdlutilbackportsEncounterAttribute encounterAttribute;
+	private EncounterAttribute encounterAttribute;
 	private Integer encounterId;
 	private String valueText;
 
@@ -21,7 +21,7 @@ public class ChirdlutilbackportsEncounterAttributeValue extends BaseOpenmrsData 
 	/**
 	 * Default constructor
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue()
+	public EncounterAttributeValue()
 	{
 		super();
 	}
@@ -31,7 +31,7 @@ public class ChirdlutilbackportsEncounterAttributeValue extends BaseOpenmrsData 
 	 * @param encounterId
 	 * @param valueText
 	 */
-	public ChirdlutilbackportsEncounterAttributeValue(ChirdlutilbackportsEncounterAttribute encounterAttribute, Integer encounterId, String valueText)
+	public EncounterAttributeValue(EncounterAttribute encounterAttribute, Integer encounterId, String valueText)
 	{
 		super();
 		this.encounterAttribute = encounterAttribute;
@@ -60,7 +60,7 @@ public class ChirdlutilbackportsEncounterAttributeValue extends BaseOpenmrsData 
 	/**
 	 * @return encounterAttribute
 	 */
-	public ChirdlutilbackportsEncounterAttribute getEncounterAttribute()
+	public EncounterAttribute getEncounterAttribute()
 	{
 		return encounterAttribute;
 	}
@@ -68,7 +68,7 @@ public class ChirdlutilbackportsEncounterAttributeValue extends BaseOpenmrsData 
 	/**
 	 * @param encounterAttribute
 	 */
-	public void setEncounterAttribute(ChirdlutilbackportsEncounterAttribute encounterAttribute)
+	public void setEncounterAttribute(EncounterAttribute encounterAttribute)
 	{
 		this.encounterAttribute = encounterAttribute;
 	}

@@ -6,7 +6,7 @@
 <!-- DWE CHICA-633 Created new chirdlutilbackports_encounter_attribute_value table -->
 <hibernate-mapping package="org.openmrs.module.chirdlutilbackports">
 
-	<class name="org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttributeValue" table="chirdlutilbackports_encounter_attribute_value">
+	<class name="org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue" table="chirdlutilbackports_encounter_attribute_value">
 
 		<id name="encounterAttributeValueId" type="java.lang.Integer"
 			column="encounter_attribute_value_id" unsaved-value="0">
@@ -24,7 +24,7 @@
 		<property name="voided" type="boolean" not-null="true" />
 		<property name="voidReason" type="java.lang.String" column="void_reason" length="255" />
 		
-		<many-to-one name="encounterAttribute" class="org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlutilbackportsEncounterAttribute" not-null="false">
+		<many-to-one name="encounterAttribute" class="org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute" not-null="false">
 			<column name="encounter_attribute_id" />
 		</many-to-one>
 				
