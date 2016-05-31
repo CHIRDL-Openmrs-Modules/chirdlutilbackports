@@ -6,12 +6,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ehcache.Cache;
 import org.openmrs.Cohort;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
@@ -24,6 +26,7 @@ import org.openmrs.logic.LogicExpressionBinary;
 import org.openmrs.logic.LogicTransform;
 import org.openmrs.logic.db.LogicObsDAO;
 import org.openmrs.logic.op.Operator;
+import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
 
 /**
  * 
@@ -32,13 +35,8 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 {
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	//I don't want duplicate obs stored if the same message is processed more 
-	//than once so Obs are stored in a Set instead of a list
-	private HashMap<Integer, HashMap<String, Set<Obs>>> obs = null; 
-
 	public LogicInMemoryObsDAO()
 	{
-		this.obs = new HashMap<Integer, HashMap<String, Set<Obs>>>();
 	}
 
 	public List<Obs> getObservations(Cohort who, LogicCriteria logicCriteria, LogicContext logicContext)
@@ -49,7 +47,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		// look up the obs for each patient in the set
 		for (Integer patientId : who.getMemberIds())
 		{
-			obsByConceptName = this.obs.get(patientId);
+			obsByConceptName = getObs(patientId);
 			if (obsByConceptName != null)
 			{
 				List<Obs> patientResults = evaluateLogicCriteria(obsByConceptName,
@@ -657,8 +655,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 			return new HashSet<Obs>();
 		}
 
-		HashMap<String, Set<Obs>> obsById = this.obs
-				.get(patientId);
+		HashMap<String, Set<Obs>> obsById = getObs(patientId);
 
 		if (obsById == null)
 		{
@@ -669,20 +666,50 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		return obsById.get(conceptName);
 	}
 	
-	public HashMap<Integer, HashMap<String, Set<Obs>>> getObs(){
-		return this.obs;	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/**
+	 * Return a HashMap of concept name to Obs for a given patient.  Any changes to this map 
+	 * WILL NOT be persisted to the cache.  Please call the saveObs method to persist the data.
+	 * 
+	 * @param patientId The patient identifier.
+	 * @return HashMap of concept name to a Set of Obs or null if the cache is not instantiated or 
+	 * a record does not exist for the provided patient ID.
+	 */
+    public HashMap<String, Set<Obs>> getObs(Integer patientId){
+		if (patientId == null) {
+			return null;
+		}
+		
+		Cache<Integer, HashMap> obsCache = getCache();
+		if (obsCache == null) {
+			return null;
+		}
+		
+		return obsCache.get(patientId);
 	}
+	
+	
 
-	public void deleteObsByPatientId(Integer patientId)
+	@SuppressWarnings("rawtypes")
+    public void deleteObsByPatientId(Integer patientId)
 	{
-		this.obs.remove(patientId);
+		Cache<Integer, HashMap> obsCache = getCache();
+		if (obsCache != null) {
+			obsCache.remove(patientId);
+		}
 	}
 
-	public void clearObs() {
+	@SuppressWarnings("rawtypes")
+    public void clearObs() {
+		HashMap<Integer, HashMap<String, Set<Obs>>> obs = getAllObs();
 	    if(obs != null && !obs.isEmpty()) {
-	        log.info("Before clearing obs cache, No. of elements" + obs.size());
-	        obs.clear();
-	        log.info("After clearing obs cache, No. of elements" + obs.size());
+	    	Cache<Integer, HashMap> obsCache = getCache();
+	    	if (obsCache != null) {
+		        log.info("Before clearing obs cache, No. of elements" + obs.size());
+		        obs.clear();
+		        obsCache.clear();
+		        log.info("After clearing obs cache, No. of elements" + obs.size());
+	    	}
 	    }
     }
 
@@ -693,5 +720,79 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	    // TODO Auto-generated method stub
 	    return null;
     }
-	
+    
+    /**
+	 * Saves the concept name to Set of Obs mapping for the the provided patient ID.  This will 
+	 * replace any existing data being stored.
+	 * 
+	 * @param patientId The patient identifier
+	 * @param conceptObsMap Map of concept name to set of Obs objects
+	 */
+    @SuppressWarnings("rawtypes")
+    public void saveObs(Integer patientId, HashMap<String, Set<Obs>> conceptObsMap) {
+    	if (patientId != null && conceptObsMap != null) {
+	    	Cache<Integer, HashMap> obsCache = getCache();
+	    	if (obsCache != null) {
+	    		obsCache.put(patientId, conceptObsMap);
+	    	}
+    	}
+	}
+    
+    /**
+	 * Saves an observation with the given patient ID and concept name.
+	 * 
+	 * @param patientId The patient identifier
+	 * @param conceptName The name of the concept
+	 * @param observation The observation to save
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+    public void saveOb(Integer patientId, String conceptName, Obs observation) {
+		if (patientId == null || conceptName == null || observation == null) {
+			return;
+		}
+		
+		Cache<Integer, HashMap> obsCache = getCache();
+		
+    	if (obsCache == null) {
+    		return;
+    	}
+    	
+    	HashMap<String, Set<Obs>> conceptObs = obsCache.get(patientId);
+    	if (conceptObs == null) {
+    		conceptObs = new HashMap<String, Set<Obs>>();
+    	}
+    	
+    	Set<Obs> obs = conceptObs.get(conceptName);
+    	if (obs == null) {
+    		obs = new HashSet<Obs>();
+    	}
+    	
+    	obs.add(observation);
+    	conceptObs.put(conceptName, obs);
+    	obsCache.put(patientId, conceptObs);
+	}
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private HashMap<Integer, HashMap<String, Set<Obs>>> getAllObs() {
+    	Cache<Integer, HashMap> obsCache = getCache();
+    	if (obsCache == null) {
+    		return null;
+    	}
+    	
+    	HashMap<Integer, HashMap> allContent = new HashMap<Integer, HashMap>();
+		Iterator<Cache.Entry<Integer,HashMap>> iter = obsCache.iterator();
+		while (iter.hasNext()) {
+			Cache.Entry<Integer, HashMap> entry = iter.next();
+			Integer key = entry.getKey();
+			HashMap value = entry.getValue();
+			allContent.put(key, value);
+		}
+		
+		return (HashMap)allContent;
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private Cache<Integer, HashMap> getCache() {
+    	return ApplicationCacheManager.getInstance().getCache(ApplicationCacheManager.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
+    }
 }

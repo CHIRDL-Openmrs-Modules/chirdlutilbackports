@@ -25,6 +25,26 @@
 		<class>org.openmrs.module.chirdlutilbackports.extension.html.AdminList</class>
 	</extension>
 	
+	<globalProperty>
+        <property>chirdlutilbackports.cacheDirectory</property>
+        <description>The directory where application cache files will be placed.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheHeapSize</property>
+        <defaultValue>32</defaultValue>
+        <description>The maximum amount of memory to allocate (in MB) for each cache.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheDiskSize</property>
+        <defaultValue>100</defaultValue>
+        <description>The maximum amount of disk space to allocate (in MB) for each cache.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheExpiry</property>
+        <defaultValue>720</defaultValue>
+        <description>The maximum amount of time (in minutes) and item will live a cache.</description>
+    </globalProperty>
+	
 	<!-- Internationalization -->
 	<!-- All message codes should start with @MODULE_ID@.* -->
 	<messages>

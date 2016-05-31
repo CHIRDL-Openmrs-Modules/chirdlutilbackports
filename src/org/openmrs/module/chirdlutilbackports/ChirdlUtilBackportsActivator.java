@@ -1,5 +1,6 @@
 package org.openmrs.module.chirdlutilbackports;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
@@ -8,6 +9,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
 
 /**
  * Purpose: Checks that module specific global properties have been set 
@@ -27,6 +29,9 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 		
 		//check that all the required global properties are set
 		checkGlobalProperties();
+		
+		//initialize the medical record cache
+		initializeMedicalRecordCache();
 	}
 
 	private void checkGlobalProperties()
@@ -66,10 +71,32 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 	}
 	
 	/**
+	 * Initializes the cache for the medical record information from the EHR.
+	 */
+	private void initializeMedicalRecordCache() {
+		this.log.info("Initializing Application Cache Manager");
+		ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();
+		this.log.info("Initializing EHR Medical Record Cache");
+		cacheManager.getCache(ApplicationCacheManager.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
+	}
+	
+	/**
+	 * Shutdown the application cache
+	 */
+	private void shutdownCache() {
+		ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();
+		cacheManager.closeCacheManager();
+	}
+	
+	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
 	public void stopped() {
 		this.log.info("Shutting down ChirdlUtilBackports Module");
+		
+		// shutdown the application cache
+		this.log.info("Shutting down the Application Cache Manager");
+		shutdownCache();
 	}
 
 }
