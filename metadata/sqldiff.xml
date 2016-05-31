@@ -403,4 +403,15 @@ CREATE TABLE `chirdlutilbackports_error` (
         </sql>
     </diff>
 
+	<diff>
+        <version>1.0.5</version>
+        <author>Dave Ely</author>
+        <date>May 26, 2016</date>
+        <description>
+            CHICA-751 Create new chirdlutilbackports_encounter_attribute to store the original location that is received in the HL7 message.
+        </description>
+        <sql>
+        	INSERT INTO chirdlutilbackports_encounter_attribute(name, description) VALUES('Original Location', 'Location found in PV1-3.9');	
+        </sql>
+    </diff>
 </sqldiff>
