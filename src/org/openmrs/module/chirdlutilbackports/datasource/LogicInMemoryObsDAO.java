@@ -693,9 +693,11 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	@SuppressWarnings("rawtypes")
     public void deleteObsByPatientId(Integer patientId)
 	{
-		Cache<Integer, HashMap> obsCache = getCache();
-		if (obsCache != null) {
-			obsCache.remove(patientId);
+		if (patientId != null) {
+			Cache<Integer, HashMap> obsCache = getCache();
+			if (obsCache != null) {
+				obsCache.remove(patientId);
+			}
 		}
 	}
 

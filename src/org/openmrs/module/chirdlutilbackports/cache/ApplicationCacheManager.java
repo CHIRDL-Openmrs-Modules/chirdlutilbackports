@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.chirdlutilbackports.cache;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
@@ -46,6 +47,7 @@ public class ApplicationCacheManager {
 	private static final String GLOBAL_PROPERTY_CACHE_DISK_SIZE = "chirdlutilbackports.cacheDiskSize";
 	private static final String GLOBAL_PROPERTY_CACHE_EXPIRY = "chirdlutilbackports.cacheExpiry";
 	
+	private static final String DEFAULT_CACHE_DIRECTORY = "applicationCache";
 	private static final String JAVA_TEMP_DIRECTORY = "java.io.tmpdir";
 	/* Default heap size in MB */
 	private static final int DEFAULT_HEAP_SIZE = 32;
@@ -117,7 +119,7 @@ public class ApplicationCacheManager {
 	private void initializeCacheManager() {
 		String cacheLocation = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_CACHE_DIRECTORY);
 		if (cacheLocation == null || cacheLocation.isEmpty()) {
-			cacheLocation = System.getProperty(JAVA_TEMP_DIRECTORY);
+			cacheLocation = System.getProperty(JAVA_TEMP_DIRECTORY) + File.separator + DEFAULT_CACHE_DIRECTORY;
 			log.error("Global property " + GLOBAL_PROPERTY_CACHE_DIRECTORY + " is not set.  The cache location will "
 					+ "be set to " + cacheLocation);
 		}
