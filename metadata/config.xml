@@ -30,19 +30,19 @@
         <description>The directory where application cache files will be placed.</description>
     </globalProperty>
     <globalProperty>
-        <property>chirdlutilbackports.cacheHeapSize</property>
-        <defaultValue>32</defaultValue>
-        <description>The maximum amount of memory to allocate (in MB) for each cache.</description>
+        <property>chirdlutilbackports.EHRMedicalRecordCacheHeapSize</property>
+        <defaultValue>0</defaultValue>
+        <description>The maximum amount of memory to allocate (in MB) for the EHR Medical Record Cache.</description>
     </globalProperty>
     <globalProperty>
-        <property>chirdlutilbackports.cacheDiskSize</property>
+        <property>chirdlutilbackports.EHRMedicalRecordCacheDiskSize</property>
         <defaultValue>100</defaultValue>
-        <description>The maximum amount of disk space to allocate (in MB) for each cache.</description>
+        <description>The maximum amount of disk space to allocate (in MB) for the EHR Medical Record Cache.</description>
     </globalProperty>
     <globalProperty>
-        <property>chirdlutilbackports.cacheExpiry</property>
-        <defaultValue>720</defaultValue>
-        <description>The maximum amount of time (in minutes) and item will live a cache.</description>
+        <property>chirdlutilbackports.EHRMedicalRecordCacheExpiry</property>
+        <defaultValue>120</defaultValue>
+        <description>The maximum amount of time (in minutes) an item will live in the EHR Medical Record Cache.</description>
     </globalProperty>
 	
 	<!-- Internationalization -->

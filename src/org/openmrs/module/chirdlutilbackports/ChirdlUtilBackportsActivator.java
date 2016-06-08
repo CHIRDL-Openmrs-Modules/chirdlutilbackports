@@ -18,6 +18,14 @@ import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
  *
  */
 public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
+	
+	public static final String CACHE_EHR_MEDICAL_RECORD = "ehrMedicalRecord";
+	public static final String GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_HEAP_SIZE = "chirdlutilbackports.EHRMedicalRecordCacheHeapSize";
+	public static final String GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_DISK_SIZE = "chirdlutilbackports.EHRMedicalRecordCacheDiskSize";
+	public static final String GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_EXPIRY = "chirdlutilbackports.EHRMedicalRecordCacheExpiry";
+	public static final Class<Integer> EHR_MEDICAL_RECORD_KEY_CLASS = Integer.class;
+	@SuppressWarnings("rawtypes")
+    public static final Class<HashMap> EHR_MEDICAL_RECORD_VALUE_CLASS = HashMap.class;
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -77,7 +85,54 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 		this.log.info("Initializing Application Cache Manager");
 		ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();
 		this.log.info("Initializing EHR Medical Record Cache");
-		cacheManager.getCache(ApplicationCacheManager.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
+		
+		long heapSize = ApplicationCacheManager.DEFAULT_HEAP_SIZE;
+		String heapSizeStr = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_HEAP_SIZE);
+		if (heapSizeStr == null || heapSizeStr.isEmpty()) {
+			log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_HEAP_SIZE + " is not set.  The cache heap size will "
+					+ "be set to " + heapSize);
+		} else {
+			try {
+				heapSize = Long.parseLong(heapSizeStr);
+			} catch (NumberFormatException e) {
+				heapSize = ApplicationCacheManager.DEFAULT_HEAP_SIZE;
+				log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_HEAP_SIZE + " is not set to a valid integer.  "
+						+ "The cache heap size will be set to " + heapSize);
+			}
+		}
+		
+		long diskSize = ApplicationCacheManager.DEFAULT_DISK_SIZE;
+		String diskSizeStr = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_DISK_SIZE);
+		if (diskSizeStr == null || diskSizeStr.isEmpty()) {
+			log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_DISK_SIZE + " is not set.  The cache disk size will "
+					+ "be set to " + diskSize);
+		} else {
+			try {
+				diskSize = Long.parseLong(diskSizeStr);
+			} catch (NumberFormatException e) {
+				diskSize = ApplicationCacheManager.DEFAULT_DISK_SIZE;
+				log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_DISK_SIZE + " is not set to a valid integer.  "
+						+ "The cache disk size will be set to " + diskSize);
+			}
+		}
+		
+		long expiration = ApplicationCacheManager.DEFAULT_EXPIRY;
+		String expirationStr = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_EXPIRY);
+		if (expirationStr == null || expirationStr.isEmpty()) {
+			log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_EXPIRY + " is not set.  The items in the cache "
+					+ "will expire after " + expiration + "minutes");
+		} else {
+			try {
+				expiration = Long.parseLong(expirationStr);
+			} catch (NumberFormatException e) {
+				expiration = ApplicationCacheManager.DEFAULT_EXPIRY;
+				log.error("Global property " + GLOBAL_PROPERTY_EHR_MEDICAL_RECORD_CACHE_EXPIRY + " is not set to a valid integer.  "
+						+ "The items in the cache will expire after " + expiration + "minutes");
+			}
+		}
+		
+		cacheManager.createCache(
+			CACHE_EHR_MEDICAL_RECORD, EHR_MEDICAL_RECORD_KEY_CLASS, EHR_MEDICAL_RECORD_VALUE_CLASS, heapSize, diskSize, expiration);
 	}
 	
 	/**

@@ -26,6 +26,7 @@ import org.openmrs.logic.LogicExpressionBinary;
 import org.openmrs.logic.LogicTransform;
 import org.openmrs.logic.db.LogicObsDAO;
 import org.openmrs.logic.op.Operator;
+import org.openmrs.module.chirdlutilbackports.ChirdlUtilBackportsActivator;
 import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
 
 /**
@@ -795,6 +796,6 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
     
     @SuppressWarnings("rawtypes")
     private Cache<Integer, HashMap> getCache() {
-    	return ApplicationCacheManager.getInstance().getCache(ApplicationCacheManager.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
+    	return ApplicationCacheManager.getInstance().getCache(ChirdlUtilBackportsActivator.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
     }
 }
