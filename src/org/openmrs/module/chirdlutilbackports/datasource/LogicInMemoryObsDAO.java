@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.cache.Cache;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ehcache.Cache;
 import org.openmrs.Cohort;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
@@ -26,7 +27,6 @@ import org.openmrs.logic.LogicExpressionBinary;
 import org.openmrs.logic.LogicTransform;
 import org.openmrs.logic.db.LogicObsDAO;
 import org.openmrs.logic.op.Operator;
-import org.openmrs.module.chirdlutilbackports.ChirdlUtilBackportsActivator;
 import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
 
 /**
@@ -34,6 +34,12 @@ import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
  */
 public class LogicInMemoryObsDAO implements LogicObsDAO
 {
+	
+	public static final String CACHE_EHR_MEDICAL_RECORD = "ehrMedicalRecord";
+	public static final Class<Integer> EHR_MEDICAL_RECORD_KEY_CLASS = Integer.class;
+	@SuppressWarnings("rawtypes")
+    public static final Class<HashMap> EHR_MEDICAL_RECORD_VALUE_CLASS = HashMap.class;
+	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	public LogicInMemoryObsDAO()
@@ -796,6 +802,11 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
     
     @SuppressWarnings("rawtypes")
     private Cache<Integer, HashMap> getCache() {
-    	return ApplicationCacheManager.getInstance().getCache(ChirdlUtilBackportsActivator.CACHE_EHR_MEDICAL_RECORD, Integer.class, HashMap.class);
+    	ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();
+    	if (cacheManager != null) {
+    		return cacheManager.getCache(CACHE_EHR_MEDICAL_RECORD, EHR_MEDICAL_RECORD_KEY_CLASS, EHR_MEDICAL_RECORD_VALUE_CLASS);
+    	}
+    	
+    	return null;
     }
 }

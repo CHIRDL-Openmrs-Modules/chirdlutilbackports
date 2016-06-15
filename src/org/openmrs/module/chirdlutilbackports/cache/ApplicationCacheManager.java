@@ -14,22 +14,22 @@
 package org.openmrs.module.chirdlutilbackports.cache;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
+
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
+import org.ehcache.config.CacheRuntimeConfiguration;
 import org.ehcache.config.ResourcePools;
 import org.ehcache.config.ResourceType;
 import org.ehcache.config.ResourceUnit;
 import org.ehcache.config.SizedResourcePool;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
-import org.ehcache.expiry.Duration;
-import org.ehcache.expiry.Expirations;
+import org.ehcache.jsr107.Eh107Configuration;
 import org.openmrs.api.context.Context;
 
 
@@ -42,18 +42,8 @@ public class ApplicationCacheManager {
 	
 	private CacheManager cacheManager = null;
 	private Log log = LogFactory.getLog(this.getClass());
-	private String cacheLocation = null;
-	
-	/* Default heap size in MB */
-	public static final long DEFAULT_HEAP_SIZE = 32;
-	/* Default disk size in MB */
-	public static final long DEFAULT_DISK_SIZE = 100;
-	/* Default expiration time in minutes */
-	public static final long DEFAULT_EXPIRY = 720;
-	
-	private static final String GLOBAL_PROPERTY_CACHE_DIRECTORY = "chirdlutilbackports.cacheDirectory";
-	private static final String DEFAULT_CACHE_DIRECTORY = "applicationCache";
-	private static final String JAVA_TEMP_DIRECTORY = "java.io.tmpdir";
+		
+	private static final String GLOBAL_PROPERTY_CACHE_CONFIG_FILE = "chirdlutilbackports.cacheConfigFile";
 	
 	/**
 	 * Private Constructor Method
@@ -76,7 +66,9 @@ public class ApplicationCacheManager {
 	 * being shutdown.
 	 */
 	public void closeCacheManager() {
-		cacheManager.close();
+		if (cacheManager != null) {
+			cacheManager.close();
+		}
 	}
 	
 	/**
@@ -88,26 +80,12 @@ public class ApplicationCacheManager {
 	 * @return Cache object or null if it does not exist
 	 */
     public <K, V> Cache<K, V> getCache(String cacheName, Class<K> keyType, Class<V> valueType) {
+    	if (cacheManager == null) {
+    		return null;
+    	}
+    	
 		Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
 		return cache;
-	}
-    
-    /**
-	 * Creates an instance of a cache with the parameters provided.  This should only be called once per application instantiation.
-	 * 
-	 * @param cacheName The name of the cache
-	 * @param keyType The key type for cache
-	 * @param valueType The value type for the cache
-	 * @param heapSize The heap size of the cache in MB
-	 * @param diskSize The maximum amount of disk space usage of the cache in MB
-	 * @param expiration The amount of time in minutes for the values in the cache will expire
-	 * @return Cache object
-	 */
-    public <K, V> Cache<K, V> createCache(String cacheName, Class<K> keyType, Class<V> valueType, long heapSize, long diskSize, long expiration) {
-		return (Cache<K, V>) cacheManager.createCache(cacheName, CacheConfigurationBuilder.newCacheConfigurationBuilder(keyType, valueType,
-			        ResourcePoolsBuilder.newResourcePoolsBuilder()
-			            .heap(heapSize, MemoryUnit.MB)
-			            .disk(diskSize, MemoryUnit.MB, true)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))));
 	}
     
     /**
@@ -118,13 +96,20 @@ public class ApplicationCacheManager {
      * @param valueType The value class of the cache
      * @param newHeapSize The new heap size of the cache (in MB)
      */
+    @SuppressWarnings("unchecked")
     public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize) {
+    	if (cacheManager == null) {
+    		return;
+    	}
+    	
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		log.error("Attempt made to update the " + cacheName + " cache heap size, but the cache cannot be found.");
     	} else {
+    		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
+    		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
     		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(newHeapSize, MemoryUnit.MB).build();
-    		cache.getRuntimeConfiguration().updateResourcePools(pools);
+    		runtimeConfiguration.updateResourcePools(pools);
     	}
     	
     }
@@ -137,13 +122,20 @@ public class ApplicationCacheManager {
      * @param valueType The value class of the cache
      * @param newDiskSize The new heap size of the cache (in MB)
      */
+    @SuppressWarnings("unchecked")
     public <K, V> void updateCacheDiskSize(String cacheName, Class<K> keyType, Class<V> valueType, long newDiskSize) {
+    	if (cacheManager == null) {
+    		return;
+    	}
+    	
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		log.error("Attempt made to update the " + cacheName + " cache disk size, but the cache cannot be found.");
     	} else {
+    		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
+    		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
     		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().disk(newDiskSize, MemoryUnit.MB, true).build();
-    		cache.getRuntimeConfiguration().updateResourcePools(pools);
+    		runtimeConfiguration.updateResourcePools(pools);
     	}
     	
     }
@@ -156,6 +148,10 @@ public class ApplicationCacheManager {
      * @param valueType The value class of the cache
      */
     public <K, V> void clearCache(String cacheName, Class<K> keyType, Class<V> valueType) {
+    	if (cacheManager == null) {
+    		return;
+    	}
+    	
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		log.error("Attempt made to clear the " + cacheName + " cache, but the cache cannot be found.");
@@ -243,21 +239,28 @@ public class ApplicationCacheManager {
     }
     
     /**
-     * Returns the location of the cache.
+     * Retrieves the specified SizedResourcePool
      * 
-     * @return String containing the location of the cache.
+     * @param cacheName The name of the cache to pull the resource pool
+     * @param keyType The key class type of the cache
+     * @param valueType The value class type of the cache
+     * @param resourceType The type of resource pool to get
+     * @return SizedResourcePool object or null if the cache specified or resource type specified cannot be found.
      */
-    public String getCacheLocation() {
-    	return cacheLocation;
-    }
-    
+    @SuppressWarnings("unchecked")
     private <K, V> SizedResourcePool getSizedResourcePool(String cacheName, Class<K> keyType, Class<V> valueType, ResourceType<SizedResourcePool> resourceType) {
+    	if (cacheManager == null) {
+    		return null;
+    	}
+    	
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		return null;
     	}
     		
-    	SizedResourcePool pool = cache.getRuntimeConfiguration().getResourcePools().getPoolForResource(resourceType);
+		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
+		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
+    	SizedResourcePool pool = runtimeConfiguration.getResourcePools().getPoolForResource(resourceType);
     	return pool;
     }
 	
@@ -274,15 +277,20 @@ public class ApplicationCacheManager {
 	 * Initializes the setting and preferences for the application cache manager.
 	 */
 	private void initializeCacheManager() {
-		cacheLocation = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_CACHE_DIRECTORY);
-		if (cacheLocation == null || cacheLocation.isEmpty()) {
-			cacheLocation = System.getProperty(JAVA_TEMP_DIRECTORY) + File.separator + DEFAULT_CACHE_DIRECTORY;
-			log.error("Global property " + GLOBAL_PROPERTY_CACHE_DIRECTORY + " is not set.  The cache location will "
-					+ "be set to " + cacheLocation);
+		String cacheConfigFileStr = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_CACHE_CONFIG_FILE);
+		if (cacheConfigFileStr == null || cacheConfigFileStr.isEmpty()) {
+			log.error("Global property " + GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " is not set.  The cache manager cannot be initialized.");
+			return;
 		}
 		
-		cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
-			    .with(CacheManagerBuilder.persistence(cacheLocation))
-			    .build(true);
+		File cacheConfigFile = new File(cacheConfigFileStr);
+		if (!cacheConfigFile.exists() || !cacheConfigFile.canRead()) {
+			log.error("Cache configuration file " + cacheConfigFileStr + " define in global property " + GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " does not exist or cannot be read.  "
+					+ "The cache manager cannot be initialized.");
+			return;
+		}
+		
+		CachingProvider provider = Caching.getCachingProvider(Thread.currentThread().getContextClassLoader());
+		cacheManager = provider.getCacheManager(cacheConfigFile.toURI(), null);
 	}
 }
