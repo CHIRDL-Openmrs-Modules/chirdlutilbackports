@@ -14,13 +14,20 @@
 package org.openmrs.module.chirdlutilbackports.cache;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,39 +111,25 @@ public class ApplicationCacheManager {
      * @param cacheName The name of the cache to update
      * @param keyType The key class of the cache
      * @param valueType The value class of the cache
-     * @param newHeapSize The new heap size of the cache (in MB)
+     * @param newHeapSize The new heap size of the cache
+     * @param memoryUnit The new heap size memory unit
      */
     @SuppressWarnings("unchecked")
-    public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize) {
+    public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize, String memoryUnit) {
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		log.error("Attempt made to update the " + cacheName + " cache heap size, but the cache cannot be found.");
     	} else {
+    		MemoryUnit memUnit = MemoryUnit.valueOf(memoryUnit);
+    		if (memUnit == null) {
+    			String message = "Attempt made to update the " + cacheName + " cache heap size, but the memory unit provided is invalid: " + memoryUnit;
+    			log.error(message);
+    			throw new IllegalArgumentException(message);
+    		}
+    		
     		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
     		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
-    		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(newHeapSize, MemoryUnit.MB).build();
-    		runtimeConfiguration.updateResourcePools(pools);
-    	}
-    	
-    }
-    
-    /**
-     * Updates the live cache's heap size.
-     * 
-     * @param cacheName The name of the cache to update
-     * @param keyType The key class of the cache
-     * @param valueType The value class of the cache
-     * @param newDiskSize The new heap size of the cache (in MB)
-     */
-    @SuppressWarnings("unchecked")
-    public <K, V> void updateCacheDiskSize(String cacheName, Class<K> keyType, Class<V> valueType, long newDiskSize) {
-    	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
-    	if (cache == null) {
-    		log.error("Attempt made to update the " + cacheName + " cache disk size, but the cache cannot be found.");
-    	} else {
-    		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
-    		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
-    		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().disk(newDiskSize, MemoryUnit.MB, true).build();
+    		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(newHeapSize, memUnit).build();
     		runtimeConfiguration.updateResourcePools(pools);
     	}
     	
@@ -273,6 +266,32 @@ public class ApplicationCacheManager {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * Returns all the statistics for a given cache name.
+     * 
+     * @param cacheName The name of the cache
+     * @return List of CacheStatistic object for the cache
+     * @throws Exception
+     */
+    public List<CacheStatistic> getCacheStatistics(String cacheName) throws Exception {
+    	List<CacheStatistic> stats = new ArrayList<CacheStatistic>();
+    	MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		ObjectName objName = null;
+		MBeanInfo info = null;
+		URI cacheLocation = getCacheConfigurationFileLocation();
+        objName = new ObjectName("javax.cache:type=CacheStatistics,CacheManager=" + cacheLocation + ",Cache=" + cacheName);
+        info = mbs.getMBeanInfo(objName);
+        MBeanAttributeInfo[] attrs = info.getAttributes();
+        for (MBeanAttributeInfo attr : attrs) {
+        	String name = attr.getName();
+            Object value = mbs.getAttribute(objName, name);
+            CacheStatistic stat = new CacheStatistic(name, value);
+            stats.add(stat);
+        }
+        
+        return stats;
     }
     
     /**
