@@ -24,10 +24,16 @@ import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -273,22 +279,42 @@ public class ApplicationCacheManager {
      * 
      * @param cacheName The name of the cache
      * @return List of CacheStatistic object for the cache
-     * @throws Exception
      */
-    public List<CacheStatistic> getCacheStatistics(String cacheName) throws Exception {
+    public List<CacheStatistic> getCacheStatistics(String cacheName) {
     	List<CacheStatistic> stats = new ArrayList<CacheStatistic>();
     	MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		ObjectName objName = null;
+    	ObjectName objName = getCacheObjectName(cacheName);
+    	if (objName == null) {
+    		return stats;
+    	}
+    	
 		MBeanInfo info = null;
-		URI cacheLocation = getCacheConfigurationFileLocation();
-        objName = new ObjectName("javax.cache:type=CacheStatistics,CacheManager=" + cacheLocation + ",Cache=" + cacheName);
-        info = mbs.getMBeanInfo(objName);
+        try {
+	        info = mbs.getMBeanInfo(objName);
+        }
+        catch (IntrospectionException | InstanceNotFoundException | ReflectionException e) {
+	        log.error("Error retrieving statistics for cache " + cacheName, e);
+        }
+        
+		if (info == null) {
+			return stats;
+		}
+		
         MBeanAttributeInfo[] attrs = info.getAttributes();
+        if (attrs == null) {
+        	return stats;
+        }
+        
         for (MBeanAttributeInfo attr : attrs) {
         	String name = attr.getName();
-            Object value = mbs.getAttribute(objName, name);
-            CacheStatistic stat = new CacheStatistic(name, value);
-            stats.add(stat);
+            try {
+            	Object value = mbs.getAttribute(objName, name);
+	            CacheStatistic stat = new CacheStatistic(name, value);
+	            stats.add(stat);
+            }
+            catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException e) {
+            	log.error("Error retrieving statistics for cache " + cacheName, e);
+            }
         }
         
         return stats;
@@ -431,5 +457,36 @@ public class ApplicationCacheManager {
 		
 		Expiry<? super String, ? super String> expiry = runtimeConfiguration.getExpiry();
 		return expiry;
+	}
+	
+	/**
+	 * Returns the cache object name.
+	 * 
+	 * @param cacheName The name of the cache
+	 * @return The cache ObjectName or null if it can't be created.
+	 */
+	private ObjectName getCacheObjectName(String cacheName) {
+		URI uri = cacheManager.getURI();
+	    String cacheManagerName = sanitize(uri != null ? uri.toString() : "null");
+	    cacheName = sanitize(cacheName != null ? cacheName : "null");
+
+	    try {
+	      return new ObjectName("javax.cache:type=CacheStatistics" + ",CacheManager=" + cacheManagerName + ",Cache="
+	          + cacheName);
+	    } catch (MalformedObjectNameException e) {
+	    	log.error("Error creating object name for cache " + cacheName, e);
+	    }
+	    
+	    return null;
+	}
+	
+	/**
+	 * Sanitizes a string so that it conforms to the requirements of the ObjectName class.
+	 * 
+	 * @param string The String to sanitize
+	 * @return The sanitized String
+	 */
+	private String sanitize(String string) {
+	    return string == null ? "" : string.replaceAll(",|:|=|\n", ".");
 	}
 }
