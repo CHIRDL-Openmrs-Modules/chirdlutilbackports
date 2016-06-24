@@ -31,12 +31,12 @@
     </globalProperty>
     <globalProperty>
         <property>chirdlutilbackports.cacheDefaultHeapSize</property>
-        <defaultValue>512</defaultValue>
+        <defaultValue>32</defaultValue>
         <description>The default heap size (in MB) of a cache created outside the Ehcache XML configuration file.</description>
     </globalProperty>
     <globalProperty>
         <property>chirdlutilbackports.cacheDefaultExpiry</property>
-        <defaultValue>120</defaultValue>
+        <defaultValue>480</defaultValue>
         <description>The default expiry time (in minutes) of a cache created outside the Ehcache XML configuration file.</description>
     </globalProperty>
 	

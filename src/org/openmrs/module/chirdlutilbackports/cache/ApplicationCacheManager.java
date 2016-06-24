@@ -65,7 +65,7 @@ public class ApplicationCacheManager {
 	private Log log = LogFactory.getLog(this.getClass());
 		
 	private static final String GLOBAL_PROPERTY_CACHE_CONFIG_FILE = "chirdlutilbackports.cacheConfigFile";
-	private static final long DEFAULT_HEAP_SIZE = 500;
+	private static final long DEFAULT_HEAP_SIZE = 32;
 	private static final long DEFAULT_EXPIRY = 480;
 	
 	/**
@@ -278,10 +278,18 @@ public class ApplicationCacheManager {
      * Returns all the statistics for a given cache name.
      * 
      * @param cacheName The name of the cache
+     * @param keyType The key class of the cache
+     * @param valueType The value class of the cache
      * @return List of CacheStatistic object for the cache
      */
-    public List<CacheStatistic> getCacheStatistics(String cacheName) {
+    public <K, V> List<CacheStatistic> getCacheStatistics(String cacheName, Class<K> keyType, Class<V> valueType) {
     	List<CacheStatistic> stats = new ArrayList<CacheStatistic>();
+    	Cache<K, V> cache = getCache(cacheName, keyType, valueType);
+    	if (cache == null) {
+    		log.error("Cannot retrieve statistics for cache " + cacheName + " because it does not exist.");
+    		return stats;
+    	}
+    	
     	MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
     	ObjectName objName = getCacheObjectName(cacheName);
     	if (objName == null) {
@@ -340,7 +348,12 @@ public class ApplicationCacheManager {
 	 * @param expiration The amount of time in minutes for the values in the cache will expire
 	 * @return Cache object
 	 */
-    private <K, V> Cache<K, V> createDefaultCache(String cacheName, Class<K> keyType, Class<V> valueType) {
+    private synchronized <K, V> Cache<K, V> createDefaultCache(String cacheName, Class<K> keyType, Class<V> valueType) {
+    	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
+    	if (cache != null) {
+    		return cache;
+    	}
+    	
     	long heapSize = DEFAULT_HEAP_SIZE;
 		String heapSizeStr = Context.getAdministrationService().getGlobalProperty(ChirdlUtilBackportsConstants.CACHE_DEFAULT_HEAP_SIZE);
 		if (heapSizeStr == null || heapSizeStr.isEmpty()) {
@@ -374,7 +387,13 @@ public class ApplicationCacheManager {
     	CacheConfiguration<K, V> cacheConfig = CacheConfigurationBuilder.newCacheConfigurationBuilder(keyType, valueType,
 	        ResourcePoolsBuilder.newResourcePoolsBuilder()
             .heap(heapSize, MemoryUnit.MB)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))).build();
-		return (Cache<K, V>) cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
+    	cache = cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
+    	cacheManager.enableManagement(cacheName, true);
+    	cacheManager.enableStatistics(cacheName, true);
+    	
+    	// retrieve the cache again since the management and statistical settings have been updated.
+    	cache = cacheManager.getCache(cacheName, keyType, valueType);
+    	return cache;
 	}
     
     /**

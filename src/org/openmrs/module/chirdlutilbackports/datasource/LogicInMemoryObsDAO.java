@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -706,16 +705,10 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 
 	@SuppressWarnings("rawtypes")
     public void clearObs() {
-		HashMap<Integer, HashMap<String, Set<Obs>>> obs = getAllObs();
-	    if(obs != null && !obs.isEmpty()) {
-	    	Cache<Integer, HashMap> obsCache = getCache();
-	    	if (obsCache != null) {
-		        log.info("Before clearing obs cache, No. of elements" + obs.size());
-		        obs.clear();
-		        obsCache.clear();
-		        log.info("After clearing obs cache, No. of elements" + obs.size());
-	    	}
-	    }
+    	Cache<Integer, HashMap> obsCache = getCache();
+    	if (obsCache != null) {
+	        obsCache.clear();
+    	}
     }
 
 	/**
@@ -776,25 +769,6 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
     	conceptObs.put(conceptName, obs);
     	obsCache.put(patientId, conceptObs);
 	}
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private HashMap<Integer, HashMap<String, Set<Obs>>> getAllObs() {
-    	Cache<Integer, HashMap> obsCache = getCache();
-    	if (obsCache == null) {
-    		return null;
-    	}
-    	
-    	HashMap<Integer, HashMap> allContent = new HashMap<Integer, HashMap>();
-		Iterator<Cache.Entry<Integer,HashMap>> iter = obsCache.iterator();
-		while (iter.hasNext()) {
-			Cache.Entry<Integer, HashMap> entry = iter.next();
-			Integer key = entry.getKey();
-			HashMap value = entry.getValue();
-			allContent.put(key, value);
-		}
-		
-		return (HashMap)allContent;
-    }
     
     @SuppressWarnings("rawtypes")
     private Cache<Integer, HashMap> getCache() {
