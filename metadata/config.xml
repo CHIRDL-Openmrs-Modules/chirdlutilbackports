@@ -31,8 +31,8 @@
     </globalProperty>
     <globalProperty>
         <property>chirdlutilbackports.cacheDefaultHeapSize</property>
-        <defaultValue>32</defaultValue>
-        <description>The default heap size (in MB) of a cache created outside the Ehcache XML configuration file.</description>
+        <defaultValue>20</defaultValue>
+        <description>The default heap size (in # of entries) of a cache created outside the Ehcache XML configuration file.</description>
     </globalProperty>
     <globalProperty>
         <property>chirdlutilbackports.cacheDefaultExpiry</property>

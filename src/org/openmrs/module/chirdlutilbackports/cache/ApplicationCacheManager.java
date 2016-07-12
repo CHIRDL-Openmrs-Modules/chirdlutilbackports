@@ -45,7 +45,7 @@ import org.ehcache.config.ResourceUnit;
 import org.ehcache.config.SizedResourcePool;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.ehcache.config.units.MemoryUnit;
+import org.ehcache.config.units.EntryUnit;
 import org.ehcache.expiry.Duration;
 import org.ehcache.expiry.Expirations;
 import org.ehcache.expiry.Expiry;
@@ -64,8 +64,7 @@ public class ApplicationCacheManager {
 	private CacheManager cacheManager = null;
 	private Log log = LogFactory.getLog(this.getClass());
 		
-	private static final String GLOBAL_PROPERTY_CACHE_CONFIG_FILE = "chirdlutilbackports.cacheConfigFile";
-	private static final long DEFAULT_HEAP_SIZE = 32;
+	private static final long DEFAULT_HEAP_SIZE = 20;
 	private static final long DEFAULT_EXPIRY = 480;
 	
 	/**
@@ -112,30 +111,22 @@ public class ApplicationCacheManager {
 	}
     
     /**
-     * Updates the live cache's heap size.
+     * Updates the live cache's heap size.  The heap size is measured in entries.
      * 
      * @param cacheName The name of the cache to update
      * @param keyType The key class of the cache
      * @param valueType The value class of the cache
      * @param newHeapSize The new heap size of the cache
-     * @param memoryUnit The new heap size memory unit
      */
     @SuppressWarnings("unchecked")
-    public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize, String memoryUnit) {
+    public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize) {
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
     		log.error("Attempt made to update the " + cacheName + " cache heap size, but the cache cannot be found.");
     	} else {
-    		MemoryUnit memUnit = MemoryUnit.valueOf(memoryUnit);
-    		if (memUnit == null) {
-    			String message = "Attempt made to update the " + cacheName + " cache heap size, but the memory unit provided is invalid: " + memoryUnit;
-    			log.error(message);
-    			throw new IllegalArgumentException(message);
-    		}
-    		
     		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
     		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
-    		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(newHeapSize, memUnit).build();
+    		ResourcePools pools = ResourcePoolsBuilder.newResourcePoolsBuilder().heap(newHeapSize, EntryUnit.ENTRIES).build();
     		runtimeConfiguration.updateResourcePools(pools);
     	}
     	
@@ -355,38 +346,40 @@ public class ApplicationCacheManager {
     	}
     	
     	long heapSize = DEFAULT_HEAP_SIZE;
-		String heapSizeStr = Context.getAdministrationService().getGlobalProperty(ChirdlUtilBackportsConstants.CACHE_DEFAULT_HEAP_SIZE);
+		String heapSizeStr = Context.getAdministrationService().getGlobalProperty(
+			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE);
 		if (heapSizeStr == null || heapSizeStr.isEmpty()) {
-			log.error("Global property " + ChirdlUtilBackportsConstants.CACHE_DEFAULT_HEAP_SIZE + " is not set.  The cache heap size will "
-					+ "be set to " + heapSize);
+			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE + " is not set.  "
+					+ "The cache heap size will be set to " + heapSize);
 		} else {
 			try {
 				heapSize = Long.parseLong(heapSizeStr);
 			} catch (NumberFormatException e) {
 				heapSize = ApplicationCacheManager.DEFAULT_HEAP_SIZE;
-				log.error("Global property " + ChirdlUtilBackportsConstants.CACHE_DEFAULT_HEAP_SIZE + " is not set to a valid integer.  "
-						+ "The cache heap size will be set to " + heapSize);
+				log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE + " is not set "
+						+ "to a valid integer.  The cache heap size will be set to " + heapSize);
 			}
 		}
 		
 		long expiration = DEFAULT_EXPIRY;
-		String expirationStr = Context.getAdministrationService().getGlobalProperty(ChirdlUtilBackportsConstants.CACHE_DEFAULT_EXPIRY);
+		String expirationStr = Context.getAdministrationService().getGlobalProperty(
+			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY);
 		if (expirationStr == null || expirationStr.isEmpty()) {
-			log.error("Global property " + ChirdlUtilBackportsConstants.CACHE_DEFAULT_EXPIRY + " is not set.  The items in the cache "
-					+ "will expire after " + expiration + "minutes");
+			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY + " is not set.  "
+					+ "The items in the cache will expire after " + expiration + "minutes");
 		} else {
 			try {
 				expiration = Long.parseLong(expirationStr);
 			} catch (NumberFormatException e) {
 				expiration = ApplicationCacheManager.DEFAULT_EXPIRY;
-				log.error("Global property " + ChirdlUtilBackportsConstants.CACHE_DEFAULT_EXPIRY + " is not set to a valid integer.  "
-						+ "The items in the cache will expire after " + expiration + "minutes");
+				log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY + " is not set "
+						+ "to a valid integer.  The items in the cache will expire after " + expiration + "minutes");
 			}
 		}
 
     	CacheConfiguration<K, V> cacheConfig = CacheConfigurationBuilder.newCacheConfigurationBuilder(keyType, valueType,
 	        ResourcePoolsBuilder.newResourcePoolsBuilder()
-            .heap(heapSize, MemoryUnit.MB)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))).build();
+            .heap(heapSize, EntryUnit.ENTRIES)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))).build();
     	cache = cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
     	cacheManager.enableManagement(cacheName, true);
     	cacheManager.enableStatistics(cacheName, true);
@@ -431,14 +424,17 @@ public class ApplicationCacheManager {
 	 * Initializes the setting and preferences for the application cache manager.
 	 */
 	private void initializeCacheManager() {
-		String cacheConfigFileStr = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_CACHE_CONFIG_FILE);
+		String cacheConfigFileStr = Context.getAdministrationService().getGlobalProperty(
+			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE);
 		URI cacheConfigURI = null;
 		if (cacheConfigFileStr == null || cacheConfigFileStr.isEmpty()) {
-			log.error("Global property " + GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " is not set.  The cache manager cannot be initialized.");
+			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " is not set.  "
+					+ "The cache manager cannot be initialized.");
 		} else {
 			File cacheConfigFile = new File(cacheConfigFileStr);
 			if (!cacheConfigFile.exists() || !cacheConfigFile.canRead()) {
-				log.error("Cache configuration file " + cacheConfigFileStr + " define in global property " + GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " does not exist or cannot be read.  "
+				log.error("Cache configuration file " + cacheConfigFileStr + " define in global property " + 
+						ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " does not exist or cannot be read.  "
 						+ "Any caches created beyond this point with be created with the global settings defined in the global properties.");
 			} else {
 				cacheConfigURI = cacheConfigFile.toURI();

@@ -37,8 +37,9 @@ public class ChirdlUtilBackportsConstants {
 	/*
 	 * Constants for global properties
 	 */
-	public static final String CACHE_DEFAULT_HEAP_SIZE = "chirdlutilbackports.cacheDefaultHeapSize";
-	public static final String CACHE_DEFAULT_EXPIRY = "chirdlutilbackports.cacheDefaultExpiry";
+	public static final String GLOBAL_PROPERTY_CACHE_CONFIG_FILE = "chirdlutilbackports.cacheConfigFile";
+	public static final String GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE = "chirdlutilbackports.cacheDefaultHeapSize";
+	public static final String GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY = "chirdlutilbackports.cacheDefaultExpiry";
 	/*
 	 * 
 	 */

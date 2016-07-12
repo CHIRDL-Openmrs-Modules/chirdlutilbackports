@@ -686,8 +686,12 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		if (obsCache == null) {
 			return null;
 		}
-		
-		return obsCache.get(patientId);
+		try {
+			return obsCache.get(patientId);
+		} catch (Exception e) {
+			log.error("Error retrieving data from in memory cache", e);
+			return null;
+		}
 	}
 	
 	
