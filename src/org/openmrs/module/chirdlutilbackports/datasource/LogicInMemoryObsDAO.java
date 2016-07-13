@@ -774,6 +774,11 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
     	obsCache.put(patientId, conceptObs);
 	}
     
+	/**
+	 * Retrieves the cache for the in-memory observations
+	 * 
+	 * @return Cache object for in-memory observations
+	 */
     @SuppressWarnings("rawtypes")
     private Cache<Integer, HashMap> getCache() {
     	ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();

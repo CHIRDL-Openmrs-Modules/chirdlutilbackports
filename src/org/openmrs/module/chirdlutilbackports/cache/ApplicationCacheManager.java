@@ -238,7 +238,9 @@ public class ApplicationCacheManager {
     	Expiry<? super String, ? super String> expiry = getExpiry(cacheName, keyType, valueType);
     	if (expiry != null) {
 			Duration duration = expiry.getExpiryForCreation(null, null);
-			return duration.getLength();
+			if (duration != null) {
+				return duration.getLength();
+			}
     	}
     	
     	return null;
@@ -256,9 +258,11 @@ public class ApplicationCacheManager {
     	Expiry<? super String, ? super String> expiry = getExpiry(cacheName, keyType, valueType);
     	if (expiry != null) {
 			Duration duration = expiry.getExpiryForCreation(null, null);
-			TimeUnit timeUnit = duration.getTimeUnit();
-			if (timeUnit != null) {
-				return timeUnit.toString();
+			if (duration != null) {
+				TimeUnit timeUnit = duration.getTimeUnit();
+				if (timeUnit != null) {
+					return timeUnit.toString();
+				}
 			}
     	}
     	
@@ -271,7 +275,7 @@ public class ApplicationCacheManager {
      * @param cacheName The name of the cache
      * @param keyType The key class of the cache
      * @param valueType The value class of the cache
-     * @return List of CacheStatistic object for the cache
+     * @return List of CacheStatistic objects for the cache
      */
     public <K, V> List<CacheStatistic> getCacheStatistics(String cacheName, Class<K> keyType, Class<V> valueType) {
     	List<CacheStatistic> stats = new ArrayList<CacheStatistic>();
@@ -429,7 +433,7 @@ public class ApplicationCacheManager {
 		URI cacheConfigURI = null;
 		if (cacheConfigFileStr == null || cacheConfigFileStr.isEmpty()) {
 			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " is not set.  "
-					+ "The cache manager cannot be initialized.");
+					+ "A default cache manager will be initialized.");
 		} else {
 			File cacheConfigFile = new File(cacheConfigFileStr);
 			if (!cacheConfigFile.exists() || !cacheConfigFile.canRead()) {
