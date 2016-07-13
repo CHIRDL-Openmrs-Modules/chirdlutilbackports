@@ -48,4 +48,29 @@ public class CacheStatistic {
     public Object getValue() {
     	return value;
     }
+    
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+    	StringBuffer buffer = new StringBuffer("Name: ");
+    	buffer.append(name);
+    	buffer.append("\n");
+    	buffer.append("Value: ");
+    	buffer.append(value);
+    	buffer.append("\n");
+    	
+    	return buffer.toString();
+    }
+    
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 17 + (name == null ? 0 : name.hashCode());
+        hash = hash * 31 + (value == null ? 0 : value.hashCode());
+        
+        return hash;
+    }
 }
