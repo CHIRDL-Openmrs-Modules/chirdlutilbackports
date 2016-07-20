@@ -472,4 +472,28 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return EncounterAttributeValue
 	 */
 	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-761
+	 * Get last patient state for all patients by location
+	 * 
+	 * @param optionalDateRestriction
+	 * @param programId
+	 * @param startStateName
+	 * @param locationId
+	 * @return
+	 * @throws HibernateException
+	 */
+	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-761
+	 * Get program by location
+	 * NOTE: This requires that the same program is being used for all location tags for a location
+	 * 
+	 * @param locationId
+	 * @return
+	 * @throws HibernateException
+	 */
+	public Program getProgramByLocation(Integer locationId) throws HibernateException;
 }
