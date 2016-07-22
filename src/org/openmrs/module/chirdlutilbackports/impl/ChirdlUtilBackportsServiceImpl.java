@@ -651,4 +651,22 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	{
 		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByAttribute(encounterId, encounterAttribute);
 	}   
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getLastPatientStateAllPatientsByLocation(Date, Integer, String, Integer)
+	 */
+	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getLastPatientStateAllPatientsByLocation(optionalDateRestriction, programId, startStateName, locationId);
+	}
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getProgramByLocation(Integer)
+	 */
+	public Program getProgramByLocation(Integer locationId) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getProgramByLocation(locationId);
+	}
 }
