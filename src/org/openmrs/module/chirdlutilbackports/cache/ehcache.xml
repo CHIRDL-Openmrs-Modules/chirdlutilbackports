@@ -12,7 +12,7 @@
 		</eh:expiry>
 		<eh:resources>
 		    <!-- We have to use # of entries because there are hibernate lazy initialization errors when using MB as the unit -->
-			<eh:heap unit="entries">25</eh:heap>
+			<eh:heap unit="entries">20</eh:heap>
 			<eh:disk unit="GB" persistent="true">3</eh:disk>
 		</eh:resources>
 	</eh:cache>
