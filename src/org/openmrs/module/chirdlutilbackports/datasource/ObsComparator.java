@@ -11,14 +11,11 @@ import org.openmrs.Obs;
  * @author tmdugan
  *
  */
-public class ObsComparator implements Comparator
+public class ObsComparator implements Comparator<Obs>
 {
 	//sort obs in ascending order by obs datetime
-	public int compare(Object obj1, Object obj2)
+	public int compare(Obs obs1, Obs obs2)
 	{
-		Obs obs1 = (Obs) obj1;
-		Obs obs2 = (Obs) obj2;
-		
 		return obs1.getObsDatetime().compareTo(obs2.getObsDatetime());
 	}
 
