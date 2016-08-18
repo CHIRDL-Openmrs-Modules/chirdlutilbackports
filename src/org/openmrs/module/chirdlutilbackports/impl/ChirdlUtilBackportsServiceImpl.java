@@ -669,4 +669,13 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	{
 		return getChirdlUtilBackportsDAO().getProgramByLocation(locationId);
 	}
+	
+	/**
+	 * DWE CHICA-784
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByValue(String, String) 
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByValue(attributeValue, encounterAttributeName);
+	}
 }
