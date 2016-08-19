@@ -496,4 +496,15 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @throws HibernateException
 	 */
 	public Program getProgramByLocation(Integer locationId) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-784
+	 * Get the encounterAttributeValue by value_text and encounter attribute name
+	 * 
+	 * @param attributeValue
+	 * @param encounterAttributeName
+	 * @return
+	 * @throws HibernateException
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException;
 }

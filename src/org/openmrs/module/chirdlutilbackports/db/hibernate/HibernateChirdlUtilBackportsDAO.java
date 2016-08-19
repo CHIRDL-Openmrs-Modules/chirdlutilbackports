@@ -1957,4 +1957,26 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			return null;
 		}	
 	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByValue(String, String)
+	 */
+	@Override
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
+		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
+		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Expression.eq("encounterAttributeValue.valueText", attributeValue));
+		
+		List<EncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (EncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
+	}
 }
