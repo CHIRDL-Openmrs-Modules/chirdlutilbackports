@@ -6,7 +6,7 @@
 	<!-- chirdlutilbackports Module Properties -->
 	<id>chirdlutilbackports</id>
 	<name>chirdlutilbackports</name>
-	<version>2.4.2</version>
+	<version>2.5.0</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>Tammy Dugan</author>
 	<description>
@@ -24,6 +24,21 @@
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.chirdlutilbackports.extension.html.AdminList</class>
 	</extension>
+	
+	<globalProperty>
+        <property>chirdlutilbackports.cacheConfigFile</property>
+        <description>The location of the cache configuration file.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheDefaultHeapSize</property>
+        <defaultValue>20</defaultValue>
+        <description>The default heap size (in # of entries) of a cache created outside the Ehcache XML configuration file.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheDefaultExpiry</property>
+        <defaultValue>480</defaultValue>
+        <description>The default expiry time (in minutes) of a cache created outside the Ehcache XML configuration file.</description>
+    </globalProperty>
 	
 	<!-- Internationalization -->
 	<!-- All message codes should start with @MODULE_ID@.* -->
@@ -54,6 +69,8 @@
 		obs_attribute.hbm.xml
 		form_instance_attribute_value.hbm.xml
         form_instance_attribute.hbm.xml
+        encounter_attribute_value.hbm.xml
+       	encounter_attribute.hbm.xml
 	</mappingFiles>
 	
 </module>

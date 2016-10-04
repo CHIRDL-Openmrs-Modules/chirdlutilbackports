@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eh:config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:eh="http://www.ehcache.org/v3"
+	xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+    xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
+	<eh:persistence directory="chica_cache"/>
+	<eh:cache alias="ehrMedicalRecord">
+		<eh:key-type>java.lang.Integer</eh:key-type>
+		<eh:value-type>java.util.HashMap</eh:value-type>
+		<eh:expiry>
+			<eh:ttl unit="hours">2</eh:ttl>
+		</eh:expiry>
+		<eh:resources>
+		    <!-- We have to use # of entries because there are hibernate lazy initialization errors when using MB as the unit -->
+			<eh:heap unit="entries">20</eh:heap>
+			<eh:disk unit="GB" persistent="true">2</eh:disk>
+		</eh:resources>
+	</eh:cache>
+	<eh:cache alias="immunization">
+        <eh:key-type>java.lang.Integer</eh:key-type>
+        <eh:value-type>org.openmrs.module.chica.ImmunizationQueryOutput</eh:value-type>
+        <eh:expiry>
+            <eh:ttl unit="hours">2</eh:ttl>
+        </eh:expiry>
+        <eh:resources>
+            <!-- We have to use # of entries because there are hibernate lazy initialization errors when using MB as the unit -->
+            <eh:heap unit="entries">20</eh:heap>
+            <eh:disk unit="GB" persistent="true">1</eh:disk>
+        </eh:resources>
+    </eh:cache>
+</eh:config>

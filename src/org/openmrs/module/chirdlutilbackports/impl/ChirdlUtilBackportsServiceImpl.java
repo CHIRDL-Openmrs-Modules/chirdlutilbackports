@@ -16,6 +16,8 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -609,4 +611,71 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 	    return getChirdlUtilBackportsDAO().getFormAttributeValues(attributeId, locationId, locationTagId);
     }
+    
+    /**
+     * DWE CHICA-633
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeByName(String)
+     */
+    @Override
+    public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException
+    {
+    	return getChirdlUtilBackportsDAO().getEncounterAttributeByName(encounterAttributeName);
+    }
+    
+    /**
+     * DWE CHICA-633
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#saveEncounterAttributeValue(EncounterAttributeValue)
+     */
+    @Override
+    public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException
+    {
+    	return getChirdlUtilBackportsDAO().saveEncounterAttributeValue(encounterAttributeValue);
+    }
+    
+    /**
+     * DWE CHICA-633
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByName(Integer, String)
+     */
+    @Override
+    public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException
+    {
+    	return getChirdlUtilBackportsDAO().getEncounterAttributeValueByName(encounterId, encounterAttributeName);
+    }
+
+    /**
+     * DWE CHICA-633
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByAttribute(Integer, EncounterAttribute)
+     */
+	@Override
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException 
+	{
+		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByAttribute(encounterId, encounterAttribute);
+	}   
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getLastPatientStateAllPatientsByLocation(Date, Integer, String, Integer)
+	 */
+	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getLastPatientStateAllPatientsByLocation(optionalDateRestriction, programId, startStateName, locationId);
+	}
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getProgramByLocation(Integer)
+	 */
+	public Program getProgramByLocation(Integer locationId) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getProgramByLocation(locationId);
+	}
+	
+	/**
+	 * DWE CHICA-784
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByValue(String, String) 
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException
+	{
+		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByValue(attributeValue, encounterAttributeName);
+	}
 }

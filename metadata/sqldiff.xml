@@ -362,5 +362,56 @@ CREATE TABLE `chirdlutilbackports_error` (
             insert into chirdlutilbackports_form_instance_attribute(name, description) values('trigger', 'The trigger that requested the form creation');
         </sql>
     </diff>
+    
+    <diff>
+        <version>1.0.4</version>
+        <author>Dave Ely</author>
+        <date>April 14, 2016</date>
+        <description>
+            CHICA-633 Create new chirdlutilbackports_encounter_attribute and chirdlutilbackports_encounter_attribute_value tables.
+        </description>
+        <sql>
+        	CREATE TABLE `chirdlutilbackports_encounter_attribute` (
+              `encounter_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+              `name` varchar(255) NOT NULL,
+              `description` varchar(255) DEFAULT NULL,
+              PRIMARY KEY (`encounter_attribute_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+           
+        	CREATE TABLE `chirdlutilbackports_encounter_attribute_value`(
+  			`encounter_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  			`encounter_attribute_id` int(11) NOT NULL,
+  			`encounter_id` int(11) NOT NULL,
+  			`value_text` text DEFAULT NULL,
+  			`creator` int(11) NOT NULL default 0,
+  			`date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+  			`changed_by` int(11) default NULL,
+  			`date_changed` datetime default NULL,
+  			`voided` smallint(6) NOT NULL default 0,
+  			`voided_by` int(11) default NULL,
+  			`date_voided` datetime default NULL,
+  			`void_reason` varchar(255) default NULL,
+  			`uuid` char(38) NOT NULL,
+			PRIMARY KEY (`encounter_attribute_value_id`),
+			KEY `chirdlutilbackports_encounter_attr_fk` (`encounter_attribute_id`),
+			KEY `chirdlutilbackports_encounter_fk` (`encounter_id`),
+			CONSTRAINT `chirdlutilbackports_encounter_attr_fk` FOREIGN KEY (`encounter_attribute_id`) REFERENCES `chirdlutilbackports_encounter_attribute` (`encounter_attribute_id`),
+			CONSTRAINT `chirdlutilbackports_encounter_fk` FOREIGN KEY (`encounter_id`) REFERENCES encounter(`encounter_id`)
+			) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+        	
+        	INSERT INTO chirdlutilbackports_encounter_attribute(name, description) VALUES('Visit Number', 'Visit number parsed from PV1-19');	
+        </sql>
+    </diff>
 
+	<diff>
+        <version>1.0.5</version>
+        <author>Dave Ely</author>
+        <date>May 26, 2016</date>
+        <description>
+            CHICA-751 Create new chirdlutilbackports_encounter_attribute to store the original location that is received in the HL7 message.
+        </description>
+        <sql>
+        	INSERT INTO chirdlutilbackports_encounter_attribute(name, description) VALUES('Original Location', 'Location found in PV1-3.9');	
+        </sql>
+    </diff>
 </sqldiff>

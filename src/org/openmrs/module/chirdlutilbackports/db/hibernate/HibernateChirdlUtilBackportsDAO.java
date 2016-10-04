@@ -33,6 +33,8 @@ import org.openmrs.User;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ErrorCategory;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
@@ -970,8 +972,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		Map<Integer, Integer> sessionToEncounterMap = new HashMap<Integer, Integer>();
 		
 		try {
-			ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
-			List<PatientState> patientStates = new ArrayList<PatientState>();
 			String dateRestriction = "";
 			if (optionalDateRestriction != null) {
 				dateRestriction = " and start_time >= ?";
@@ -992,42 +992,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 			qry.addEntity(PatientState.class);
 			List<PatientState> states = qry.list();
-			for (PatientState patientState : states) {
-				Integer sessionId = patientState.getSessionId();
-				Integer encounterId = sessionToEncounterMap.get(sessionId);
-				if (encounterId == null) {
-					encounterId = chirdlUtilBackportsService.getSession(sessionId).getEncounterId();
-					sessionToEncounterMap.put(sessionId, encounterId);
-				}
-				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
-				if (stateNameMap == null) {
-					stateNameMap = new LinkedHashMap<String, PatientState>();
-				}
-				if (stateNameMap.get(patientState.getState().getName()) == null) {
-					stateNameMap.put(patientState.getState().getName(), patientState);
-				}
-				patientStateMap.put(encounterId, stateNameMap);
-			}
 			
-			List<String> mappedStateNames = getListMappedStates(programId, startStateName);
-			
-			//look at the state chain in reverse order
-			//find the latest unfinished state in the chain for the given patient
-			for (Integer encounterId : patientStateMap.keySet()) {
-				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
-				for (int i = mappedStateNames.size() - 1; i >= 0; i--) {
-					String currStateName = mappedStateNames.get(i);
-					PatientState currPatientState = stateNameMap.get(currStateName);
-					if (currPatientState != null) {
-						patientStates.add(currPatientState);
-						break;
-					}
-				}
-				
-				stateNameMap.clear();
-			}
-			
-			return patientStates;
+			return findLatestUnfinishedPatientStates(states, programId, startStateName); // DWE CHICA-761 Moved code to method
 			
 		}
 		catch (Exception e) {
@@ -1802,5 +1768,215 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		
 		return new FormAttribute();
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeByName(String)
+	 */
+	@Override
+	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException
+	{
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(EncounterAttribute.class)
+				.add(Expression.eq("name", encounterAttributeName));
+
+		List<EncounterAttribute> list = criteria.list();
+		
+		if (list != null && list.size() > 0) 
+		{
+			return (EncounterAttribute)criteria.uniqueResult();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveEncounterAttributeValue(EncounterAttributeValue)
+	 */
+	@Override
+	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException
+	{
+		sessionFactory.getCurrentSession().saveOrUpdate(encounterAttributeValue);
+		return encounterAttributeValue;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttributeName(Integer, String)
+	 */
+	@Override
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
+		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
+		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
+		
+		List<EncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (EncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByAttribute(Integer, EncounterAttributeValue)
+	 */
+	@Override
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
+		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
+		criteria.add(Expression.eq("encounterAttribute", encounterAttribute));
+
+		List<EncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (EncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getLastPatientStateAllPatientsByLocation(Date, Integer, String, Integer)
+	 */
+	@Override
+	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException 
+	{
+		String dateRestriction = "";
+		if (optionalDateRestriction != null) {
+			dateRestriction = " AND aps.start_time >= ?";
+		}
+
+		String sql = "SELECT aps.* FROM chirdlutilbackports_patient_state aps"
+				+ " INNER JOIN chirdlutilbackports_session cs ON aps.session_id = cs.session_id" 
+				+ " INNER JOIN encounter e ON cs.encounter_id = e.encounter_id"
+				+ " WHERE aps.retired=? AND aps.location_id=?" + dateRestriction
+				+ " ORDER BY e.encounter_datetime DESC, aps.start_time DESC";
+
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+
+		qry.setBoolean(0, false);
+		qry.setInteger(1, locationId);
+		if (optionalDateRestriction != null) {
+			qry.setDate(2, optionalDateRestriction);
+		}
+		qry.addEntity(PatientState.class);
+		List<PatientState> states = qry.list();
+
+		return findLatestUnfinishedPatientStates(states, programId, startStateName);
+	}
+	
+	/**
+	 * DWE CHICA-761
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgramByLocation(Integer)
+	 */
+	public Program getProgramByLocation(Integer locationId) throws HibernateException
+	{
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ProgramTagMap.class).add(
+			    Expression.eq("locationId", locationId));
+		List<ProgramTagMap> list = criteria.list();
+		
+		if(list != null && list.size() > 0)
+		{
+			ProgramTagMap map = list.get(0);
+			if(map != null)
+			{
+				return map.getProgram();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * DWE CHICA-761 Moved existing code into a method
+	 * Returns a list of the latest unfinished states, one for each of the given patients
+	 * @param states
+	 * @param programId
+	 * @param startStateName
+	 * @return
+	 */
+	private List<PatientState> findLatestUnfinishedPatientStates(List<PatientState> states, Integer programId, String startStateName)
+	{
+		try
+		{
+			ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
+			LinkedHashMap<Integer, LinkedHashMap<String, PatientState>> patientStateMap = new LinkedHashMap<Integer, LinkedHashMap<String, PatientState>>();
+			Map<Integer, Integer> sessionToEncounterMap = new HashMap<Integer, Integer>();
+			List<PatientState> patientStates = new ArrayList<PatientState>();
+
+			for (PatientState patientState : states) {
+				Integer sessionId = patientState.getSessionId();
+				Integer encounterId = sessionToEncounterMap.get(sessionId);
+				if (encounterId == null) {
+					encounterId = chirdlUtilBackportsService.getSession(sessionId).getEncounterId();
+					sessionToEncounterMap.put(sessionId, encounterId);
+				}
+				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
+				if (stateNameMap == null) {
+					stateNameMap = new LinkedHashMap<String, PatientState>();
+				}
+				if (stateNameMap.get(patientState.getState().getName()) == null) {
+					stateNameMap.put(patientState.getState().getName(), patientState);
+				}
+				patientStateMap.put(encounterId, stateNameMap);
+			}
+
+			List<String> mappedStateNames = getListMappedStates(programId, startStateName);
+
+			//look at the state chain in reverse order
+			//find the latest unfinished state in the chain for the given patient
+			for (Integer encounterId : patientStateMap.keySet()) {
+				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
+				for (int i = mappedStateNames.size() - 1; i >= 0; i--) {
+					String currStateName = mappedStateNames.get(i);
+					PatientState currPatientState = stateNameMap.get(currStateName);
+					if (currPatientState != null) {
+						patientStates.add(currPatientState);
+						break;
+					}
+				}
+
+				stateNameMap.clear();
+			}
+
+			return patientStates;	
+		}
+		catch(Exception e)
+		{
+			log.error("Error in method findLatestUnfinishedPatientStates.", e);
+			return null;
+		}	
+	}
+	
+	/**
+	 * DWE CHICA-633
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByValue(String, String)
+	 */
+	@Override
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException 
+	{
+		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
+		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
+		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Expression.eq("encounterAttributeValue.valueText", attributeValue));
+		
+		List<EncounterAttributeValue> list = criteria.list();
+
+		if (list != null && list.size() > 0) 
+		{
+			return (EncounterAttributeValue)criteria.uniqueResult();
+		}
+
+		return null;
 	}
 }

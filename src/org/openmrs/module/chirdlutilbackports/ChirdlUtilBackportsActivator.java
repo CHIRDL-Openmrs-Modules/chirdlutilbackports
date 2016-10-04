@@ -8,6 +8,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.chirdlutilbackports.cache.ApplicationCacheManager;
 
 /**
  * Purpose: Checks that module specific global properties have been set 
@@ -66,10 +67,24 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 	}
 	
 	/**
+	 * Shutdown the application cache
+	 */
+	private void shutdownCache() {
+		ApplicationCacheManager cacheManager = ApplicationCacheManager.getInstance();
+		if (cacheManager != null) {
+			cacheManager.closeCacheManager();
+		}
+	}
+	
+	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
 	public void stopped() {
 		this.log.info("Shutting down ChirdlUtilBackports Module");
+		
+		// shutdown the application cache
+		this.log.info("Shutting down the Application Cache Manager");
+		shutdownCache();
 	}
 
 }

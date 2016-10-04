@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -12,6 +13,8 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -437,4 +440,71 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return the FormAttribute object
 	 */
 	public FormAttribute getFormAttributeById(Integer formAttributeId);
+	
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttribute
+	 * @param encounterAttribute
+	 */
+	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-633
+	 * Saves or updates a EncounterAttributeValue
+	 * @param encounterAttributeValue
+	 */
+	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
+	 * @param encounterId
+	 * @param encounterAttributeName
+	 * @return EncounterAttributeValue
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-633
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
+	 * @param encounterId
+	 * @param encounterAttribute
+	 * @return EncounterAttributeValue
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-761
+	 * Get last patient state for all patients by location
+	 * 
+	 * @param optionalDateRestriction
+	 * @param programId
+	 * @param startStateName
+	 * @param locationId
+	 * @return
+	 * @throws HibernateException
+	 */
+	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-761
+	 * Get program by location
+	 * NOTE: This requires that the same program is being used for all location tags for a location
+	 * 
+	 * @param locationId
+	 * @return
+	 * @throws HibernateException
+	 */
+	public Program getProgramByLocation(Integer locationId) throws HibernateException;
+	
+	/**
+	 * DWE CHICA-784
+	 * Get the encounterAttributeValue by value_text and encounter attribute name
+	 * 
+	 * @param attributeValue
+	 * @param encounterAttributeName
+	 * @return
+	 * @throws HibernateException
+	 */
+	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException;
 }
