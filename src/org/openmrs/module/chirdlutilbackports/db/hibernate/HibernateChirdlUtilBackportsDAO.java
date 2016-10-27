@@ -1969,6 +1969,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
 		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
 		criteria.add(Expression.eq("encounterAttributeValue.valueText", attributeValue));
+		criteria.add(Restrictions.eq("encounterAttributeValue.voided", false));
 		
 		List<EncounterAttributeValue> list = criteria.list();
 
