@@ -1959,6 +1959,40 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	/**
+	 * DWE CHICA-862
+	 * 
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStateEndTime(Integer)
+	 */
+	@Override
+	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId) {
+		
+		try {
+			String sql = "select * from chirdlutilbackports_patient_state where session_id=? and state in (40,53)";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setInteger(0, sessionId);
+			qry.addEntity(PatientState.class);
+			List<PatientState> patientStates = qry.list();
+			Date endTimePSF = null;
+			HashMap<String, Date> patientStateMap = new HashMap<String, Date>();
+			
+			for (PatientState patientState : patientStates) {
+				if (patientState.getState().getName().equals("PSF WAIT FOR ELECTRONIC SUBMISSION")) {
+					endTimePSF = patientState.getEndTime();
+					patientStateMap.put(patientState.getState().getName(), endTimePSF);
+				}
+				if (patientState.getState().getName().equals("Processed Vitals HL7") && endTimePSF!=null ){
+					patientStateMap.put(patientState.getState().getName(), endTimePSF);
+				}
+			}
+			return patientStateMap;
+		}
+		catch (Exception e) {
+			log.error("Error in method getPatientStateEndTime", e);
+		}
+		return null;
+	}
+	
+	/**
 	 * DWE CHICA-633
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByValue(String, String)
 	 */

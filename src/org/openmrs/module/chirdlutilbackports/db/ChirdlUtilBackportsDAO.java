@@ -512,4 +512,13 @@ public interface ChirdlUtilBackportsDAO {
 	 * @throws HibernateException
 	 */
 	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException;
+	
+	/**
+	 * CHICA-862
+	 * Get Patient State End Time
+	 * 
+	 * @param sessionId The session identifier.  This is a required parameter.
+	 * @return List of PatientState objects
+	 */
+	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId);
 }

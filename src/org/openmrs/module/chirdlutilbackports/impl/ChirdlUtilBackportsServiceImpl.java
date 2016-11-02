@@ -678,4 +678,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	{
 		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByValue(attributeValue, encounterAttributeName);
 	}
+	
+	/**
+	 * DWE CHICA-862
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPatientStateEndTime(Integer) 
+	 */
+	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId){
+		return getChirdlUtilBackportsDAO().getPatientStateEndTime(sessionId);
+	}
 }
