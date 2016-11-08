@@ -515,10 +515,12 @@ public interface ChirdlUtilBackportsDAO {
 	
 	/**
 	 * CHICA-862
-	 * Get Patient State End Time
+	 * Get Patient States by session id
 	 * 
 	 * @param sessionId The session identifier.  This is a required parameter.
+	 * @param stateNames
+	 * @param retired 
 	 * @return List of PatientState objects
 	 */
-	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId);
+	public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
 }

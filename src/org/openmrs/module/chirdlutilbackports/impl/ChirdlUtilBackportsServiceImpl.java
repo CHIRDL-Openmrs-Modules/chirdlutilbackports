@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -680,10 +681,28 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	}
 	
 	/**
-	 * DWE CHICA-862
-	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPatientStateEndTime(Integer) 
+	 * CHICA-862
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPatientStatesBySessionId(Integer, List, boolean) 
 	 */
-	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId){
-		return getChirdlUtilBackportsDAO().getPatientStateEndTime(sessionId);
-	}
+	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException
+    {
+           Map<String, List<PatientState>> returnMap = new HashMap<String, List<PatientState>>();
+
+           List<PatientState> patientStates = getChirdlUtilBackportsDAO().getPatientStatesBySessionId(sessionId, stateNames, retired);
+
+           if(patientStates != null && patientStates.size() > 0)
+           {
+                  for(PatientState state : patientStates)
+                  {
+                        List<PatientState> mappedPatientStates = returnMap.get(state.getState().getName());
+                        if(mappedPatientStates == null)
+                        {
+                               mappedPatientStates = new ArrayList<PatientState>();
+                        }
+                        mappedPatientStates.add(state);
+                        returnMap.put(state.getState().getName(), mappedPatientStates);
+                  }
+           }
+           return returnMap;
+    }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
@@ -510,11 +511,13 @@ public PatientState getPatientState(Integer patientStateId);
 	
 	/**
 	 * CHICA-862
-	 * Get Patient State End Time
-	 * 
-	 * @param sessionId The session identifier.  This is a required parameter.
-	 * @return List of PatientState objects
+	 * Get the patient states by session id
+	 * @param sessionId
+	 * @param stateNames
+	 * @param retired
+	 * @return Map containing patient states
+	 * @throws HibernateException
 	 */
-	public HashMap<String, Date> getPatientStateEndTime(Integer sessionId);
 	
+	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
 }
