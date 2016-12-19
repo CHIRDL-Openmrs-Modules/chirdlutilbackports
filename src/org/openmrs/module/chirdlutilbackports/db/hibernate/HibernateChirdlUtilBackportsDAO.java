@@ -1969,6 +1969,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
 		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
 		criteria.add(Expression.eq("encounterAttributeValue.valueText", attributeValue));
+		criteria.add(Restrictions.eq("encounterAttributeValue.voided", false));
 		
 		List<EncounterAttributeValue> list = criteria.list();
 
@@ -1979,4 +1980,21 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 		return null;
 	}
+	
+	/**
+	 * CHICA-862
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesBySessionId(Integer, List, boolean)
+	 */
+	@SuppressWarnings("unchecked")
+    public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException
+    {
+           Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PatientState.class, "ps");
+           Criteria nestedCriteria = criteria.createCriteria("state", "s");
+           nestedCriteria.add(Expression.in("s.name", stateNames));
+           criteria.add(Expression.eq("ps.sessionId", sessionId));
+           criteria.add(Expression.eq("ps.retired", retired));
+           criteria.addOrder(Order.desc("ps.startTime"));
+
+           return criteria.list();
+    }
 }
