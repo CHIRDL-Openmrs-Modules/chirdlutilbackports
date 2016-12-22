@@ -25,8 +25,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -75,7 +75,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 		return getChirdlUtilBackportsDAO().getLocationTagAttributeValue(locationTagId, locationTagAttributeName, locationId);
 	}
 	
-	public LocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
+	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
 		return getChirdlUtilBackportsDAO().getLocationAttributeValue(locationId, locationAttributeName);
 	}
 	
@@ -99,7 +99,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 		return getChirdlUtilBackportsDAO().saveLocationTagAttributeValue(value);
 	}
 	
-	public LocationAttributeValue saveLocationAttributeValue(LocationAttributeValue value) {
+	public ChirdlLocationAttributeValue saveLocationAttributeValue(ChirdlLocationAttributeValue value) {
 		return getChirdlUtilBackportsDAO().saveLocationAttributeValue(value);
 	}
 	
@@ -426,7 +426,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getLocationAttribute(java.lang.String)
 	 */
-    public LocationAttribute getLocationAttribute(String locationAttributeName) {
+    public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName) {
 	    return getChirdlUtilBackportsDAO().getLocationAttribute(locationAttributeName);
     }
 
@@ -468,7 +468,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getAllLocationAttributes()
 	 */
-    public List<LocationAttribute> getAllLocationAttributes() {
+    public List<ChirdlLocationAttribute> getAllLocationAttributes() {
 	    return getChirdlUtilBackportsDAO().getAllLocationAttributes();
     }
 

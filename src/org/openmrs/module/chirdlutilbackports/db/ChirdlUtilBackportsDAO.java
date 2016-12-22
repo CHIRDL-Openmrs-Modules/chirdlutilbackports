@@ -20,8 +20,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -46,7 +46,7 @@ public interface ChirdlUtilBackportsDAO {
 	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId);
 	
-	public LocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName);
+	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName);
 	
 	public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id);
 	
@@ -58,7 +58,7 @@ public interface ChirdlUtilBackportsDAO {
 	
 	public LocationTagAttributeValue saveLocationTagAttributeValue(LocationTagAttributeValue value);
 	
-	public LocationAttributeValue saveLocationAttributeValue(LocationAttributeValue value);
+	public ChirdlLocationAttributeValue saveLocationAttributeValue(ChirdlLocationAttributeValue value);
 	
 	public void deleteLocationTagAttribute(LocationTagAttribute value);
 	
@@ -298,7 +298,7 @@ public interface ChirdlUtilBackportsDAO {
 	 * @param locationAttributeName
 	 * @return LocationAttribute object
 	 */
-	public LocationAttribute getLocationAttribute(String locationAttributeName);
+	public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName);
 	
 	/**
 	 * Returns a program by name.
@@ -343,7 +343,7 @@ public interface ChirdlUtilBackportsDAO {
 	 * 
 	 * @return List containing all location attributes.
 	 */
-	public List<LocationAttribute> getAllLocationAttributes();
+	public List<ChirdlLocationAttribute> getAllLocationAttributes();
 	
 	/**
 	 * Returns all location tag attributes.

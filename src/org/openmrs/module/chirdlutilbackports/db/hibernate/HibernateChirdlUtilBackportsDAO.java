@@ -23,6 +23,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StringType;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -42,8 +43,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -139,9 +140,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-	public LocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
+	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
 		try {
-			LocationAttribute locationAttribute = this.getLocationAttribute(locationAttributeName);
+			ChirdlLocationAttribute locationAttribute = this.getLocationAttribute(locationAttributeName);
 			
 			if (locationAttribute != null) {
 				Integer locationAttributeId = locationAttribute.getLocationAttributeId();
@@ -151,9 +152,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				qry.setInteger(0, locationId);
 				qry.setInteger(1, locationAttributeId);
-				qry.addEntity(LocationAttributeValue.class);
+				qry.addEntity(ChirdlLocationAttributeValue.class);
 				
-				List<LocationAttributeValue> list = qry.list();
+				List<ChirdlLocationAttributeValue> list = qry.list();
 				
 				if (list != null && list.size() > 0) {
 					return list.get(0);
@@ -170,14 +171,14 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getLocationAttribute(java.lang.String)
 	 */
-	public LocationAttribute getLocationAttribute(String locationAttributeName) {
+	public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_location_attribute " + "where name=?";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setString(0, locationAttributeName);
-			qry.addEntity(LocationAttribute.class);
+			qry.addEntity(ChirdlLocationAttribute.class);
 			
-			List<LocationAttribute> list = qry.list();
+			List<ChirdlLocationAttribute> list = qry.list();
 			
 			if (list != null && list.size() > 0) {
 				return list.get(0);
@@ -241,7 +242,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return value;
 	}
 	
-	public LocationAttributeValue saveLocationAttributeValue(LocationAttributeValue value) {
+	public ChirdlLocationAttributeValue saveLocationAttributeValue(ChirdlLocationAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;
 	}
@@ -1545,8 +1546,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllLocationAttributes()
 	 */
-    public List<LocationAttribute> getAllLocationAttributes() {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationAttribute.class);
+    public List<ChirdlLocationAttribute> getAllLocationAttributes() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlLocationAttribute.class);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
     }
@@ -1618,7 +1619,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select distinct value from chirdlutilbackports_form_attribute_value where form_attribute_id=? ";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setParameter(0, fa.getFormAttributeId());
-			qry.addScalar("value", Hibernate.STRING);
+			qry.addScalar("value", new StringType());
 			valuesCollection = qry.list();
 			return valuesCollection;
 		}

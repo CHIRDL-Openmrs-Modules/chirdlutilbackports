@@ -57,10 +57,12 @@
 	<classpathentry kind="lib" path="lib/jibx-extras.jar"/>
 	<classpathentry kind="lib" path="lib/jibx-run.jar"/>
 	<classpathentry kind="lib" path="lib-common/logic-0.5.0.1.jar"/>
-	<classpathentry kind="lib" path="lib-common/openmrs-api-1.7.3.0-dev.jar"/>
-	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.7.2.19959-dev.jar"/>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.7.2.19959-dev.jar"/>
 	<classpathentry kind="lib" path="lib/cache-api-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.12.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.12.1-SNAPSHOT-tests.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-tests.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-tools-1.12.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-web-1.12.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
