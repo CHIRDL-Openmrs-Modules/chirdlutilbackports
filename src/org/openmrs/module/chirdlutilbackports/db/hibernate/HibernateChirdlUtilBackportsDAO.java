@@ -20,7 +20,6 @@ import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StringType;
@@ -212,7 +211,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public LocationTagAttribute getLocationTagAttribute(Integer locationTagAttributeId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class).add(
-		    Expression.eq("locationTagAttributeId", locationTagAttributeId));
+		    Restrictions.eq("locationTagAttributeId", locationTagAttributeId));
 		
 		List<LocationTagAttribute> locations = criteria.list();
 		if (null == locations || locations.isEmpty()) {
@@ -223,7 +222,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public LocationTagAttribute getLocationTagAttribute(String locationTagAttributeName) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class).add(
-		    Expression.eq("name", locationTagAttributeName));
+				Restrictions.eq("name", locationTagAttributeName));
 		
 		List<LocationTagAttribute> locations = criteria.list();
 		if (null == locations || locations.isEmpty()) {
@@ -249,7 +248,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public void deleteLocationTagAttribute(LocationTagAttribute value) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class).add(
-		    Expression.eq("locationTagAttributeId", value.getLocationTagAttributeId()));
+				Restrictions.eq("locationTagAttributeId", value.getLocationTagAttributeId()));
 		
 		List<LocationTagAttributeValue> locations = criteria.list();
 		if (null != locations) {
@@ -1029,13 +1028,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 		try {
 			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
-			    Expression.eq("formAttributeId", attributeId));
+					Restrictions.eq("formAttributeId", attributeId));
 			if (locationId != null) {
-				criteria = criteria.add(Expression.eq("locationId", locationId));
+				criteria = criteria.add(Restrictions.eq("locationId", locationId));
 			}
 			
 			if (locationTagId != null) {
-				criteria = criteria.add(Expression.eq("locationTagId", locationTagId));
+				criteria = criteria.add(Restrictions.eq("locationTagId", locationTagId));
 			}
 			
 			return criteria.list();
@@ -1223,7 +1222,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public Integer getErrorCategoryIdByName(String name) {
 		
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ErrorCategory.class).add(
-			    Expression.eq("name", name));
+				Restrictions.eq("name", name));
 			try {
 				List<ErrorCategory> categories = criteria.list();
 				for (ErrorCategory category : categories){
@@ -1534,7 +1533,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 */
     public Program getProgram(String name) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Program.class).add(
-		    Expression.eq("name", name));
+    			Restrictions.eq("name", name));
 		
 		List<Program> programs = criteria.list();
 		if (null == programs || programs.isEmpty()) {
@@ -1685,11 +1684,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     public List<User> getUsersByRole(Role role, boolean includeRetired) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
     	if (!includeRetired) {
-    		criteria.add(Expression.eq("u.retired", Boolean.FALSE));
+    		criteria.add(Restrictions.eq("u.retired", Boolean.FALSE));
     	}
     	
 		List<User> users = criteria.createCriteria("roles", "r")
-		        .add(Expression.eq("r.role", role.getRole())).list();
+		        .add(Restrictions.eq("r.role", role.getRole())).list();
 		
 		return users;
 	}
@@ -1779,7 +1778,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(EncounterAttribute.class)
-				.add(Expression.eq("name", encounterAttributeName));
+				.add(Restrictions.eq("name", encounterAttributeName));
 
 		List<EncounterAttribute> list = criteria.list();
 		
@@ -1811,8 +1810,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
-		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
-		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
+		nestedCriteria.add(Restrictions.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Restrictions.eq("encounterAttributeValue.encounterId", encounterId));
 		
 		List<EncounterAttributeValue> list = criteria.list();
 
@@ -1832,8 +1831,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException 
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
-		criteria.add(Expression.eq("encounterAttributeValue.encounterId", encounterId));
-		criteria.add(Expression.eq("encounterAttribute", encounterAttribute));
+		criteria.add(Restrictions.eq("encounterAttributeValue.encounterId", encounterId));
+		criteria.add(Restrictions.eq("encounterAttribute", encounterAttribute));
 
 		List<EncounterAttributeValue> list = criteria.list();
 
@@ -1883,7 +1882,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public Program getProgramByLocation(Integer locationId) throws HibernateException
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ProgramTagMap.class).add(
-			    Expression.eq("locationId", locationId));
+				Restrictions.eq("locationId", locationId));
 		List<ProgramTagMap> list = criteria.list();
 		
 		if(list != null && list.size() > 0)
@@ -1968,8 +1967,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
-		nestedCriteria.add(Expression.eq("encounterAttribute.name", encounterAttributeName));
-		criteria.add(Expression.eq("encounterAttributeValue.valueText", attributeValue));
+		nestedCriteria.add(Restrictions.eq("encounterAttribute.name", encounterAttributeName));
+		criteria.add(Restrictions.eq("encounterAttributeValue.valueText", attributeValue));
 		criteria.add(Restrictions.eq("encounterAttributeValue.voided", false));
 		
 		List<EncounterAttributeValue> list = criteria.list();
@@ -1991,9 +1990,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     {
            Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PatientState.class, "ps");
            Criteria nestedCriteria = criteria.createCriteria("state", "s");
-           nestedCriteria.add(Expression.in("s.name", stateNames));
-           criteria.add(Expression.eq("ps.sessionId", sessionId));
-           criteria.add(Expression.eq("ps.retired", retired));
+           nestedCriteria.add(Restrictions.in("s.name", stateNames));
+           criteria.add(Restrictions.eq("ps.sessionId", sessionId));
+           criteria.add(Restrictions.eq("ps.retired", retired));
            criteria.addOrder(Order.desc("ps.startTime"));
 
            return criteria.list();
