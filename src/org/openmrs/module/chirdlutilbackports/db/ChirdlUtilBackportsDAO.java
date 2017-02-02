@@ -2,7 +2,6 @@ package org.openmrs.module.chirdlutilbackports.db;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -296,7 +295,7 @@ public interface ChirdlUtilBackportsDAO {
 	 * Returns a location attribute by name.  This will return null if one is not found by the name provided.
 	 * 
 	 * @param locationAttributeName
-	 * @return LocationAttribute object
+	 * @return ChirdlLocationAttribute object
 	 */
 	public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName);
 	
