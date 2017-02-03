@@ -5,7 +5,7 @@
   
 <beans>
 
-<bean id="chirdlutilUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+<bean id="chirdlutilbackportsUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <props>
 			</props>
