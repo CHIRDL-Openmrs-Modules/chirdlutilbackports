@@ -28,6 +28,8 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 		
 		//check that all the required global properties are set
 		checkGlobalProperties();
+		
+		ApplicationCacheManager.getInstance(); // CHICA-963 Prevent errors on shutdown by initializing on startup
 	}
 
 	private void checkGlobalProperties()
