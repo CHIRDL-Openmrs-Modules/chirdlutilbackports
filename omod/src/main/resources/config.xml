@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.0//EN" "http://resources.openmrs.org/doctype/config-1.0.dtd">
+
+<module configVersion="1.0">
+	
+	<!-- chirdlutilbackports Module Properties -->
+	<id>@MODULE_ID@</id>
+	<name>@MODULE_NAME@</name>
+	<version>@MODULE_VERSION@</version>
+	<package>@MODULE_PACKAGE@</package>
+	<author>Tammy Dugan</author>
+	<description>
+			Contains data model extensions of openmrs used by
+			CHIRDL (Child Health Improvement Research and Development Lab)
+	</description>
+
+	<require_modules>
+		<require_module version="0.5.1">org.openmrs.logic</require_module>
+	</require_modules>
+	
+	<activator>@MODULE_PACKAGE@.ChirdlUtilBackportsActivator</activator>
+	
+	<!-- /chirdlutilbackports Module Properties -->
+	
+	<require_version>1.1.10.2283</require_version>
+	
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.chirdlutilbackports.extension.html.AdminList</class>
+	</extension>
+	
+	<globalProperty>
+        <property>chirdlutilbackports.cacheConfigFile</property>
+        <description>The location of the cache configuration file.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheDefaultHeapSize</property>
+        <defaultValue>20</defaultValue>
+        <description>The default heap size (in # of entries) of a cache created outside the Ehcache XML configuration file.</description>
+    </globalProperty>
+    <globalProperty>
+        <property>chirdlutilbackports.cacheDefaultExpiry</property>
+        <defaultValue>480</defaultValue>
+        <description>The default expiry time (in minutes) of a cache created outside the Ehcache XML configuration file.</description>
+    </globalProperty>
+	
+	<!-- Internationalization -->
+	<!-- All message codes should start with @MODULE_ID@.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+	
+	<mappingFiles>
+		location_tag_attribute.hbm.xml
+		location_tag_attribute_value.hbm.xml
+		chirdl_location_attribute.hbm.xml
+		chirdl_location_attribute_value.hbm.xml
+		form_instance.hbm.xml
+		form_attribute.hbm.xml
+		form_attribute_value.hbm.xml
+		session.hbm.xml
+   	 	state_mapping.hbm.xml
+		state_action.hbm.xml
+		state.hbm.xml
+		patient_state.hbm.xml
+		program.hbm.xml
+		error_category.hbm.xml
+		error.hbm.xml
+		program_tag_map.hbm.xml
+		obs_attribute_value.hbm.xml
+		obs_attribute.hbm.xml
+		form_instance_attribute_value.hbm.xml
+        form_instance_attribute.hbm.xml
+        encounter_attribute_value.hbm.xml
+       	encounter_attribute.hbm.xml
+	</mappingFiles>
+	
+</module>
+
