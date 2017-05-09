@@ -15,11 +15,13 @@ package org.openmrs.module.chirdlutilbackports;
 
 import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.test.SkipBaseSetup;
 
 
 /**
  * 
  */
+@SkipBaseSetup
 public class GeneralTest extends BaseModuleContextSensitiveTest {
 	
 	@Test
