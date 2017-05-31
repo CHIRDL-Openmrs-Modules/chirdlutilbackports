@@ -1997,4 +1997,24 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
            return criteria.list();
     }
+	
+	/**
+	 * CHICA-993
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteLocationTagAttributeValueByValue(LocationTagAttribute, String)
+	 */
+	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value)
+	{
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class)
+				.add(Restrictions.eq("locationTagAttributeId", locationTagAttribute.getLocationTagAttributeId()))
+				.add(Restrictions.eq("value", value));
+		
+		List<LocationTagAttributeValue> locationTagAttributeValues = criteria.list();
+		if (locationTagAttributeValues != null) 
+		{
+			for (LocationTagAttributeValue attrValue : locationTagAttributeValues) 
+			{
+				deleteLocationTagAttributeValue(attrValue);
+			}
+		}
+	}
 }
