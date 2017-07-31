@@ -15,7 +15,7 @@
 	</description>
 
 	<require_modules>
-		<require_module version="0.5.1">org.openmrs.logic</require_module>
+		<require_module version="0.5.2">org.openmrs.logic</require_module>
 	</require_modules>
 	
 	<activator>@MODULE_PACKAGE@.ChirdlUtilBackportsActivator</activator>

@@ -705,4 +705,13 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
            }
            return returnMap;
     }
+	
+	/**
+	 * CHICA-993 
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#deleteLocationTagAttributeValueByValue(LocationTagAttribute, String)
+	 */
+	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value)
+	{
+		getChirdlUtilBackportsDAO().deleteLocationTagAttributeValueByValue(locationTagAttribute, value);
+	}
 }

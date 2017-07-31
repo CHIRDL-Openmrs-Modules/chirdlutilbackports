@@ -520,4 +520,12 @@ public PatientState getPatientState(Integer patientStateId);
 	 */
 	
 	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
+	
+	/**
+	 * CHICA-993 
+	 * Deletes LocationTagAttributeValue records by LocationTagAttribute and the value passed in
+	 * @param locationTagAttribute - the LocationTagAttribute
+	 * @param value - the value, such as a formId
+	 */
+	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value);
 }
