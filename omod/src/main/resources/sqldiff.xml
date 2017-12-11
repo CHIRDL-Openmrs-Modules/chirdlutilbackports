@@ -414,4 +414,16 @@ CREATE TABLE `chirdlutilbackports_error` (
         	INSERT INTO chirdlutilbackports_encounter_attribute(name, description) VALUES('Original Location', 'Location found in PV1-3.9');	
         </sql>
     </diff>
+    <diff>
+        <version>1.0.6</version>
+        <author>Dave Ely</author>
+        <date>September 5, 2017</date>
+        <description>
+            CHICA-1063 Create new chirdlutilbackports_encounter_attribute to store the device data type received in the Glooko device sync notification message.
+        </description>
+        <sql>
+        	INSERT INTO chirdlutilbackports_encounter_attribute(name, description) 
+        	VALUES('Device Data Type', 'Device data type received from Glooko. Indicates if the readings are from a meter, pump, etc. A value of readings indicates that it came from a meter.');	
+        </sql>
+    </diff>
 </sqldiff>
