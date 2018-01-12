@@ -23,7 +23,7 @@
 	
 	<!-- /chirdlutilbackports Module Properties -->
 	
-	<require_version>1.1.10.2283</require_version>
+	<require_version>2.0.6</require_version>
 	
 	<extension>
 		<point>org.openmrs.admin.list</point>
