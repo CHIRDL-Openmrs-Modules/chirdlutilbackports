@@ -25,7 +25,7 @@
 		</property>
 		<!--  default properties must be set in the hibernate.default.properties -->
 	</bean>
-	<bean parent="serviceContext">
+    <bean parent="serviceContext">
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService</value> <!-- service interface name -->
