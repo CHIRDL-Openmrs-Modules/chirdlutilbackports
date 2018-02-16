@@ -2054,7 +2054,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 					+ " AND ps.form_instance_id IS NOT NULL"
 					+ stateNameRestriction
 					+ retiredRestriction
-					+ " ORDER BY ps.end_time";
+					+ " ORDER BY ps.end_time DESC";
 
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger("encounterId", encounterId);
