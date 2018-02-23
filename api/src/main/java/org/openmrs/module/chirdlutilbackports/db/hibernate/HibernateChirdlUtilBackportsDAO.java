@@ -2027,10 +2027,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	{
 		try
 		{
+			String encounerIdRestriction = "";
+			if(encounterId != null)
+			{
+				encounerIdRestriction = " AND s.encounter_id = :encounterId";
+			}
+			
 			String retiredRestriction = "";
 			if(!includeRetired)
 			{
-				retiredRestriction = " AND ps.retired = false";
+				retiredRestriction = " AND ps.retired = :retired";
 			}
 			
 			String formNameRestriction = "";
@@ -2049,15 +2055,19 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 					+ " INNER JOIN chirdlutilbackports_session s ON ps.session_id=s.session_id" 
 					+ " INNER JOIN chirdlutilbackports_state st ON ps.state = st.state_id"
 					+ " INNER JOIN form f ON ps.form_id=f.form_id"
-					+ " WHERE s.encounter_id = :encounterId"
+					+ " WHERE ps.form_instance_id IS NOT NULL"
+					+ encounerIdRestriction
 					+ formNameRestriction
-					+ " AND ps.form_instance_id IS NOT NULL"
 					+ stateNameRestriction
 					+ retiredRestriction
 					+ " ORDER BY ps.end_time DESC";
 
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
+			
+			if(encounterId != null)
+			{
+				qry.setInteger("encounterId", encounterId);
+			}
 			
 			if(formName != null)
 			{
@@ -2067,6 +2077,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			if(stateNames != null && !stateNames.isEmpty())
 			{
 				qry.setParameterList("stateNames", stateNames);
+			}
+			
+			if(!includeRetired)
+			{
+				qry.setBoolean("retired", false);
 			}
 			
 			qry.addEntity(PatientState.class);
