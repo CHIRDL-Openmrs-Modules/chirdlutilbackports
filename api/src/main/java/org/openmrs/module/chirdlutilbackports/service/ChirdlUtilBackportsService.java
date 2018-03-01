@@ -470,9 +470,10 @@ public PatientState getPatientState(Integer patientStateId);
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
 	 * @param encounterId
 	 * @param encounterAttribute
+	 * @param includeVoided
 	 * @return EncounterAttributeValue
 	 */
-	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException;
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute, boolean includeVoided) throws HibernateException;
 	
 	/**
 	 * DWE CHICA-761
