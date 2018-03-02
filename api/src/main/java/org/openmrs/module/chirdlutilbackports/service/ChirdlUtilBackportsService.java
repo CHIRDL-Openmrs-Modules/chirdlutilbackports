@@ -14,6 +14,7 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
+import org.openmrs.api.APIException;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -528,4 +529,16 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param value - the value, such as a formId
 	 */
 	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value);
+	
+	/**
+	 * CHICA-1169
+	 * Get a list of PatientState objects by encounter, formName, and stateNames
+	 * @param formName
+	 * @param stateNames
+	 * @param encounterId
+	 * @param includeRetired
+	 * @return
+	 * @throws APIException
+	 */
+	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException;
 }
