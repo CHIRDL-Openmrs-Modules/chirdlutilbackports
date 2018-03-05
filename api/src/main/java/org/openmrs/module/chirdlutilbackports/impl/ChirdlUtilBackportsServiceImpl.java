@@ -646,12 +646,12 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 
     /**
      * DWE CHICA-633
-     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByAttribute(Integer, EncounterAttribute)
+     * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getEncounterAttributeValueByAttribute(Integer, EncounterAttribute, boolean)
      */
 	@Override
-	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException 
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute, boolean includeVoided) throws HibernateException 
 	{
-		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByAttribute(encounterId, encounterAttribute);
+		return getChirdlUtilBackportsDAO().getEncounterAttributeValueByAttribute(encounterId, encounterAttribute, includeVoided);
 	}   
 	
 	/**
