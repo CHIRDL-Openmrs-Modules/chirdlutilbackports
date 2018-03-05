@@ -1825,14 +1825,19 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	/**
 	 * DWE CHICA-633
-	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByAttribute(Integer, EncounterAttributeValue)
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByAttribute(Integer, EncounterAttributeValue, boolean)
 	 */
 	@Override
-	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute) throws HibernateException 
+	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute, boolean includeVoided) throws HibernateException 
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
 		criteria.add(Restrictions.eq("encounterAttributeValue.encounterId", encounterId));
 		criteria.add(Restrictions.eq("encounterAttribute", encounterAttribute));
+		
+		if(!includeVoided)
+		{
+			criteria.add(Restrictions.eq("encounterAttributeValue.voided", false));
+		}
 
 		List<EncounterAttributeValue> list = criteria.list();
 
