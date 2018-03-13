@@ -14,6 +14,7 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
@@ -46,30 +47,43 @@ public interface ChirdlUtilBackportsService {
 	final static int OPERATION_SUCCESS=1;
 	final static int OPERATION_FAIL=0;
 	
+	@Authorized()
 	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId);
 	
+	@Authorized()
 	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName);
 	
+	@Authorized()
 	public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id);
 	
+	@Authorized()
 	public LocationTagAttribute getLocationTagAttribute(Integer locationTagAttributeId);
 	
+	@Authorized()
 	public LocationTagAttribute getLocationTagAttribute(String locationTagAttributeName);
 	
+	@Authorized()
 	public LocationTagAttribute saveLocationTagAttribute(LocationTagAttribute value);
 	
+	@Authorized()
 	public LocationTagAttributeValue saveLocationTagAttributeValue(LocationTagAttributeValue value);
 	
+	@Authorized()
 	public ChirdlLocationAttributeValue saveLocationAttributeValue(ChirdlLocationAttributeValue value);
 	
+	@Authorized()
 	public void deleteLocationTagAttribute(LocationTagAttribute value);
 	
+	@Authorized()
 	public void deleteLocationTagAttributeValue(LocationTagAttributeValue value);
 	
+	@Authorized()
 	public int deleteFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId, Integer locationId, String formAttributeValue);
 	
+	@Authorized()
 	public int deleteFormAttributeValue(FormAttributeValue fav);
+	
 	/**
 	 * Get state by state name
 	 * 
@@ -78,97 +92,140 @@ public interface ChirdlUtilBackportsService {
 	 * @param stateMappingId state name
 	 * @return state with given state name
 	 */
+	@Authorized()
 	public StateMapping getStateMapping(State initialState,Program program);
 	
+	@Authorized()
 	public Session addSession();
 	
+	@Authorized()
 	public Session updateSession(Session session);
 	
+	@Authorized()
 	public Session getSession(int sessionId);
 	
+	@Authorized()
 	public PatientState addPatientState(Patient patient,State initialState, int sessionId,Integer locationTagId,Integer locationId,FormInstance formInstance);
 	
+	@Authorized()
 	public PatientState updatePatientState(PatientState patientState);
 
+	@Authorized()
 	public PatientState getPrevPatientStateByAction(
 			int sessionId, int patientStateId,String action);
 	
+	@Authorized()
 	public List<PatientState> getPatientStatesWithForm(int sessionId);
 	
+	@Authorized()
 	public List<PatientState> getUnfinishedPatientStatesAllPatients(Date optionalDateRestriction,Integer locationTagId,Integer locationId);
 	
+	@Authorized()
 	public List<PatientState> getUnfinishedPatientStateByStateName(String state,Date optionalDateRestriction,Integer locationTagId,Integer locationId);
 	
+	@Authorized()
 	public PatientState getLastUnfinishedPatientState(Integer sessionId);
 
+	@Authorized()
 	public PatientState getLastPatientState(Integer sessionId);
 	
+	@Authorized()
 	public List<PatientState> getLastPatientStateAllPatients(Date optionalDateRestriction, Integer programId,
 			String startStateName, Integer locationTagId, Integer locationId);
 	
+	@Authorized()
 	public State getStateByName(String stateName);
 	
+	@Authorized()
 	public Program getProgramByNameVersion(String name,String version);
 	
+	@Authorized()
 	public Program getProgram(Integer programId);
 	
+	@Authorized()
 	public PatientState getPatientStateByEncounterFormAction(Integer encounterId, Integer formId, String action);
 
+	@Authorized()
 	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action);
 
+	@Authorized()
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName);
 	
+	@Authorized()
 	public ArrayList<String> getFormAttributesByNameAsString(String attributeName);
 	
+	@Authorized()
 	public List<State> getStatesByActionName(String actionName);
 	
+	@Authorized()
 	public State getState(Integer stateId);
 
+	@Authorized()
 public PatientState getPatientState(Integer patientStateId);
 	
+	@Authorized()
 	public List<PatientState> getPatientStateBySessionState(Integer sessionId,
 			Integer stateId);
 	
+	@Authorized()
 	public List<PatientState> getAllRetiredPatientStatesWithForm(Date thresholdDate);
 	
+	@Authorized()
 	public List<Session> getSessionsByEncounter(Integer encounterId);
 	
+	@Authorized()
 	public List<PatientState> getPatientStatesWithFormInstances(String formName, Integer encounterId);
 	
+	@Authorized()
 	public List<PatientState> getPatientStateByEncounterState(Integer encounterId,
 			Integer stateId);
 	
+	@Authorized()
 	public void saveError(Error error);
 	
+	@Authorized()
 	public List<Error> getErrorsByLevel(String errorLevel,Integer sessionId);
 	
+	@Authorized()
 	public Integer getErrorCategoryIdByName(String name);
 	
+	@Authorized()
 	public Program getProgram(Integer locationTagId,Integer locationId);
 	
+	@Authorized()
 	public List<FormAttributeValue> getFormAttributeValuesByValue(String value);
 
+	@Authorized()
 	public List<PatientState> getUnfinishedPatientStateByStateSession(
 		String stateName,Integer sessionId);
 	
+	@Authorized()
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state);
+	
+	@Authorized()
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired);
 
+	@Authorized()
 	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired);
 
+	@Authorized()
 	public List<PatientState> getPatientStatesBySession(Integer sessionId,boolean isRetired);
 	
+	@Authorized()
 	public FormAttributeValue getFormAttributeValue(Integer formId, String formAttributeName,
 	                                    			Integer locationTagId,Integer locationId);
 	
+	@Authorized()
 	public FormInstance addFormInstance(Integer formId, Integer locationId);
 	
+	@Authorized()
 	public void unretireStatesBySessionId(Integer sessionId);
 	
 	/**
 	 * save or update the FormAttributeValue object according to form id, form attribute id, location id, location tag id as in-fact primary key
 	 * @param value
 	 */
+	@Authorized()
 	public void saveFormAttributeValue(FormAttributeValue value);
 	
 	/**
@@ -181,9 +238,10 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return an integer sign to show whether the value is stored successfully. value ChirdlUtilBackportsService.OPERATION_SUCCESS
 	 * means success and ChirdlUtilBackportsService.FAIL means failed.
 	 */
+	@Authorized()
 	public int saveFormAttributeValue(Integer formId, String formAttributeName, Integer locationTagId, Integer locationId, String formAttributeValue);
 	
-
+	@Authorized()
 	public FormAttribute getFormAttributeByName(String formAttributeName);
 	
 	/**
@@ -192,6 +250,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param obsAttributeName The observation attribute name used to do the lookup.
 	 * @return ObsAttribute object or null if cannot be found matching the provided observation attribute name.
 	 */
+	@Authorized()
 	public ObsAttribute getObsAttributeByName(String obsAttributeName);
 	
 	/**
@@ -200,6 +259,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param attributeName The observation attribute name used to do the lookup.
 	 * @return List of ObsAttributeValue objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<ObsAttributeValue> getObsAttributesByName(String attributeName);
 	
 	/**
@@ -208,6 +268,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param attributeName The observation attribute name used to do the lookup.
 	 * @return List of String objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<String> getObsAttributesByNameAsString(String attributeName);
 	
 	/**
@@ -217,6 +278,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param obsAttributeName The observation attribute name.
 	 * @return ObsAttributeValue object or null if a match cannot be found.
 	 */
+	@Authorized()
 	public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName);
 	
 	/**
@@ -225,6 +287,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param value The value of the observation attribute value.
 	 * @return List of ObsAttributeValue objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<ObsAttributeValue> getObsAttributeValuesByValue(String value);
 
 	/**
@@ -232,6 +295,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @param value The observation attribute value to save.
 	 */
+	@Authorized()
 	public void saveObsAttributeValue(ObsAttributeValue value);
 	
 	/**
@@ -240,6 +304,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param formInstanceAttributeName The form instance attribute name used to do the lookup.
 	 * @return FormInstanceAttribute object or null if cannot be found matching the provided form instance attribute name.
 	 */
+	@Authorized()
 	public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName);
 	
 	/**
@@ -248,6 +313,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param attributeName The form instance attribute name used to do the lookup.
 	 * @return List of FormInstanceAttributeValue objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName);
 	
 	/**
@@ -256,6 +322,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param attributeName The form instance attribute name used to do the lookup.
 	 * @return List of String objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<String> getFormInstanceAttributesByNameAsString(String attributeName);
 	
 	/**
@@ -267,6 +334,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param formInstanceAttributeName The form instance attribute name.
 	 * @return FormInstanceAttributeValue object or null if a match cannot be found.
 	 */
+	@Authorized()
 	public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId, 
 	                                                                Integer locationId, String formInstanceAttributeName);
 	
@@ -276,6 +344,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param value The value of the form instance attribute value.
 	 * @return List of FormInstanceAttributeValue objects or null if an error occurs.
 	 */
+	@Authorized()
 	public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value);
 
 	/**
@@ -283,6 +352,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @param value The form instance attribute value to save.
 	 */
+	@Authorized()
 	public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value);
 	
 	/**
@@ -290,6 +360,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @return List of Program objects.
 	 */
+	@Authorized()
 	public List<Program> getAllPrograms();
 	
 	/**
@@ -298,6 +369,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param locationAttributeName
 	 * @return LocationAttribute object
 	 */
+	@Authorized()
 	public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName);
 	
 	/**
@@ -306,6 +378,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param name The name of the program.
 	 * @return Program by the name specified or null if one is not found by that name.
 	 */
+	@Authorized()
 	public Program getProgram(String name);
 	
 	/**
@@ -314,6 +387,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param program The program to save or update.
 	 * @return The updated program.
 	 */
+	@Authorized()
 	public Program saveProgram(Program program);
 	
 	/**
@@ -321,6 +395,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @param program The program to delete.
 	 */
+	@Authorized()
 	public void deleteProgram(Program program);
 	
 	/**
@@ -329,6 +404,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param programTagMap The program tag map to save or update.
 	 * @return The updated program tag map.
 	 */
+	@Authorized()
 	public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap);
 	
 	/**
@@ -336,6 +412,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @param programTagMap The program tag map to delete.
 	 */
+	@Authorized()
 	public void deleteProgramTagMap(ProgramTagMap programTagMap);
 	
 	/**
@@ -343,6 +420,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @return List containing all location attributes.
 	 */
+	@Authorized()
 	public List<ChirdlLocationAttribute> getAllLocationAttributes();
 	
 	/**
@@ -350,6 +428,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @return List containing all location tag attributes.
 	 */
+	@Authorized()
 	public List<LocationTagAttribute> getAllLocationTagAttributes();
 	
 	/**
@@ -357,6 +436,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @return List containing all form attributes.
 	 */
+	@Authorized()
 	public List<FormAttribute> getAllFormAttributes();
 	
 	/**
@@ -368,12 +448,14 @@ public PatientState getPatientState(Integer patientStateId);
 	 * 
 	 * @return List containing FormField objects.
 	 */
+	@Authorized()
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered);
 	
 	/**
 	 * return all FormAttributes that are eligible to edit for administrators
 	 * @return a list of FormAttributes 
 	 */
+	@Authorized()
 	public List<FormAttribute> getAllEditableFormAttributes();
 	
 	/**
@@ -381,6 +463,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param fa
 	 * @return a Set of FormAttributeValues that is existed in database for fa.
 	 */
+	@Authorized()
 	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa);
 	
 	/**
@@ -390,6 +473,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param value The value to match.
 	 * @return PersonAttribute object or null if a match cannot be found.
 	 */
+	@Authorized()
 	public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value);
 	
 	/**
@@ -401,6 +485,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param locationId the location id
 	 * @return FormAttributeValue value of the attribute for the given form
 	 */
+	@Authorized()
 	public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttributeId, Integer locationTagId, Integer locationId);
 	
 	/**
@@ -410,6 +495,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param includeRetired If true, all users with the provided role will be returned.  If false, only non-retired users will be returned.
 	 * @return List of User objects containing the provided role.
 	 */
+	@Authorized()
 	public List<User> getUsersByRole(Role role, boolean includeRetired);
 	
 	/**
@@ -420,6 +506,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param locationTagId The location tag identifier.  This is an optional parameter.
 	 * @return List of FormAttributeValue objects
 	 */
+	@Authorized()
 	public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId);
 
 	/**
@@ -431,6 +518,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param formId
 	 * @return List containing FormAttributeValue objects
 	 */
+	@Authorized()
 	public List<FormAttributeValue> getAllFormAttributeValuesByFormId(Integer formId);
 	
 	/**
@@ -441,6 +529,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param formAttributeId
 	 * @return the FormAttribute object
 	 */
+	@Authorized()
 	public FormAttribute getFormAttributeById(Integer formAttributeId);
 	
 	/**
@@ -448,6 +537,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * Gets a EncounterAttribute
 	 * @param encounterAttribute
 	 */
+	@Authorized()
 	public EncounterAttribute getEncounterAttributeByName(String encounterAttributeName) throws HibernateException;
 	
 	/**
@@ -455,6 +545,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * Saves or updates a EncounterAttributeValue
 	 * @param encounterAttributeValue
 	 */
+	@Authorized()
 	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
 	
 	/**
@@ -464,6 +555,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param encounterAttributeName
 	 * @return EncounterAttributeValue
 	 */
+	@Authorized()
 	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
 	
 	/**
@@ -474,6 +566,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param includeVoided
 	 * @return EncounterAttributeValue
 	 */
+	@Authorized()
 	public EncounterAttributeValue getEncounterAttributeValueByAttribute(Integer encounterId, EncounterAttribute encounterAttribute, boolean includeVoided) throws HibernateException;
 	
 	/**
@@ -487,6 +580,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return
 	 * @throws HibernateException
 	 */
+	@Authorized()
 	public List<PatientState> getLastPatientStateAllPatientsByLocation(Date optionalDateRestriction, Integer programId, String startStateName, Integer locationId) throws HibernateException;
 	
 	/**
@@ -498,6 +592,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return
 	 * @throws HibernateException
 	 */
+	@Authorized()
 	public Program getProgramByLocation(Integer locationId) throws HibernateException;
 	
 	/**
@@ -509,6 +604,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return
 	 * @throws HibernateException
 	 */
+	@Authorized()
 	public EncounterAttributeValue getEncounterAttributeValueByValue(String attributeValue, String encounterAttributeName) throws HibernateException;
 	
 	/**
@@ -520,7 +616,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return Map containing patient states
 	 * @throws HibernateException
 	 */
-	
+	@Authorized()
 	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
 	
 	/**
@@ -529,6 +625,7 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @param locationTagAttribute - the LocationTagAttribute
 	 * @param value - the value, such as a formId
 	 */
+	@Authorized()
 	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value);
 	
 	/**
@@ -541,5 +638,6 @@ public PatientState getPatientState(Integer patientStateId);
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException;
 }

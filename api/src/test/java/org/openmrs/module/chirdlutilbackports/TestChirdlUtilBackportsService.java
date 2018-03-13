@@ -1,17 +1,39 @@
 package org.openmrs.module.chirdlutilbackports;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.api.APIException;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.test.SkipBaseSetup;
 
 public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTest {
+	
+	/**
+	 * Make sure that all methods in the service layer have the @Authorized annotation
+	 */
+	@Test
+	@SkipBaseSetup
+	public void test_checkForAuthorizedAnnotations()
+	{
+		Method[] methods = ChirdlUtilBackportsService.class.getDeclaredMethods(); // Use reflection to get a list of all methods (including public, private, etc.)
+		
+		for(Method method : methods)
+		{
+			if(Modifier.isPublic(method.getModifiers()))
+			{
+				Authorized authorized = method.getAnnotation(Authorized.class);
+				Assert.assertNotNull("Service methods must include the Authorized annotation. Authorized annotation not found on method " + method.getName(), authorized);
+			}
+		}
+	}
 
 	@Test
 	public void testGetPatientStatesByFormNameAndState() throws Exception {
