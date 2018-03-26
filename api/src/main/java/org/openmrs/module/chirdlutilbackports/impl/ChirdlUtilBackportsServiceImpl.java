@@ -16,6 +16,7 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
+import org.openmrs.api.APIException;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
@@ -713,5 +714,14 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value)
 	{
 		getChirdlUtilBackportsDAO().deleteLocationTagAttributeValueByValue(locationTagAttribute, value);
+	}
+	
+	/**
+	 * CHICA-1169
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPatientStatesByFormNameAndState(java.lang.String, java.util.List, java.lang.Integer, boolean)
+	 */
+	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException
+	{
+		return getChirdlUtilBackportsDAO().getPatientStatesByFormNameAndState(formName, stateNames, encounterId, includeRetired);
 	}
 }

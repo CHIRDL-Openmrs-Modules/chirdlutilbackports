@@ -32,6 +32,7 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
@@ -2020,6 +2021,82 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			{
 				deleteLocationTagAttributeValue(attrValue);
 			}
+		}
+	}
+	
+	/**
+	 * CHICA-1169
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesByFormNameAndState(java.lang.String, java.util.List, java.lang.Integer, boolean)
+	 */
+	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws DAOException
+	{
+		try
+		{
+			String encounerIdRestriction = "";
+			if(encounterId != null)
+			{
+				encounerIdRestriction = " AND s.encounter_id = :encounterId";
+			}
+			
+			String retiredRestriction = "";
+			if(!includeRetired)
+			{
+				retiredRestriction = " AND ps.retired = :retired";
+			}
+			
+			String formNameRestriction = "";
+			if(formName != null)
+			{
+				formNameRestriction = " AND f.name = :formName";
+			}
+			
+			String stateNameRestriction = "";
+			if(stateNames != null && !stateNames.isEmpty())
+			{
+				stateNameRestriction = " AND st.name IN (:stateNames)";
+			}
+
+			String sql = "SELECT ps.* FROM chirdlutilbackports_patient_state ps"
+					+ " INNER JOIN chirdlutilbackports_session s ON ps.session_id=s.session_id" 
+					+ " INNER JOIN chirdlutilbackports_state st ON ps.state = st.state_id"
+					+ " INNER JOIN form f ON ps.form_id=f.form_id"
+					+ " WHERE ps.form_instance_id IS NOT NULL"
+					+ encounerIdRestriction
+					+ formNameRestriction
+					+ stateNameRestriction
+					+ retiredRestriction
+					+ " ORDER BY ps.end_time DESC";
+
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			
+			if(encounterId != null)
+			{
+				qry.setInteger("encounterId", encounterId);
+			}
+			
+			if(formName != null)
+			{
+				qry.setString("formName", formName);
+			}
+			
+			if(stateNames != null && !stateNames.isEmpty())
+			{
+				qry.setParameterList("stateNames", stateNames);
+			}
+			
+			if(!includeRetired)
+			{
+				qry.setBoolean("retired", false);
+			}
+			
+			qry.addEntity(PatientState.class);
+			
+			return qry.list();
+		}
+		catch(Exception e)
+		{
+			log.error("Error in method getPatientStatesByFormNameAndState.", e);
+			throw new DAOException(e);
 		}
 	}
 }
