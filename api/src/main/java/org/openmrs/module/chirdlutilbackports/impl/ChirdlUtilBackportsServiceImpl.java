@@ -685,11 +685,11 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	 * CHICA-862
 	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPatientStatesBySessionId(Integer, List, boolean) 
 	 */
-	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException
+	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
            Map<String, List<PatientState>> returnMap = new HashMap<String, List<PatientState>>();
 
-           List<PatientState> patientStates = getChirdlUtilBackportsDAO().getPatientStatesBySessionId(sessionId, stateNames, retired);
+           List<PatientState> patientStates = getChirdlUtilBackportsDAO().getPatientStatesBySessionId(sessionId, stateNames, includeRetired);
 
            if(patientStates != null && patientStates.size() > 0)
            {

@@ -524,7 +524,7 @@ public interface ChirdlUtilBackportsDAO {
 	 * @param retired 
 	 * @return List of PatientState objects
 	 */
-	public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
+	public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException;
 	
 	/**
 	 * CHICA-993 

@@ -617,7 +617,7 @@ public interface ChirdlUtilBackportsService {
 	 * @throws HibernateException
 	 */
 	@Authorized()
-	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
+	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException;
 	
 	/**
 	 * CHICA-993 
