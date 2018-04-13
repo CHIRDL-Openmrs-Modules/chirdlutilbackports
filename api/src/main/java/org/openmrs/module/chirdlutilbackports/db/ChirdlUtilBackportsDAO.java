@@ -521,7 +521,7 @@ public interface ChirdlUtilBackportsDAO {
 	 * 
 	 * @param sessionId The session identifier.  This is a required parameter.
 	 * @param stateNames
-	 * @param retired 
+	 * @param includeRetired 
 	 * @return List of PatientState objects
 	 */
 	public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException;

@@ -612,7 +612,7 @@ public interface ChirdlUtilBackportsService {
 	 * Get the patient states by session id
 	 * @param sessionId
 	 * @param stateNames
-	 * @param retired
+	 * @param includeRetired
 	 * @return Map containing patient states
 	 * @throws HibernateException
 	 */
