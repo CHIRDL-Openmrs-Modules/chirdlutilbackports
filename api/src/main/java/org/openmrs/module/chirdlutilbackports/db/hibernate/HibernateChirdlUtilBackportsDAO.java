@@ -1992,13 +1992,15 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesBySessionId(Integer, List, boolean)
 	 */
 	@SuppressWarnings("unchecked")
-    public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException
+    public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
            Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PatientState.class, "ps");
            Criteria nestedCriteria = criteria.createCriteria("state", "s");
            nestedCriteria.add(Restrictions.in("s.name", stateNames));
            criteria.add(Restrictions.eq("ps.sessionId", sessionId));
-           criteria.add(Restrictions.eq("ps.retired", retired));
+           if(!includeRetired)
+   			{ criteria.add(Restrictions.eq("ps.retired", Boolean.FALSE)); }
+
            criteria.addOrder(Order.desc("ps.startTime"));
 
            return criteria.list();
