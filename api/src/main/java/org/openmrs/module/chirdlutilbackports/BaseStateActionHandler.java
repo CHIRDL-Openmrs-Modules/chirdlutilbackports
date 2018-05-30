@@ -58,13 +58,16 @@ public class BaseStateActionHandler implements StateActionHandler {
 	                }
                 }
                 catch (Exception e) {
+                    log.error(e);
                 }
 			}
 			if (stateActionClass == null) {
 				return null;
 			}
-			//class the initialization method is in
-			processStateAction = (ProcessStateAction) classInstatiation.newInstance();
+			if(classInstatiation!=null){
+			    //class the initialization method is in
+			    processStateAction = (ProcessStateAction) classInstatiation.newInstance();
+			}
 		}
 		catch (Exception e) {
 			log.error(e.getMessage());
@@ -73,7 +76,7 @@ public class BaseStateActionHandler implements StateActionHandler {
 		return processStateAction;
 	}
 	
-	public void processAction(StateAction stateAction, Patient patient, PatientState patientState,
+	public void processAction(StateAction stateAction, Patient stalePatient, PatientState patientState,
 	                                       HashMap<String, Object> parameters) {
 		if (stateAction == null) {
 			return;
@@ -81,8 +84,8 @@ public class BaseStateActionHandler implements StateActionHandler {
 		
 		// lookup the patient again to avoid lazy initialization errors
 		PatientService patientService = Context.getPatientService();
-		Integer patientId = patient.getPatientId();
-		patient = patientService.getPatient(patientId);
+		Integer patientId = stalePatient.getPatientId();
+		Patient patient = patientService.getPatient(patientId);
 		
 		ProcessStateAction processStateAction = loadProcessStateAction(stateAction);
 		
@@ -97,14 +100,14 @@ public class BaseStateActionHandler implements StateActionHandler {
 		List<org.openmrs.module.chirdlutilbackports.hibernateBeans.Error> errors = null;
 		// change to error state if fatal error exists for session
 		//only look up errors for consume state, for now
-		if (action != null && action.getActionName().equalsIgnoreCase("CONSUME FORM INSTANCE")) {
+		if (action != null && "CONSUME FORM INSTANCE".equalsIgnoreCase(action.getActionName())) {
 			errors = chirdlutilbackportsService.getErrorsByLevel("Fatal", sessionId);
 		}
-		if (errors != null && errors.size() > 0) {
+		if (errors != null && !errors.isEmpty()) {
 			//open an error state
 			FormInstance formInstance = (FormInstance)parameters.get("formInstance");
-			currState = chirdlutilbackportsService.getStateByName("ErrorState");
-			chirdlutilbackportsService.addPatientState(patient, currState, sessionId, locationTagId, locationId, 
+			State errorState = chirdlutilbackportsService.getStateByName("ErrorState");
+			chirdlutilbackportsService.addPatientState(patient, errorState, sessionId, locationTagId, locationId, 
 				formInstance);
 		} else {
 			Program program = chirdlutilbackportsService.getProgram(locationTagId, locationId);

@@ -26,50 +26,57 @@ public class StateManager
 
 	/**
 	 * Changes from the current state to the next state
-	 * as determined by the chirdlutilbackports_state_mapping table
-	 * @param patient Patient that is being processed
-	 * @param sessionId current session for the Patient
-	 * @param currState current state of the process
+     * as determined by the chirdlutilbackports_state_mapping table
+	 * @param patient
+	 * @param sessionId
+	 * @param currState
+	 * @param staleProgram
+	 * @param parameters
+	 * @param locationTagId
+	 * @param locationId
+	 * @param stateActionHandler
 	 * @return
 	 */
 	public static PatientState changeState(Patient patient, Integer sessionId,
-			State currState, Program program,HashMap<String,Object> parameters,
+			State currStateParam, Program staleProgram,HashMap<String,Object> parameters,
 			Integer locationTagId,Integer locationId,StateActionHandler stateActionHandler)
 	{
 		ChirdlUtilBackportsService chirdlUtilBackportsService = Context
 				.getService(ChirdlUtilBackportsService.class);
-		PatientState patientState = null;
 		//look program back up since we are crossing sessions
-		program = chirdlUtilBackportsService.getProgram(program.getProgramId());
-
-		StateMapping currMapping = null;
+		Program program = chirdlUtilBackportsService.getProgram(staleProgram.getProgramId());
 
 		final State START_STATE = program.getStartState();
 		
+		State currState = null;
+		StateMapping currMapping = null;
+		
 		// start at the initial state or move to the next one
-		if (currState == null)
+		if (currStateParam == null)
 		{
 			currState = START_STATE;
 		} else
 		{
-			currMapping = chirdlUtilBackportsService.getStateMapping(currState,program);
+		    currMapping = chirdlUtilBackportsService.getStateMapping(currState,program);
+
 			if(currMapping != null){
 				currState = currMapping.getNextState();
 			}
 		}
 
-		currMapping = chirdlUtilBackportsService.getStateMapping(currState,program);
 
 		FormInstance formInstance = null;
 		if (parameters != null) {
 			formInstance = (FormInstance)parameters.get("formInstance");
 		}
 		
-		patientState = chirdlUtilBackportsService.addPatientState(patient, currState,
+		PatientState patientState = chirdlUtilBackportsService.addPatientState(patient, currState,
 				sessionId, locationTagId, locationId, formInstance);
-
-		processStateAction(currState.getAction(), patient, patientState, 
-			program, parameters, stateActionHandler, currMapping);
+		
+		if(currState != null){
+		    processStateAction(currState.getAction(), patient, patientState, 
+		        program, parameters, stateActionHandler, currMapping);
+		}
 
 		if (currMapping == null)
 		{

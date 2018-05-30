@@ -384,7 +384,7 @@ public class ApplicationCacheManager {
     	CacheConfiguration<K, V> cacheConfig = CacheConfigurationBuilder.newCacheConfigurationBuilder(keyType, valueType,
 	        ResourcePoolsBuilder.newResourcePoolsBuilder()
             .heap(heapSize, EntryUnit.ENTRIES)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))).build();
-    	cache = cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
+    	cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
     	cacheManager.enableManagement(cacheName, true);
     	cacheManager.enableStatistics(cacheName, true);
     	
@@ -487,13 +487,13 @@ public class ApplicationCacheManager {
 	private ObjectName getCacheObjectName(String cacheName) {
 		URI uri = cacheManager.getURI();
 	    String cacheManagerName = sanitize(uri != null ? uri.toString() : "null");
-	    cacheName = sanitize(cacheName != null ? cacheName : "null");
+	    String cacheNameSanitized = sanitize(cacheName != null ? cacheName : "null");
 
 	    try {
 	      return new ObjectName("javax.cache:type=CacheStatistics" + ",CacheManager=" + cacheManagerName + ",Cache="
-	          + cacheName);
+	          + cacheNameSanitized);
 	    } catch (MalformedObjectNameException e) {
-	    	log.error("Error creating object name for cache " + cacheName, e);
+	    	log.error("Error creating object name for cache " + cacheNameSanitized, e);
 	    }
 	    
 	    return null;
