@@ -44,11 +44,12 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	public List<Obs> getObservations(Cohort who, LogicCriteria logicCriteria, LogicContext logicContext)
 	{
 		List<Obs> results = new ArrayList<Obs>();
+		HashMap<String, Set<Obs>> obsByConceptName = null;
 
 		// look up the obs for each patient in the set
 		for (Integer patientId : who.getMemberIds())
 		{
-		    HashMap<String, Set<Obs>> obsByConceptName = getObs(patientId);
+			obsByConceptName = getObs(patientId);
 			if (obsByConceptName != null)
 			{
 				List<Obs> patientResults = evaluateLogicCriteria(obsByConceptName,
@@ -86,7 +87,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		// Apply First/Last Transform to results
 		if (transformOperator == Operator.LAST)
 		{
-			if(!resultObs.isEmpty())
+			if(resultObs.size()>0)
 			{
 				Collections.sort(resultObs, Collections
 						.reverseOrder(new ObsComparator()));
@@ -129,7 +130,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 				}
 			}
 			
-			if(!nResultMap.values().isEmpty()){
+			if(nResultMap.values().size()>0){
 				resultObs.clear();
 				
 				for(ArrayList<Obs> currPatientObs:nResultMap.values()){
@@ -303,8 +304,8 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 			// each patient
 		} else if (operator == Operator.ASOF
 		        && rightOperand instanceof Date) {
-
-			results = compare("obsDatetime", (Date) rightOperand, leftOperandResults, "LT");
+			indexDate = (Date) rightOperand;
+			results = compare("obsDatetime", indexDate, leftOperandResults, "LT");
 
 		} else if (operator == Operator.WITHIN
 		        && rightOperand instanceof Duration) {
@@ -363,7 +364,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 			Object comparisonOperand2,
 			ArrayList<Obs> prevResults)
 	{
-		if ("obsDatetime".equalsIgnoreCase(component)
+		if (component.equalsIgnoreCase("obsDatetime")
 				&& comparisonOperand1 instanceof Date&&comparisonOperand2 instanceof Date)
 		{
 			return compareBetweenObsDateTime((Date) comparisonOperand1,(Date) comparisonOperand2,
@@ -376,13 +377,13 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compare(String component, Object comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		if ("obsDatetime".equalsIgnoreCase(component)
+		if (component.equalsIgnoreCase("obsDatetime")
 				&& comparisonOperand instanceof Date)
 		{
 			return compareObsDateTime((Date) comparisonOperand, prevResults,
 					comparator);
 		}
-		if ("valueNumeric".equalsIgnoreCase(component))
+		if (component.equalsIgnoreCase("valueNumeric"))
 
 		{
 			if (comparisonOperand instanceof Double)
@@ -402,21 +403,21 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 						prevResults, comparator);
 			}
 		}
-		if ("valueDatetime".equalsIgnoreCase(component)
+		if (component.equalsIgnoreCase("valueDatetime")
 				&& comparisonOperand instanceof Date)
 		{
 			return compareValueDate((Date) comparisonOperand, prevResults,
 					comparator);
 		}
 
-		if ("valueCoded".equalsIgnoreCase(component)
+		if (component.equalsIgnoreCase("valueCoded")
 				&& comparisonOperand instanceof Concept)
 		{
 			return compareValueConcept((Concept) comparisonOperand,
 					prevResults, comparator);
 		}
 		
-		if ("valueText".equalsIgnoreCase(component)
+		if (component.equalsIgnoreCase("valueText")
 				&& comparisonOperand instanceof String)
 		{
 			return compareValueText((String) comparisonOperand,
@@ -432,7 +433,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 
 		for (Obs currObs : prevResults)
 		{
-			if ("EQ".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("EQ"))
 			{
 				Concept codedAnswer = currObs.getValueCoded();
 				
@@ -456,35 +457,35 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		{
 			Date currObsDate = currObs.getObsDatetime();
 
-			if ("LT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LT"))
 			{
 				if (currObsDate!=null&&currObsDate.compareTo(comparisonOperand) < 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("LTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LTE"))
 			{
 				if (currObsDate!=null&&currObsDate.compareTo(comparisonOperand) <= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GT"))
 			{
 				if (currObsDate!=null&&currObsDate.compareTo(comparisonOperand) > 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GTE"))
 			{
 				if (currObsDate!=null&&currObsDate.compareTo(comparisonOperand) >= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("EQ".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("EQ"))
 			{
 				if (currObsDate!=null&&currObsDate.compareTo(comparisonOperand) == 0)
 				{
@@ -519,35 +520,35 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		{
 			Double currObsNumeric = currObs.getValueNumeric();
 
-			if ("LT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LT"))
 			{
 				if (currObsNumeric!=null&&currObsNumeric.compareTo(comparisonOperand) < 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("LTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LTE"))
 			{
 				if (currObsNumeric!=null&&currObsNumeric.compareTo(comparisonOperand) <= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GT"))
 			{
 				if (currObsNumeric!=null&&currObsNumeric.compareTo(comparisonOperand) > 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GTE"))
 			{
 				if (currObsNumeric!=null&&currObsNumeric.compareTo(comparisonOperand) >= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("EQ".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("EQ"))
 			{
 				if (currObsNumeric!=null&&currObsNumeric.compareTo(comparisonOperand) == 0)
 				{
@@ -566,7 +567,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 
 		for (Obs currObs : prevResults)
 		{
-			if ("EQ".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("EQ"))
 			{
 				String currObsText = currObs.getValueText();
 				if (currObsText!=null&&currObsText.compareTo(comparisonOperand) == 0)
@@ -588,35 +589,35 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		{
 			Date currValueDatetime = currObs.getValueDatetime();
 
-			if ("LT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LT"))
 			{
 				if (currValueDatetime!=null&&currValueDatetime.compareTo(comparisonOperand) < 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("LTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("LTE"))
 			{
 				if (currValueDatetime!=null&&currValueDatetime.compareTo(comparisonOperand) <= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GT".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GT"))
 			{
 				if (currValueDatetime!=null&&currValueDatetime.compareTo(comparisonOperand) > 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("GTE".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("GTE"))
 			{
 				if (currValueDatetime!=null&&currValueDatetime.compareTo(comparisonOperand) >= 0)
 				{
 					results.add(currObs);
 				}
 			}
-			if ("EQ".equalsIgnoreCase(comparator))
+			if (comparator.equalsIgnoreCase("EQ"))
 			{
 				if (currValueDatetime!=null&&currValueDatetime.compareTo(comparisonOperand) == 0)
 				{

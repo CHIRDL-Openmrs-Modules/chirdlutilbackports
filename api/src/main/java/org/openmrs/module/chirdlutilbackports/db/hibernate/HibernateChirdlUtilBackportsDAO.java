@@ -109,7 +109,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<LocationTagAttributeValue> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -130,7 +130,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<LocationTagAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -156,7 +156,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<ChirdlLocationAttributeValue> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -180,7 +180,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<ChirdlLocationAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -200,7 +200,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.addEntity(LocationTagAttributeValue.class);
 			List<LocationTagAttributeValue> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -303,8 +303,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 					if (tx != null) {
 						tx.commit();
 					}
-					session.close();
-
+					if (session != null) {
+						session.close();
+					}
 				}
 				catch (Exception e) {
 					log.error("Error generated", e);
@@ -347,6 +348,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				ResultSet rs = stmt.executeQuery();
 				if (rs.next()) {
 					Integer formInstanceId = rs.getInt(1);
+					formId = rs.getInt(2);
+					locationId = rs.getInt(3);
 					FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
 					return formInstance;
 				}
@@ -384,7 +387,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<FormAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -403,7 +406,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<State> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -451,7 +454,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<FormAttributeValue> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -504,8 +507,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public List<PatientState> getPatientStatesWithForm(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=? and form_id is not null and retired=? order by start_time desc,end_time desc";
+			SQLQuery qry = null;
 			
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, sessionId);
 			qry.setBoolean(1, false);
 			qry.addEntity(PatientState.class);
@@ -521,15 +525,17 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=? and patient_state_id < ? and retired=?"
 			        + " order by patient_state_id desc";
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			SQLQuery qry = null;
+			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, sessionId);
 			qry.setInteger(1, patientStateId);
 			qry.setBoolean(2, false);
 			qry.addEntity(PatientState.class);
 			List<PatientState> patientStates = qry.list();
+			StateAction stateAction = null;
 			
 			for (PatientState patientState : patientStates) {
-			    StateAction stateAction = patientState.getState().getAction();
+				stateAction = patientState.getState().getAction();
 				if (stateAction != null) {
 					if (stateAction.getActionName().equalsIgnoreCase(action)) {
 						return patientState;
@@ -875,7 +881,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setBoolean(1, false);
 			qry.addEntity(PatientState.class);
 			List<PatientState> states = qry.list();
-			if (states != null && !states.isEmpty()) {
+			if (states != null && states.size() > 0) {
 				return states.get(0);
 			}
 			return null;
@@ -895,7 +901,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setBoolean(1, false);
 			qry.addEntity(PatientState.class);
 			List<PatientState> states = qry.list();
-			if (states != null && !states.isEmpty()) {
+			if (states != null && states.size() > 0) {
 				return states.get(0);
 			}
 			return null;
@@ -935,15 +941,17 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		for (StateMapping mapping : mappings) {
 			stateMap.put(mapping.getInitialState().getName(), mapping);
 		}
-				
+		
+		StateMapping mapping = null;
+		
 		if (startStateName != null) {
 			orderedStateNames.add(startStateName);
-			StateMapping mapping = stateMap.get(startStateName);
+			mapping = stateMap.get(startStateName);
 			
 			while (mapping != null) {
-				String nextState = mapping.getNextState().getName();
-				orderedStateNames.add(nextState);
-				mapping = stateMap.get(nextState);
+				startStateName = mapping.getNextState().getName();
+				orderedStateNames.add(startStateName);
+				mapping = stateMap.get(startStateName);
 			}
 		}
 		return orderedStateNames;
@@ -1245,7 +1253,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<ObsAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -1319,7 +1327,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<ObsAttributeValue> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -1367,7 +1375,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<FormInstanceAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) {
+			if (list != null && list.size() > 0) {
 				return list.get(0);
 			}
 		}
@@ -1446,7 +1454,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<FormInstanceAttributeValue> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -1569,7 +1577,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(FormField.class, "formField");
 		criteria.createAlias("formField.field", "field");
 		criteria.add(Restrictions.eq("form", form));
-		if (fieldTypes != null && !fieldTypes.isEmpty()) {
+		if (fieldTypes != null && fieldTypes.size() > 0) {
 			criteria.add(Restrictions.in("field.fieldType", fieldTypes));
 		}
 		
@@ -1640,7 +1648,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				
 				List<PersonAttribute> list = qry.list();
 				
-				if (list != null && !list.isEmpty()) {
+				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
 				
@@ -1750,7 +1758,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			List<FormAttribute> list = qry.list();
 			
-			if (list != null && !list.isEmpty()) 
+			if (list != null && list.size() > 0) 
 			{
 				return (FormAttribute)qry.uniqueResult();
 			}
@@ -1775,7 +1783,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 		List<EncounterAttribute> list = criteria.list();
 		
-		if (list != null && !list.isEmpty()) 
+		if (list != null && list.size() > 0) 
 		{
 			return (EncounterAttribute)criteria.uniqueResult();
 		}
@@ -1808,7 +1816,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		List<EncounterAttributeValue> list = criteria.list();
 
-		if (list != null && !list.isEmpty()) 
+		if (list != null && list.size() > 0) 
 		{
 			return (EncounterAttributeValue)criteria.uniqueResult();
 		}
@@ -1834,7 +1842,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 		List<EncounterAttributeValue> list = criteria.list();
 
-		if (list != null && !list.isEmpty()) 
+		if (list != null && list.size() > 0) 
 		{
 			return (EncounterAttributeValue)criteria.uniqueResult();
 		}
@@ -1883,7 +1891,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				Restrictions.eq("locationId", locationId));
 		List<ProgramTagMap> list = criteria.list();
 		
-		if(list != null && !list.isEmpty())
+		if(list != null && list.size() > 0)
 		{
 			ProgramTagMap map = list.get(0);
 			if(map != null)
@@ -1933,7 +1941,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 			//look at the state chain in reverse order
 			//find the latest unfinished state in the chain for the given patient
-			for (LinkedHashMap<String, PatientState> stateNameMap: patientStateMap.values()) {
+			for (Integer encounterId : patientStateMap.keySet()) {
+				LinkedHashMap<String, PatientState> stateNameMap = patientStateMap.get(encounterId);
 				for (int i = mappedStateNames.size() - 1; i >= 0; i--) {
 					String currStateName = mappedStateNames.get(i);
 					PatientState currPatientState = stateNameMap.get(currStateName);
@@ -1970,7 +1979,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		List<EncounterAttributeValue> list = criteria.list();
 
-		if (list != null && !list.isEmpty()) 
+		if (list != null && list.size() > 0) 
 		{
 			return (EncounterAttributeValue)criteria.uniqueResult();
 		}

@@ -38,14 +38,17 @@ public class ChirdlUtilBackportsActivator extends BaseModuleActivator {
 			
 			Iterator<GlobalProperty> properties = adminService
 					.getAllGlobalProperties().iterator();
+			GlobalProperty currProperty = null;
+			String currValue = null;
+			String currName = null;
 
 			while (properties.hasNext())
 			{
-			    GlobalProperty currProperty = properties.next();
-			    String currName = currProperty.getProperty();
+				currProperty = properties.next();
+				currName = currProperty.getProperty();
 				if (currName.startsWith("chirdlutilbackports"))
 				{
-				    String currValue = currProperty.getPropertyValue();
+					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{
 						this.log.error("You must set a value for global property: "

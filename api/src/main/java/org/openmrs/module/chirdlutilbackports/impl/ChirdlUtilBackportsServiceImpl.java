@@ -530,7 +530,6 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 			getChirdlUtilBackportsDAO().deleteFormAttributeValue(fav);		
 		}
 		catch(HibernateException e){
-		    log.error(e);
 			return OPERATION_FAIL;
 		}
 		return OPERATION_SUCCESS;
@@ -545,7 +544,6 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 			getChirdlUtilBackportsDAO().deleteFormAttributeValue(fav);		
 		}
 		catch(HibernateException e){
-		    log.error(e);
 			return OPERATION_FAIL;
 		}
 		return OPERATION_SUCCESS;
@@ -693,7 +691,7 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 
            List<PatientState> patientStates = getChirdlUtilBackportsDAO().getPatientStatesBySessionId(sessionId, stateNames, includeRetired);
 
-           if(patientStates != null && !patientStates.isEmpty())
+           if(patientStates != null && patientStates.size() > 0)
            {
                   for(PatientState state : patientStates)
                   {
