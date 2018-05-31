@@ -64,7 +64,9 @@ public class BaseStateActionHandler implements StateActionHandler {
 				return null;
 			}
 			//class the initialization method is in
-			processStateAction = (ProcessStateAction) classInstatiation.newInstance();
+			if(classInstatiation != null){
+			    processStateAction = (ProcessStateAction) classInstatiation.newInstance();
+			}
 		}
 		catch (Exception e) {
 			log.error(e.getMessage());

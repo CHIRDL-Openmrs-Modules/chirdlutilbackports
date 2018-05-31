@@ -353,6 +353,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 					FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
 					return formInstance;
 				}
+				rs.close();
 			}
 			
 		}
