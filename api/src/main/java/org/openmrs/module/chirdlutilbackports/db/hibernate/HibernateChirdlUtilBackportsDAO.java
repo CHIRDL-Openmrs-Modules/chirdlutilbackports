@@ -281,9 +281,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + " select max(form_instance_id)+1 as form_instance_id,location_id "
 			        + " from chirdlutilbackports_form_instance where location_id=? and form_id in "
 			        + " (select form_id from form where name=?) group by location_id)a" + " union select 1 from dual)a";
-			PreparedStatement stmt = null;
-			try {
-				stmt = con.prepareStatement(sql);
+			try (PreparedStatement stmt = con.prepareStatement(sql)){
 				stmt.setInt(1, formId);
 				stmt.setInt(2, locationId);
 				stmt.setInt(3, locationId);
@@ -297,9 +295,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			}
 			finally {
 				try {
-					if (stmt != null) {
-						stmt.close();
-					}
 					if (tx != null) {
 						tx.commit();
 					}
@@ -322,9 +317,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public synchronized FormInstance addFormInstance(Integer formId, Integer locationId) {
-		PreparedStatement stmt = null;
 		Transaction tx = null;
 		StatelessSession session = null;
+		ResultSet rs = null;
 		try {
 			Integer rowsInserted = insertFormInstance(formId, locationId);
 			
@@ -339,21 +334,22 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				        + "? as form_id,location_id from chirdlutilbackports_form_instance " 
 				        + "inner join form f using (form_id) where location_id=? "
 				        + "and f.name=? group by location_id";
-				
-				stmt = con.prepareStatement(sql);
-				stmt.setInt(1, formId);
-				stmt.setInt(2, locationId);
-				stmt.setString(3, formName);
-				
-				ResultSet rs = stmt.executeQuery();
-				if (rs.next()) {
-					Integer formInstanceId = rs.getInt(1);
-					formId = rs.getInt(2);
-					locationId = rs.getInt(3);
-					FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
-					return formInstance;
+				try (PreparedStatement stmt = con.prepareStatement(sql)) {
+    				stmt.setInt(1, formId);
+    				stmt.setInt(2, locationId);
+    				stmt.setString(3, formName);
+    				
+    				rs = stmt.executeQuery();
+    				if (rs.next()) {
+    					Integer formInstanceId = rs.getInt(1);
+    					formId = rs.getInt(2);
+    					locationId = rs.getInt(3);
+    					FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
+    					return formInstance;
+    				}
+				} catch (Exception e) {
+				    this.log.error("Error in method addFormInstance", e);
 				}
-				rs.close();
 			}
 			
 		}
@@ -362,8 +358,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		finally {
 			try {
-				if (stmt != null) {
-					stmt.close();
+				if (rs != null) {
+					rs.close();
 				}
 				if (tx != null) {
 					tx.commit();
