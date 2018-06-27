@@ -24,6 +24,7 @@
     <chirdlutilbackports_state state_id="98793" name="PWS_process" />
     <chirdlutilbackports_state state_id="98794" name="PSF_process" />
     <chirdlutilbackports_state state_id="98795" name="PSF WAIT FOR ELECTRONIC SUBMISSION" />
+    <chirdlutilbackports_state state_id="98796" name="TEST STATE" />
     
     <form form_id="8970" name="PSF" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sde" />
     <form form_id="8971" name="PWS" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sdf" />
@@ -37,4 +38,6 @@
 	<chirdlutilbackports_patient_state patient_state_id="2" patient_id="2298" state="98793" start_time="2017-02-09 15:51:50.0" end_time="2017-02-09 15:55:50.0" session_id="23189" form_instance_id="298238" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
 	<chirdlutilbackports_patient_state patient_state_id="3" patient_id="2298" state="98795" start_time="2018-02-09 15:46:50.0" end_time="2018-02-09 15:50:50.0" session_id="23190" form_instance_id="298239" form_id="8970" retired="false" location_tag_id="2987" location_id="8992"/>
 	<chirdlutilbackports_patient_state patient_state_id="4" patient_id="2298" state="98793" start_time="2018-02-09 15:51:50.0" end_time="2018-02-09 15:55:50.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
+	<chirdlutilbackports_patient_state patient_state_id="5" patient_id="2298" state="98796" start_time="2018-06-27 11:09:00.0" end_time="2018-06-27 11:10:00.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="true" location_tag_id="2987" location_id="8992"/>
+	<chirdlutilbackports_patient_state patient_state_id="6" patient_id="2298" state="98796" start_time="2018-06-27 11:11:00.0" end_time="2018-06-27 11:12:00.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
 </dataset>
