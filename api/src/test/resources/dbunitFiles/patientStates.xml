@@ -1,33 +1,59 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test/dbunitFiles/tableSetupDTD.dtd">
 <dataset>
-    <person person_id="777" gender="F" dead="false" creator="1" date_created="2008-08-15 15:46:47.0" voided="false" uuid="7e93b11f-fc1f-4c3a-ab5f-cc6e3ded6c73"/>
+    <!--  <person person_id="777" gender="F" dead="false" creator="1" date_created="2008-08-15 15:46:47.0" voided="false" uuid="7e93b11f-fc1f-4c3a-ab5f-cc6e3ded6c73"/> -->
     <person person_id="2298" gender="M" birthdate="2016-01-01" birthdate_estimated="false" dead="false" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="f1b719b8-76d0-4515-9a9c-3ce5a50c0b80" />
     <patient patient_id="2298" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" />
-    
-    <users user_id="777" person_id="777" system_id="6-7" username="user1" password="0c1e358be64b7ac6412cbf4748aaa902152f97d3833f81dbaa8ab39a7505cb0b6011cac629ec3e20c29681ad05e9d67ad9a15d8fff81e77ea91246edf518af85" salt="32fdfbaec5cb5829a1277f869b17404806c1b1f25fc7c00ddcf4265d0adb2b78812650af86ca03b7a59b4a8317e3b5d28974cfd42f036de7311c9b51a6662676" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="fbbc8bec-e135-11de-babe-001e378eb67e"/>
+      
+    <!-- 
+    <users user_id="777" person_id="777" system_id="6-777" username="user1" password="0c1e358be64b7ac6412cbf4748aaa902152f97d3833f81dbaa8ab39a7505cb0b6011cac629ec3e20c29681ad05e9d67ad9a15d8fff81e77ea91246edf518af85" salt="32fdfbaec5cb5829a1277f869b17404806c1b1f25fc7c00ddcf4265d0adb2b78812650af86ca03b7a59b4a8317e3b5d28974cfd42f036de7311c9b51a6662676" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="fbbc8bec-e135-11de-babe-001e378eb67e"/>
     <role role="System Developer" description="OpenMRS developer role" uuid="2394872987s89d789sdf789"/>
-    <user_role user_id="777" role="System Developer"/>
-    
+    <user_role user_id="777" role="System Developer"/>    
+      -->
+      
     <location location_id="8992" name="location8992" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="23498719928797382971827391"/>
     <location_tag location_tag_id="2987" name="tag2987" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789273"/>
     <location_tag_map location_id="8992" location_tag_id="2987"/>
+    <location_tag location_tag_id="2988" name="tag2988" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789274"/>
+    <location_tag_map location_id="8992" location_tag_id="2988"/>
     
     <encounter_type encounter_type_id="23981" name="HL7Message" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="kla9009812as9s8df908asdf"/>
     
     <encounter encounter_id="23189" encounter_type="23981" patient_id="2298" location_id="8992" encounter_datetime="2017-02-09 15:46:47.0" creator="1" date_created="2017-02-09 15:46:47.0" voided="false" uuid="asdf98asd08asd908sadf97" />
     <encounter encounter_id="23190" encounter_type="23981" patient_id="2298" location_id="8992" encounter_datetime="2018-02-09 15:46:47.0" creator="1" date_created="2018-02-09 15:46:47.0" voided="false" uuid="asdf98asd08asd908sadf98" />
+    <encounter encounter_id="23191" encounter_type="23981" patient_id="2298" location_id="8992" encounter_datetime="2018-06-29 15:46:47.0" creator="1" date_created="2018-06-29 15:46:47.0" voided="false" uuid="asdf98asd08asd908sadf99" />
+    <encounter encounter_id="23192" encounter_type="23981" patient_id="2298" location_id="8992" encounter_datetime="2018-06-30 15:46:47.0" creator="1" date_created="2018-06-30 15:46:47.0" voided="false" uuid="abcd98asd08asd908sadf99" />
+    
+    <chirdlutilbackports_encounter_attribute encounter_attribute_id="1" name="TestEncounterAttribute" description="TestEncounterAttributeDescription"/>
+    <chirdlutilbackports_encounter_attribute_value encounter_attribute_value_id="1" encounter_attribute_id="1" encounter_id="23189" value_text="EncounterAttributeValueFor_23189" creator="1" date_created="2017-02-09 15:46:47.0" voided="false" uuid="abcd98asd08asd908sadf98"/>
+    <chirdlutilbackports_encounter_attribute_value encounter_attribute_value_id="2" encounter_attribute_id="1" encounter_id="23190" value_text="EncounterAttributeValueFor_23190" creator="1" date_created="2018-02-09 15:46:47.0" voided="true" uuid="abce98asd08asd908sadf98" changed_by="1" date_changed="2018-02-09 15:50:47.0" voided_by="1" void_reason="Testing"/>
+    <chirdlutilbackports_encounter_attribute_value encounter_attribute_value_id="3" encounter_attribute_id="1" encounter_id="23191" value_text="EncounterAttributeValueFor_23191" creator="1" date_created="2018-02-09 15:46:47.0" voided="true" uuid="abcf98asd08asd908sadf98" changed_by="1" date_changed="2018-02-09 15:50:47.0" voided_by="1" void_reason="Testing"/>
+    <chirdlutilbackports_encounter_attribute_value encounter_attribute_value_id="4" encounter_attribute_id="1" encounter_id="23191" value_text="EncounterAttributeValueFor_23191" creator="1" date_created="2018-06-29 15:46:47.0" voided="false" uuid="abcg98asd08asd908sadf98"/>
+    <chirdlutilbackports_encounter_attribute_value encounter_attribute_value_id="5" encounter_attribute_id="1" encounter_id="23192" value_text="EncounterAttributeValueFor_23192" creator="1" date_created="2018-06-30 15:46:47.0" voided="false" uuid="abch98asd08asd908sadf98"/>
     
     <chirdlutilbackports_session session_id="23189" encounter_id="23189"/>
     <chirdlutilbackports_session session_id="23190" encounter_id="23190"/>
+    <chirdlutilbackports_session session_id="23191" encounter_id="23191"/>
     
     <chirdlutilbackports_state state_id="98793" name="PWS_process" />
     <chirdlutilbackports_state state_id="98794" name="PSF_process" />
     <chirdlutilbackports_state state_id="98795" name="PSF WAIT FOR ELECTRONIC SUBMISSION" />
     <chirdlutilbackports_state state_id="98796" name="TEST STATE" />
     
+    <chirdlutilbackports_state_mapping state_mapping_id="1" initial_state="98796" next_state="98795" program_id="1" creator="1" date_created="2018-06-27 11:09:00.0"/>
+    
+    <chirdlutilbackports_program program_id="1" name="test_program" description="test program description" version="1.0" date_created="2018-06-27 14:33:00.0" creator="1" start_state="98796" end_state="98796"/>
+    <chirdlutilbackports_program_tag_map program_tag_map_id="1" program_id="1" location_id="8992" location_tag_id="2987"/>
+    <chirdlutilbackports_program_tag_map program_tag_map_id="1" program_id="1" location_id="8992" location_tag_id="2988"/>
+    
+    <chirdlutilbackports_form_attribute form_attribute_id="1" name="TestFormAttribute" description="TestFormAttributeDescription"/>
+    <chirdlutilbackports_form_attribute form_attribute_id="2" name="TestFormAttribute2" description="TestFormAttributeDescription2"/>
+    
     <form form_id="8970" name="PSF" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sde" />
     <form form_id="8971" name="PWS" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sdf" />
+    
+    <chirdlutilbackports_form_attribute_value form_attribute_value_id="1" form_id="8970" value="testValue1" form_attribute_id="1" location_tag_id="2987" location_id="8992"/>
+    <chirdlutilbackports_form_attribute_value form_attribute_value_id="2" form_id="8970" value="testValue2" form_attribute_id="2" location_tag_id="2987" location_id="8992"/>
     
     <chirdlutilbackports_form_instance form_id="8970" form_instance_id="298237" location_id="8992" />
     <chirdlutilbackports_form_instance form_id="8971" form_instance_id="298238" location_id="8992" />
@@ -39,5 +65,5 @@
 	<chirdlutilbackports_patient_state patient_state_id="3" patient_id="2298" state="98795" start_time="2018-02-09 15:46:50.0" end_time="2018-02-09 15:50:50.0" session_id="23190" form_instance_id="298239" form_id="8970" retired="false" location_tag_id="2987" location_id="8992"/>
 	<chirdlutilbackports_patient_state patient_state_id="4" patient_id="2298" state="98793" start_time="2018-02-09 15:51:50.0" end_time="2018-02-09 15:55:50.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
 	<chirdlutilbackports_patient_state patient_state_id="5" patient_id="2298" state="98796" start_time="2018-06-27 11:09:00.0" end_time="2018-06-27 11:10:00.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="true" location_tag_id="2987" location_id="8992"/>
-	<chirdlutilbackports_patient_state patient_state_id="6" patient_id="2298" state="98796" start_time="2018-06-27 11:11:00.0" end_time="2018-06-27 11:12:00.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
+	<chirdlutilbackports_patient_state patient_state_id="6" patient_id="2298" state="98796" start_time="2018-06-27 11:11:00.0" session_id="23190" form_instance_id="298240" form_id="8971" retired="false" location_tag_id="2987" location_id="8992"/>
 </dataset>

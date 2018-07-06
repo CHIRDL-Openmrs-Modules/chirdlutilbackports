@@ -10,7 +10,14 @@
 		<mapping resource="state.hbm.xml"/>
 	    <mapping resource="patient_state.hbm.xml"/>
 	    <mapping resource="form_instance.hbm.xml"/>
+	    <mapping resource="encounter_attribute.hbm.xml"/>
+	    <mapping resource="encounter_attribute_value.hbm.xml"/>
 	    <mapping resource="location_tag_attribute.hbm.xml"/>
 	    <mapping resource="location_tag_attribute_value.hbm.xml"/>
+	    <mapping resource="program.hbm.xml"/>
+	    <mapping resource="program_tag_map.hbm.xml"/>
+	    <mapping resource="state_mapping.hbm.xml"/>
+	    <mapping resource="form_attribute.hbm.xml"/>
+	    <mapping resource="form_attribute_value.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

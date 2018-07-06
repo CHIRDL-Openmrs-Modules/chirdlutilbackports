@@ -1,17 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test/dbunitFiles/tableSetupDTD.dtd">
 <dataset>
-    <person person_id="777" gender="F" dead="false" creator="1" date_created="2008-08-15 15:46:47.0" voided="false" uuid="7e93b11f-fc1f-4c3a-ab5f-cc6e3ded6c73"/>
-    <users user_id="777" person_id="777" system_id="6-7" username="user1" password="0c1e358be64b7ac6412cbf4748aaa902152f97d3833f81dbaa8ab39a7505cb0b6011cac629ec3e20c29681ad05e9d67ad9a15d8fff81e77ea91246edf518af85" salt="32fdfbaec5cb5829a1277f869b17404806c1b1f25fc7c00ddcf4265d0adb2b78812650af86ca03b7a59b4a8317e3b5d28974cfd42f036de7311c9b51a6662676" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="fbbc8bec-e135-11de-babe-001e378eb67e"/>
-    <role role="System Developer" description="OpenMRS developer role" uuid="2394872987s89d789sdf789"/>
-    <user_role user_id="777" role="System Developer"/>
-    
-    <location location_id="8992" name="location8992" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="23498719928797382971827391"/>
-    <location_tag location_tag_id="2987" name="tag2987" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789273"/>
-    <location_tag_map location_id="8992" location_tag_id="2987"/>
-    <location_tag location_tag_id="2988" name="tag2988" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789274"/>
-    <location_tag_map location_id="8992" location_tag_id="2988"/>
-    
     <chirdlutilbackports_location_tag_attribute location_tag_attribute_id="1" name="TestAttribute" description="TestDescription"/>
     <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="123" location_tag_id="2987" value="TestValue" location_tag_attribute_id="1" location_id="8992"/>
     <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="124" location_tag_id="2988" value="TestValue2" location_tag_attribute_id="1" location_id="8992"/>
