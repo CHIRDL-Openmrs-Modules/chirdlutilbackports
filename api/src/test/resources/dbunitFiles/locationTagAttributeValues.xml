@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE dataset SYSTEM "test/dbunitFiles/tableSetupDTD.dtd">
-<dataset>
-    <chirdlutilbackports_location_tag_attribute location_tag_attribute_id="1" name="TestAttribute" description="TestDescription"/>
-    <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="123" location_tag_id="2987" value="TestValue" location_tag_attribute_id="1" location_id="8992"/>
-    <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="124" location_tag_id="2988" value="TestValue2" location_tag_attribute_id="1" location_id="8992"/>
-</dataset>

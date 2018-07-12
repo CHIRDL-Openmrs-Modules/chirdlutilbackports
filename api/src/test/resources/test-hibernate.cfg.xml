@@ -12,6 +12,7 @@
 	    <mapping resource="form_instance.hbm.xml"/>
 	    <mapping resource="encounter_attribute.hbm.xml"/>
 	    <mapping resource="encounter_attribute_value.hbm.xml"/>
+	    <mapping resource="chirdl_location_attribute.hbm.xml"/>
 	    <mapping resource="location_tag_attribute.hbm.xml"/>
 	    <mapping resource="location_tag_attribute_value.hbm.xml"/>
 	    <mapping resource="program.hbm.xml"/>

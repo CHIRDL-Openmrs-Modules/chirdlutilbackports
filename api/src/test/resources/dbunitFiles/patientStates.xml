@@ -4,7 +4,10 @@
     <!--  <person person_id="777" gender="F" dead="false" creator="1" date_created="2008-08-15 15:46:47.0" voided="false" uuid="7e93b11f-fc1f-4c3a-ab5f-cc6e3ded6c73"/> -->
     <person person_id="2298" gender="M" birthdate="2016-01-01" birthdate_estimated="false" dead="false" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="f1b719b8-76d0-4515-9a9c-3ce5a50c0b80" />
     <patient patient_id="2298" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" />
-      
+    
+    <person_attribute_type person_attribute_type_id="1" name="TestPersonAttributeType" description="TestDescription" format="java.lang.String" searchable="0" creator="1" date_created="2018-07-11 07:46:47.0" retired="false" sort_weight="1" uuid="abcd98asd08asd908sadzyx"/>
+    <person_attribute person_attribute_id="1" person_id="2298" value="1234-4" person_attribute_type_id="1" creator="1" date_created="2018-07-11 07:46:47.0" voided="false" uuid="zycd98asd08asd908sadzyx"/>
+    
     <!-- 
     <users user_id="777" person_id="777" system_id="6-777" username="user1" password="0c1e358be64b7ac6412cbf4748aaa902152f97d3833f81dbaa8ab39a7505cb0b6011cac629ec3e20c29681ad05e9d67ad9a15d8fff81e77ea91246edf518af85" salt="32fdfbaec5cb5829a1277f869b17404806c1b1f25fc7c00ddcf4265d0adb2b78812650af86ca03b7a59b4a8317e3b5d28974cfd42f036de7311c9b51a6662676" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="fbbc8bec-e135-11de-babe-001e378eb67e"/>
     <role role="System Developer" description="OpenMRS developer role" uuid="2394872987s89d789sdf789"/>
@@ -16,6 +19,15 @@
     <location_tag_map location_id="8992" location_tag_id="2987"/>
     <location_tag location_tag_id="2988" name="tag2988" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789274"/>
     <location_tag_map location_id="8992" location_tag_id="2988"/>
+    <location location_id="8993" name="location8993" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="23498719928797382971827399"/>
+    <location_tag location_tag_id="2989" name="tag2989" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="2987398273792872983789279"/>
+    <location_tag_map location_id="8993" location_tag_id="2989"/>
+    
+    <chirdlutilbackports_location_attribute location_attribute_id="1" name="TestLocationAttribute" description="TestLocationAttributeDescription" />
+    
+    <chirdlutilbackports_location_tag_attribute location_tag_attribute_id="1" name="TestLocationTagAttribute" description="TestLocationTagAttributeDescription"/>
+    <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="123" location_tag_id="2987" value="TestLocationTagAttributeValue" location_tag_attribute_id="1" location_id="8992"/>
+    <chirdlutilbackports_location_tag_attribute_value location_tag_attribute_value_id="124" location_tag_id="2988" value="TestValue2" location_tag_attribute_id="1" location_id="8992"/>
     
     <encounter_type encounter_type_id="23981" name="HL7Message" creator="1" date_created="2007-08-15 15:46:47.0" retired="false" uuid="kla9009812as9s8df908asdf"/>
     
@@ -44,13 +56,26 @@
     
     <chirdlutilbackports_program program_id="1" name="test_program" description="test program description" version="1.0" date_created="2018-06-27 14:33:00.0" creator="1" start_state="98796" end_state="98796"/>
     <chirdlutilbackports_program_tag_map program_tag_map_id="1" program_id="1" location_id="8992" location_tag_id="2987"/>
-    <chirdlutilbackports_program_tag_map program_tag_map_id="1" program_id="1" location_id="8992" location_tag_id="2988"/>
+    <chirdlutilbackports_program_tag_map program_tag_map_id="2" program_id="1" location_id="8992" location_tag_id="2988"/>
     
     <chirdlutilbackports_form_attribute form_attribute_id="1" name="TestFormAttribute" description="TestFormAttributeDescription"/>
     <chirdlutilbackports_form_attribute form_attribute_id="2" name="TestFormAttribute2" description="TestFormAttributeDescription2"/>
     
     <form form_id="8970" name="PSF" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sde" />
     <form form_id="8971" name="PWS" version="1.0" published="false" creator="1" date_created="2018-02-09 15:46:47.0" retired="false" uuid="98193872388sdf89sdf" />
+    
+    <field_type field_type_id="1" name="Merge Field" description="fields populated by rules" is_set="0" creator="1" date_created="2018-07-11 07:46:47.0" uuid="a7a3a59d-f273-11e0-be21-0050569563"/>
+    <field_type field_type_id="2" name="Export Field" description="fill in boxes" is_set="0" creator="1" date_created="2018-07-11 07:46:47.0" uuid="a7a3a59d-f273-11e0-be21-0050569564"/>
+    
+    <field field_id="1" name="Question1" description="Question1" field_type="1" select_multiple="0" creator="1" date_created="2018-07-11 07:46:47.0" retired="false" uuid="82a43ba8-170a-4353-be1d-5277f90174cf"/>
+    <field field_id="2" name="Question2" description="Question2" field_type="1" select_multiple="0" creator="1" date_created="2018-07-11 07:46:47.0" retired="false" uuid="82a43ba8-170a-4353-be1d-5277f90174cd"/>
+    <field field_id="3" name="Question3" description="Question3" field_type="1" select_multiple="0" creator="1" date_created="2018-07-11 07:46:47.0" retired="false" uuid="82a43ba8-170a-4353-be1d-5277f90174ce"/>
+    <field field_id="4" name="Answer" description="Answer" field_type="2" select_multiple="0" creator="1" date_created="2018-07-11 07:46:47.0" retired="false" uuid="82a43ba8-170a-4353-be1d-5277f90174cg"/>
+    
+    <form_field form_field_id="1" form_id="8970" field_id="1" field_number="10" required="false" creator="1" date_created="2018-07-11 07:46:47.0" uuid="aea3e1-f273-11e0-be21-005056956394"/>
+    <form_field form_field_id="2" form_id="8970" field_id="2" field_number="2" required="false" creator="1" date_created="2018-07-11 07:46:47.0" uuid="aea3e1-f273-11e0-be21-005056956395"/>
+    <form_field form_field_id="3" form_id="8970" field_id="3" field_number="70" required="false" creator="1" date_created="2018-07-11 07:46:47.0" uuid="aea3e1-f273-11e0-be21-005056956396"/>
+    <form_field form_field_id="4" form_id="8970" field_id="4" field_number="3" required="false" creator="1" date_created="2018-07-11 07:46:47.0" uuid="aea3e1-f273-11e0-be21-005056956397"/>
     
     <chirdlutilbackports_form_attribute_value form_attribute_value_id="1" form_id="8970" value="testValue1" form_attribute_id="1" location_tag_id="2987" location_id="8992"/>
     <chirdlutilbackports_form_attribute_value form_attribute_value_id="2" form_id="8970" value="testValue2" form_attribute_id="2" location_tag_id="2987" location_id="8992"/>
