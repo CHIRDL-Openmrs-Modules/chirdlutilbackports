@@ -561,7 +561,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         // Include retired
         stateMap.clear();
         patientStates.clear();
-        stateMap = chirdlUtilBackportsService.getPatientStatesBySessionId(23190, stateNames, true);
+        stateMap = chirdlUtilBackportsService.getPatientStatesBySessionId(SESSION_ID_TEST_23190, stateNames, true);
         patientStates = stateMap.get(STATE_TEST);
         Assert.assertEquals("Number of patient state rows did not match in should_getPatientStatesBySessionId()", 2, patientStates.size());
 	}
