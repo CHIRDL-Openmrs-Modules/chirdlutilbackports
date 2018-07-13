@@ -37,6 +37,8 @@ import org.openmrs.test.SkipBaseSetup;
 
 public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTest {
     
+    private static final String DATA_SET_PATIENT_STATES = "dbunitFiles/patientStates.xml";
+    
     private static final String FORM_NAME_PSF = "PSF";
     private static final String FORM_NAME_PWS = "PWS";
     
@@ -87,11 +89,9 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
     private static final Integer PROGRAM_TAG_MAP_ID_TEST_1 = new Integer(1);
     
     @Before
-    public void runBeforeEachTest() throws Exception{
-        // create the basic user and give it full rights
+    public void runBeforeEachTest() throws Exception{     
         initializeInMemoryDatabase();
-        
-        executeDataSet("dbunitFiles/patientStates.xml");
+        executeDataSet(DATA_SET_PATIENT_STATES);
         authenticate(); 
     }
     
