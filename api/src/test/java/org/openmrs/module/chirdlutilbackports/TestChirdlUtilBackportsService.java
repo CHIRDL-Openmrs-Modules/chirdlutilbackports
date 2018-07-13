@@ -231,7 +231,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllLocationTagAttributes() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<LocationTagAttribute> locationTagAttributes = chirdlUtilBackportsService.getAllLocationTagAttributes();
-	    Assert.assertNotNull("Location tag attributes were not found.", locationTagAttributes);
+	    Assert.assertFalse("Location tag attributes were not found.", locationTagAttributes.isEmpty());
 	}
 	
 	/**
@@ -350,10 +350,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    Role role = userService.getRole(ROLE_SYSTEM_DEVELOPER);
 	    List<User> users = chirdlUtilBackportsService.getUsersByRole(role, false);
 	    
-	    Assert.assertNotNull("Number of user rows was not greater than 0.", users.size() > 0);
+	    Assert.assertTrue("Number of user rows was not greater than 0.", users.size() > 0);
 	    
 	    users = chirdlUtilBackportsService.getUsersByRole(role, true);
-	    Assert.assertNotNull("Number of user rows was not greater than 0.", users.size() > 0);
+	    Assert.assertTrue("Number of user rows was not greater than 0.", users.size() > 0);
 	}
 	
 	/**
@@ -380,6 +380,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<FormAttributeValue> formAttributeValues = chirdlUtilBackportsService.getAllFormAttributeValuesByFormId(FORM_ID_TEST_8970);
 	    Assert.assertEquals("Number of form attribute value rows did not match.", 2, formAttributeValues.size());
+	    
+	    // Hibernate layer catches the exception for this scenario, just check to make sure the list is empty that is returned
+	    formAttributeValues = chirdlUtilBackportsService.getAllFormAttributeValuesByFormId(null);
+	    Assert.assertTrue(formAttributeValues.isEmpty());
 	}
 	
 	/**
