@@ -5,14 +5,6 @@
   
 <beans>
 
-<bean id="chirdlutilbackportsUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-			</props>
-		</property>
-	</bean>
-	
-	
     <bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
