@@ -161,7 +161,7 @@ public interface ChirdlUtilBackportsService {
 	public State getState(Integer stateId);
 
 	@Authorized()
-public PatientState getPatientState(Integer patientStateId);
+	public PatientState getPatientState(Integer patientStateId);
 	
 	@Authorized()
 	public List<PatientState> getPatientStateBySessionState(Integer sessionId,
@@ -612,12 +612,12 @@ public PatientState getPatientState(Integer patientStateId);
 	 * Get the patient states by session id
 	 * @param sessionId
 	 * @param stateNames
-	 * @param retired
+	 * @param includeRetired
 	 * @return Map containing patient states
 	 * @throws HibernateException
 	 */
 	@Authorized()
-	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean retired) throws HibernateException;
+	public Map<String, List<PatientState>> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException;
 	
 	/**
 	 * CHICA-993 
