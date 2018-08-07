@@ -221,8 +221,13 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	
 	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action){
 
-		return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceAction(formInstance, action);
+		return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceAction(formInstance, action, false);
 	}
+	
+    public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action, boolean includeRetired) {
+        return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceAction(formInstance, action, includeRetired);
+
+    }
 	
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName){
 		return getChirdlUtilBackportsDAO().getFormAttributesByName(attributeName);
@@ -295,8 +300,8 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired) {
 		return getChirdlUtilBackportsDAO().getPatientStateByFormInstanceState(formInstance, state,includeRetired);
 	}
-	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired) {
-		return getChirdlUtilBackportsDAO().getPatientStatesByFormInstance(formInstance, isRetired);
+	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean includeRetired) {
+		return getChirdlUtilBackportsDAO().getPatientStatesByFormInstance(formInstance, includeRetired);
 	}
 	
 	public List<PatientState> getPatientStatesBySession(Integer sessionId,boolean isRetired){
