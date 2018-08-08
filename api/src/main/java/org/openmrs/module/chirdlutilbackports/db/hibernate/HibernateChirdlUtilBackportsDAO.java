@@ -715,17 +715,27 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired) {
+	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean includeRetired) {
 		
 		try {
+		    String retiredString = " ";
+            
+            if(!includeRetired){
+                retiredString = " and retired=? ";
+            }
+		    
 			// limit to states for the session that match the form id
 			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=? "
-			        + "and form_id=? and location_id=? and retired=? " + "order by start_time desc, end_time desc";
+			        + "and form_id=? and location_id=? "+retiredString + "order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(0, formInstance.getFormInstanceId());
 			qry.setInteger(1, formInstance.getFormId());
 			qry.setInteger(2, formInstance.getLocationId());
-			qry.setBoolean(3, isRetired);
+			
+			if(!includeRetired){
+			    qry.setBoolean(3, false);
+			}
+
 			qry.addEntity(PatientState.class);
 			
 			return qry.list();
@@ -736,11 +746,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance, String action) {
+	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance, String action, boolean includeRetired) {
 		
 		try {
 			// limit to states for the session that match the form id
-			List<PatientState> states = getPatientStatesByFormInstance(formInstance, false);
+			List<PatientState> states = getPatientStatesByFormInstance(formInstance, includeRetired);
 			
 			// return the most recent state with the given action
 			for (PatientState state : states) {
