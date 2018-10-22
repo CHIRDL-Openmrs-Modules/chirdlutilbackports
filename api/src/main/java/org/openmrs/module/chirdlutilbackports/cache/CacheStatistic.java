@@ -53,7 +53,7 @@ public class CacheStatistic {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-    	StringBuffer buffer = new StringBuffer("Name: ");
+    	StringBuilder buffer = new StringBuilder("Name: ");
     	buffer.append(name);
     	buffer.append("\n");
     	buffer.append("Value: ");
@@ -73,4 +73,36 @@ public class CacheStatistic {
         
         return hash;
     }
+    
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj){
+			return true;
+		}
+		if (!super.equals(obj)){
+			return false;
+		}
+		if (getClass() != obj.getClass()){
+			return false;
+		}
+		CacheStatistic other = (CacheStatistic) obj;
+		if (name == null) {
+			if (other.name != null){
+				return false;
+			}
+		} else if (!name.equals(other.name)){
+			return false;
+		}
+		if (value == null) {
+			if (other.value != null){
+				return false;
+			}
+		} else if (!value.equals(other.value)){
+			return false;
+		}
+		return true;
+	}
 }

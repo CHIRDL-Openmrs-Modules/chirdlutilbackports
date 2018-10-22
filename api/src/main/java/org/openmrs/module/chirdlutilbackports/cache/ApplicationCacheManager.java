@@ -384,7 +384,7 @@ public class ApplicationCacheManager {
     	CacheConfiguration<K, V> cacheConfig = CacheConfigurationBuilder.newCacheConfigurationBuilder(keyType, valueType,
 	        ResourcePoolsBuilder.newResourcePoolsBuilder()
             .heap(heapSize, EntryUnit.ENTRIES)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(expiration, TimeUnit.MINUTES))).build();
-    	cache = cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
+    	cacheManager.createCache(cacheName, Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfig));
     	cacheManager.enableManagement(cacheName, true);
     	cacheManager.enableStatistics(cacheName, true);
     	
