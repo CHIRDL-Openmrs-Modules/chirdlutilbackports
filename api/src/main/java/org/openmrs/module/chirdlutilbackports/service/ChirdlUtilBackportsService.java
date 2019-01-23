@@ -147,6 +147,9 @@ public interface ChirdlUtilBackportsService {
 
 	@Authorized()
 	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action);
+	
+	@Authorized()
+    public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action, boolean includeRetired);
 
 	@Authorized()
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName);
@@ -206,7 +209,7 @@ public interface ChirdlUtilBackportsService {
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired);
 
 	@Authorized()
-	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired);
+	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean includeRetired);
 
 	@Authorized()
 	public List<PatientState> getPatientStatesBySession(Integer sessionId,boolean isRetired);

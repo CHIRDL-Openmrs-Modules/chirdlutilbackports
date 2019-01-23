@@ -130,8 +130,8 @@ public interface ChirdlUtilBackportsDAO {
 
 	public PatientState getPatientStateByEncounterFormAction(Integer encounterId, Integer formId, String action);
 	
-	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action);
-
+	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance,String action, boolean includeRetired);
+	
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName);
 
 	public List<State> getStatesByActionName(String actionName);
@@ -175,7 +175,7 @@ public interface ChirdlUtilBackportsDAO {
 	
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state,boolean includeRetired);
 	
-	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean isRetired);
+	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean includeRetired);
 
 	public List<PatientState> getPatientStatesBySession(Integer sessionId,boolean isRetired);
 
