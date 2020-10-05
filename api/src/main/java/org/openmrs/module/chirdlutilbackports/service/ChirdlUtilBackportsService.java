@@ -2,7 +2,6 @@ package org.openmrs.module.chirdlutilbackports.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +15,8 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -24,8 +25,6 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -36,6 +35,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
+import org.openmrs.util.PrivilegeConstants;
 
 /**
  * Defines services used by this module
@@ -51,7 +51,7 @@ public interface ChirdlUtilBackportsService {
 	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId);
 	
-	@Authorized()
+	@Authorized(PrivilegeConstants.GET_LOCATIONS)
 	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName);
 	
 	@Authorized()
