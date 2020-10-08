@@ -17,7 +17,7 @@ public class ObsInMemoryDatasource extends ObsDataSource
 {
 	public static final String NAME = "RMRS";
 	
-	private LogicInMemoryObsDAO logicObsInMemoryDAO;
+	protected LogicInMemoryObsDAO logicObsInMemoryDAO;
 	
 	public void setLogicObsInMemoryDAO(LogicInMemoryObsDAO logicObsInMemoryDAO) {
 		this.logicObsInMemoryDAO = logicObsInMemoryDAO;
@@ -25,7 +25,7 @@ public class ObsInMemoryDatasource extends ObsDataSource
 	
 	@Override
 	public LogicInMemoryObsDAO getLogicObsDAO() {
-		return logicObsInMemoryDAO;
+		return this.logicObsInMemoryDAO;
 	}
 	
 	public void deleteObsByPatientId(Integer patientId)
