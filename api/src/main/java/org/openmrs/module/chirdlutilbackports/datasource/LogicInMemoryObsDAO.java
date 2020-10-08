@@ -44,7 +44,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	@Override
 	public List<Obs> getObservations(Cohort who, LogicCriteria logicCriteria, LogicContext logicContext)
 	{
-		List<Obs> results = new ArrayList<Obs>();
+		List<Obs> results = new ArrayList<>();
 		HashMap<String, Set<Obs>> obsByConceptName = null;
 
 		// look up the obs for each patient in the set
