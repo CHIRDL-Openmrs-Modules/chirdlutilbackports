@@ -669,6 +669,28 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		return obsById.get(conceptName);
 	}
 	
+	/**
+	 * Retrieves a set of observations for the provided patient ID and concept name.  This will return null if there 
+	 * are no observations found for the concept.
+	 * 
+	 * @param patientId The patient identifier
+	 * @param conceptName The concept name
+	 * @return Set of observations for the patient and concept name or null if the values have yet to be set
+	 */
+	public Set<Obs> getExistingObsByConceptName(Integer patientId, String conceptName) {
+		// Return null when patient or obs is null to indicate we haven't queried the FHIR service yet.
+		if (patientId == null) {
+			return null;
+		}
+		
+		HashMap<String, Set<Obs>> obsById = getObs(patientId);
+		if (obsById == null) {
+			return null;
+		}
+		
+		return obsById.get(conceptName);
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	/**
 	 * Return a HashMap of concept name to Obs for a given patient.  Any changes to this map 
