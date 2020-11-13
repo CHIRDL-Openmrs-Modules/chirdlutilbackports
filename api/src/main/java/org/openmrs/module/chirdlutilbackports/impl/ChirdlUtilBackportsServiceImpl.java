@@ -13,6 +13,7 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
@@ -728,5 +729,14 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException
 	{
 		return getChirdlUtilBackportsDAO().getPatientStatesByFormNameAndState(formName, stateNames, encounterId, includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getPeopleByBirthDate(
+	 * java.util.Date, boolean)
+	 */
+	@Override
+	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided) {
+		return getChirdlUtilBackportsDAO().getPeopleByBirthDate(birthDate, includeVoided);
 	}
 }

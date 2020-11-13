@@ -8,11 +8,14 @@ import org.hibernate.HibernateException;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -21,8 +24,6 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -545,4 +546,13 @@ public interface ChirdlUtilBackportsDAO {
 	 * @throws DAOException
 	 */
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws DAOException;
+	
+	/**
+	 * Get a list of people by birth date
+	 * 
+	 * @param birthDate The birth date to match
+	 * @param includeVoided Whether or not to include voided people in the result
+	 * @return List of people having the provided birth date
+	 */
+	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
 }
