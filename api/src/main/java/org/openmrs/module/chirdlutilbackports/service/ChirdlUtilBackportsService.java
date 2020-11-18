@@ -10,6 +10,7 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
@@ -643,4 +644,14 @@ public interface ChirdlUtilBackportsService {
 	 */
 	@Authorized()
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException;
+	
+	/**
+	 * Get a list of people by birth date
+	 * 
+	 * @param birthDate The birth date to match
+	 * @param includeVoided Whether or not to include voided people in the result
+	 * @return List of people having the provided birth date
+	 */
+	@Authorized( { PrivilegeConstants.GET_PATIENTS })
+	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
 }
