@@ -6,10 +6,15 @@ package org.openmrs.module.chirdlutilbackports.util;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceTag;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
+import org.openmrs.util.Security;
 
 /**
  * @author Tammy Dugan
@@ -17,6 +22,9 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  */
 public class Util
 {
+    
+    private static final Log log = LogFactory.getLog(Util.class);
+    
 	public static String getFormAttributeValue(Integer formId,
 			String attribute, Integer locationTagId,Integer locationId)
 	{
@@ -60,4 +68,29 @@ public class Util
 		
 		return new FormInstanceTag(locationId, formId, formInstanceId, locationTagId);
 	}
+
+
+    /**
+     * Looks up the encrypted global property value and decrypts the string
+     * @param property is the global property
+     * @return decrypted property value
+     */
+    public static String decryptGlobalProperty(String property) {
+        
+        if (StringUtils.isBlank(property)) {
+            return null;
+        }
+        
+       String decryptedValue = null;
+       
+        try {
+            String propertyValue = Context.getAdministrationService().getGlobalProperty(property);
+            decryptedValue = Security.decrypt(propertyValue);
+        } catch (APIException e) {
+            log.error("Error decrypting global property: " + property, e);
+        }
+       
+       return decryptedValue;
+       
+    }
 }

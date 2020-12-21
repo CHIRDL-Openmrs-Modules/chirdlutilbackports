@@ -25,10 +25,14 @@ public class AdminList extends AdministrationSectionExt {
 		return "chirdlutilbackports.title";
 	}
 	
+	/**
+	 *Administration tool to get the encrypted/decrypted value for a string.
+	 */
 	@Override
 	public Map<String, String> getLinks() {
 		
 		Map<String, String> map = new HashMap<String, String>();
+	    map.put("module/chirdlutilbackports/encryptionTool.form", "Encryption Tool");
 
 		return map;
 	}
