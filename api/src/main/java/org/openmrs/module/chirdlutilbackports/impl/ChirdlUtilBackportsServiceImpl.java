@@ -9,9 +9,13 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
@@ -19,6 +23,8 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -27,8 +33,6 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -738,5 +742,15 @@ public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsServic
 	@Override
 	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided) {
 		return getChirdlUtilBackportsDAO().getPeopleByBirthDate(birthDate, includeVoided);
+	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService#getOrders(
+	 * org.openmrs.Patient, java.util.List, java.util.List, java.util.List, boolean)
+	 */
+	@Override
+	public List<Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes,
+	        List<Encounter> encounters, boolean includeVoided) {
+		return getChirdlUtilBackportsDAO().getOrders(patient, careSettings, orderTypes, encounters, includeVoided);
 	}
 }

@@ -5,9 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
@@ -555,4 +559,17 @@ public interface ChirdlUtilBackportsDAO {
 	 * @return List of people having the provided birth date
 	 */
 	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
+	
+	/**
+	 * Returns a list of orders filtered by the criteria specified.
+	 * 
+	 * @param patient The patient
+	 * @param careSettings List of care settings
+	 * @param orderTypes List of orderTypes
+	 * @param encounters List of encounters
+	 * @param includeVoided whether or not to include voided orders
+	 * @return List of Order objects
+	 */
+	public List<Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes, 
+			List<Encounter> encounters, boolean includeVoided);
 }

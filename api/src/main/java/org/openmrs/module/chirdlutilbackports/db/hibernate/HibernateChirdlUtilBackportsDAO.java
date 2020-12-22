@@ -22,9 +22,13 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StringType;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.OrderType;
+import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
@@ -2126,6 +2130,37 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		
 		criteria.add(Restrictions.eq("birthdate", birthDate));
+		
+		return criteria.list();
+	}
+
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getOrders(
+	 * org.openmrs.Patient, java.util.List, java.util.List, java.util.List, boolean)
+	 */
+	@Override
+	public List<org.openmrs.Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes,
+	        List<Encounter> encounters, boolean includeVoided) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
+		if (patient != null) {
+			criteria.add(Restrictions.eq("patient", patient));
+		}
+		
+		if (careSettings != null && !careSettings.isEmpty()) {
+			criteria.add(Restrictions.in("careSetting", careSettings));
+		}
+		
+		if (orderTypes != null && !orderTypes.isEmpty()) {
+			criteria.add(Restrictions.in("orderType", orderTypes));
+		}
+		
+		if (encounters != null && !encounters.isEmpty()) {
+			criteria.add(Restrictions.in("encounter", encounters));
+		}
+		
+		if (!includeVoided) {
+			criteria.add(Restrictions.eq("voided", includeVoided));
+		}
 		
 		return criteria.list();
 	}
