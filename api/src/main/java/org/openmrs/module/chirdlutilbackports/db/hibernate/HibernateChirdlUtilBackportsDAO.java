@@ -2141,7 +2141,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	@Override
 	public List<org.openmrs.Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes,
 	        List<Encounter> encounters, boolean includeVoided) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(org.openmrs.Order.class);
 		if (patient != null) {
 			criteria.add(Restrictions.eq("patient", patient));
 		}
