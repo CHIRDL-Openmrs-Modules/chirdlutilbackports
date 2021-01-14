@@ -2146,15 +2146,21 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			criteria.add(Restrictions.eq("patient", patient));
 		}
 		
-		if (careSettings != null && !careSettings.isEmpty()) {
+		if (careSettings != null && careSettings.size() == 1) {
+			criteria.add(Restrictions.eq("careSetting", careSettings.get(0)));
+		} else if (careSettings != null && !careSettings.isEmpty()) {
 			criteria.add(Restrictions.in("careSetting", careSettings));
 		}
 		
-		if (orderTypes != null && !orderTypes.isEmpty()) {
+		if (orderTypes != null && orderTypes.size() == 1) {
+			criteria.add(Restrictions.eq("orderType", orderTypes.get(0)));
+		} else if (orderTypes != null && !orderTypes.isEmpty()) {
 			criteria.add(Restrictions.in("orderType", orderTypes));
 		}
 		
-		if (encounters != null && !encounters.isEmpty()) {
+		if (encounters != null && encounters.size() == 1) {
+			criteria.add(Restrictions.eq("encounter", encounters.get(0)));
+		} else if (encounters != null && !encounters.isEmpty()) {
 			criteria.add(Restrictions.in("encounter", encounters));
 		}
 		
