@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
@@ -654,4 +658,18 @@ public interface ChirdlUtilBackportsService {
 	 */
 	@Authorized( { PrivilegeConstants.GET_PATIENTS })
 	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
+	
+	/**
+	 * Returns a list of orders filtered by the criteria specified.
+	 * 
+	 * @param patient The patient
+	 * @param careSettings List of care settings
+	 * @param orderTypes List of orderTypes
+	 * @param encounters List of encounters
+	 * @param includeVoided whether or not to include voided orders
+	 * @return List of Order objects
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDERS)
+	public List<Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes, 
+			List<Encounter> encounters, boolean includeVoided);
 }
