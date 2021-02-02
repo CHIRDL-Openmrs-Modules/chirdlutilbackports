@@ -449,4 +449,27 @@ CREATE TABLE `chirdlutilbackports_error` (
 			Values('Manage CHIRDLUTILBACKPORTS', 'CHIRDLUTILBACKPORTS Module privilege', UUID());
         </sql>
     </diff>
+    <diff>
+        <version>1.0.9</version>
+        <author>Steve McKee</author>
+        <date>February 2, 2021</date>
+        <description>
+            CHICA-1461 Convert the chirdlutilbackports_form_instance and chirdlutilbackports_form_instance_attribute_value tables to InnoDB.
+            Warning: This command will remove all form instance attribute values and all form instance information.
+        </description>
+        <sql>
+            delete from chirdlutilbackports_form_instance_attribute_value;
+            alter table chirdlutilbackports_form_instance_attribute_value ENGINE=InnoDB;
+            drop table chirdlutilbackports_form_instance;
+            
+            CREATE TABLE chirdlutilbackports_form_instance (
+              `form_instance_id` int(11) NOT NULL AUTO_INCREMENT,
+              `form_id` int(11) NOT NULL,
+              `location_id` int(11) NOT NULL DEFAULT '1',
+              PRIMARY KEY (`form_instance_id`),
+              CONSTRAINT chirdlutilbackports_form_inst_fk_loc FOREIGN KEY (location_id) REFERENCES location (location_id),
+              CONSTRAINT chirdlutilbackports_form_inst_fk_form FOREIGN KEY (form_id) REFERENCES form (form_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        </sql>
+    </diff>
 </sqldiff>
