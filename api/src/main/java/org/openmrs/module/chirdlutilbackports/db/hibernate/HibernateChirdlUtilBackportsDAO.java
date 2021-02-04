@@ -1,8 +1,5 @@
 package org.openmrs.module.chirdlutilbackports.db.hibernate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +14,6 @@ import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StringType;
@@ -34,7 +29,6 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.api.FormService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO;
@@ -269,114 +263,15 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		sessionFactory.getCurrentSession().delete(value);
 	}
 	
-	private Integer insertFormInstance(Integer formId, Integer locationId) {
-		try {
-			FormService formService = Context.getFormService();
-			Form form = formService.getForm(formId);
-			String formName = form.getName();
-			// This is a work around since I couldn't get hibernate to create
-			// a two column auto-generated key
-			StatelessSession session = this.sessionFactory.openStatelessSession();
-			Transaction tx = session.beginTransaction();
-			Connection con = session.connection();
-			int rowsInserted = 0;
-			String sql = "insert into chirdlutilbackports_form_instance(form_instance_id,form_id,location_id) "
-			        + " select max(form_instance_id),?,? from (select form_instance_id from  ("
-			        + " select max(form_instance_id)+1 as form_instance_id,location_id "
-			        + " from chirdlutilbackports_form_instance where location_id=? and form_id in "
-			        + " (select form_id from form where name=?) group by location_id)a" + " union select 1 from dual)a";
-			try (PreparedStatement stmt = con.prepareStatement(sql)){
-				stmt.setInt(1, formId);
-				stmt.setInt(2, locationId);
-				stmt.setInt(3, locationId);
-				stmt.setString(4, formName);
-				
-				rowsInserted = stmt.executeUpdate();
-			}
-			catch (Exception e) {
-				this.log.error(e.getMessage());
-				this.log.error(e);
-			}
-			finally {
-				try {
-					if (tx != null) {
-						tx.commit();
-					}
-					if (session != null) {
-						session.close();
-					}
-				}
-				catch (Exception e) {
-					log.error("Error generated", e);
-				}
-			}
-			
-			return rowsInserted;
-			
-		}
-		catch (Exception e) {
-			log.error("Error in method insertFormInstance", e);
-		}
-		return 0;
-	}
-	
-	public synchronized FormInstance addFormInstance(Integer formId, Integer locationId) {
-		Transaction tx = null;
-		StatelessSession session = null;
-		ResultSet rs = null;
-		try {
-			Integer rowsInserted = insertFormInstance(formId, locationId);
-			
-			if (rowsInserted > 0) {
-				FormService formService = Context.getFormService();
-				Form form = formService.getForm(formId);
-				String formName = form.getName();
-				session = this.sessionFactory.openStatelessSession();
-				tx = session.beginTransaction();
-				Connection con = session.connection();
-				String sql = "select max(form_instance_id) as form_instance_id,"
-				        + "? as form_id,location_id from chirdlutilbackports_form_instance " 
-				        + "inner join form f using (form_id) where location_id=? "
-				        + "and f.name=? group by location_id";
-				try (PreparedStatement stmt = con.prepareStatement(sql)) {
-    				stmt.setInt(1, formId);
-    				stmt.setInt(2, locationId);
-    				stmt.setString(3, formName);
-    				
-    				rs = stmt.executeQuery();
-    				if (rs.next()) {
-    					Integer formInstanceId = rs.getInt(1);
-    					formId = rs.getInt(2);
-    					locationId = rs.getInt(3);
-    					FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
-    					return formInstance;
-    				}
-				} catch (Exception e) {
-				    this.log.error("Error in method addFormInstance", e);
-				}
-			}
-			
-		}
-		catch (Exception e) {
-			log.error("Error in method addFormInstance", e);
-		}
-		finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (tx != null) {
-					tx.commit();
-				}
-				if (session != null) {
-					session.close();
-				}
-			}
-			catch (Exception e) {
-				log.error("Error generated", e);
-			}
-		}
-		return null;
+	/**
+	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#addFormInstance(
+	 * java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public FormInstance addFormInstance(Integer formId, Integer locationId) {
+		FormInstance formInstance = new FormInstance(locationId, formId, null);
+		this.sessionFactory.getCurrentSession().save(formInstance);
+		return formInstance;
 	}
 	
 	public FormAttribute getFormAttributeByName(String formAttributeName) {
