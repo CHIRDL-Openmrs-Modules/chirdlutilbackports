@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -32,7 +32,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.test.jupiter.BaseModuleContextSensitiveTest;
 import org.openmrs.test.SkipBaseSetup;
 
 public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTest {
@@ -88,7 +88,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
     private static final Integer PROGRAM_ID_TEST_1 = new Integer(1);
     private static final Integer PROGRAM_TAG_MAP_ID_TEST_1 = new Integer(1);
     
-    @Before
+    @BeforeEach
     public void runBeforeEachTest() throws Exception{     
         initializeInMemoryDatabase();
         executeDataSet(DATA_SET_PATIENT_STATES);
@@ -106,7 +106,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 		for (Method method : allMethods) {
 		    if (Modifier.isPublic(method.getModifiers())) {
 		        Authorized authorized = method.getAnnotation(Authorized.class);
-		        Assert.assertNotNull("Authorized annotation not found on method " + method.getName(), authorized);
+		        Assertions.assertNotNull(authorized, "Authorized annotation not found on method " + method.getName());
 		    }
 		}
 	}
@@ -120,26 +120,26 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 		// Look for scanned paper PSF and PWS
 		stateNames.add(STATE_PSF_PROCESS);
 		patientStates = chirdlUtilBackportsService.getPatientStatesByFormNameAndState(FORM_NAME_PSF, stateNames, ENCOUNTER_ID_TEST_23189, false);
-		Assert.assertEquals("Number of patient state rows did not match", 1, patientStates.size());
+		Assertions.assertEquals(1, patientStates.size(),"Number of patient state rows did not match");
 		patientStates.clear();
 		stateNames.clear();
 		
 		stateNames.add(STATE_PWS_PROCESS);
 		patientStates = chirdlUtilBackportsService.getPatientStatesByFormNameAndState(FORM_NAME_PWS, stateNames, ENCOUNTER_ID_TEST_23189, false);
-		Assert.assertEquals("Number of patient state rows did not match", 1, patientStates.size());
+		Assertions.assertEquals(1, patientStates.size(), "Number of patient state rows did not match");
 		patientStates.clear();
 		stateNames.clear();
 		
 		// Look for submitted electronic PSF and PWS - NOTE: PWS_process is used for both paper and electronic
 		stateNames.add(STATE_PSF_WAIT_FOR_SUBMISSION);
 		patientStates = chirdlUtilBackportsService.getPatientStatesByFormNameAndState(FORM_NAME_PSF, stateNames, ENCOUNTER_ID_TEST_23190, false);
-		Assert.assertEquals("Number of patient state rows did not match", 1, patientStates.size());
+		Assertions.assertEquals(1, patientStates.size(), "Number of patient state rows did not match");
 		patientStates.clear();
 		stateNames.clear();
 		
 		stateNames.add(STATE_PWS_PROCESS);
 		patientStates = chirdlUtilBackportsService.getPatientStatesByFormNameAndState(FORM_NAME_PWS, stateNames, ENCOUNTER_ID_TEST_23190, false);
-		Assert.assertEquals("Number of patient state rows did not match", 1, patientStates.size());
+		Assertions.assertEquals(1, patientStates.size(), "Number of patient state rows did not match");
 		patientStates.clear();
 		stateNames.clear();	
 	}
@@ -153,10 +153,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getLocationAttribute() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    ChirdlLocationAttribute locationAttribute = chirdlUtilBackportsService.getLocationAttribute(LOCATION_ATTRIBUTE_TEST);
-	    Assert.assertNotNull("Location attribute was not found.", locationAttribute);
+	    Assertions.assertNotNull(locationAttribute, "Location attribute was not found.");
 	    
 	    locationAttribute = chirdlUtilBackportsService.getLocationAttribute(GENERAL_TEST_STRING);
-	    Assert.assertNull("Location attribute was found, but was not expected.", locationAttribute);
+	    Assertions.assertNull(locationAttribute, "Location attribute was found, but was not expected.");
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getProgram() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
         Program program = chirdlUtilBackportsService.getProgram(PROGRAM_NAME_TEST_PROGRAM);
-        Assert.assertNotNull("Unable to get program by name.", program);
+        Assertions.assertNotNull(program, "Unable to get program by name.");
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         programTagMap.setLocationTagId(LOCATION_TAG_ID_TEST_2989);
         
         programTagMap = chirdlUtilBackportsService.saveProgramTagMap(programTagMap);
-        Assert.assertNotNull("Unable to save new ProgramTagMap", programTagMap.getProgramTagMapId());
+        Assertions.assertNotNull(programTagMap.getProgramTagMapId(), "Unable to save new ProgramTagMap");
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    try{
 	        chirdlUtilBackportsService.deleteProgramTagMap(programTagMap);
 	    }catch(Exception e){
-	        Assert.assertFalse("Unable to delete ProgramTagMap", true);
+	        Assertions.assertFalse(true, "Unable to delete ProgramTagMap");
 	    }   
 	}
 	
@@ -219,7 +219,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllLocationAttributes() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<ChirdlLocationAttribute> locationAttributes = chirdlUtilBackportsService.getAllLocationAttributes();
-	    Assert.assertEquals("Number of location attribute rows did not match.", 1, locationAttributes.size());
+	    Assertions.assertEquals(1, locationAttributes.size(), "Number of location attribute rows did not match.");
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllLocationTagAttributes() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<LocationTagAttribute> locationTagAttributes = chirdlUtilBackportsService.getAllLocationTagAttributes();
-	    Assert.assertFalse("Location tag attributes were not found.", locationTagAttributes.isEmpty());
+	    Assertions.assertFalse(locationTagAttributes.isEmpty(), "Location tag attributes were not found.");
 	}
 	
 	/**
@@ -244,7 +244,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllFormAttributes() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
         List<FormAttribute> formAttributes = chirdlUtilBackportsService.getAllFormAttributes();
-        Assert.assertEquals("Number of form attribute rows did not match.", 2, formAttributes.size());
+        Assertions.assertEquals(2, formAttributes.size(), "Number of form attribute rows did not match.");
 	}
 	
 	/**
@@ -264,10 +264,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    fieldTypes.add(mergeFieldType);
 	    
 	    List<FormField> formFields = chirdlUtilBackportsService.getFormFields(form, fieldTypes, true);
-	    Assert.assertEquals("Number of form field rows did not match.", 3, formFields.size());
+	    Assertions.assertEquals(3, formFields.size(), "Number of form field rows did not match.");
 	    
 	    formFields = chirdlUtilBackportsService.getFormFields(form, null, true);
-	    Assert.assertEquals("Number of form field rows did not match.", 4, formFields.size());
+	    Assertions.assertEquals(4, formFields.size(), "Number of form field rows did not match.");
 	}
 	
 	/**
@@ -280,7 +280,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllEditableFormAttributes() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<FormAttribute> formAttributes = chirdlUtilBackportsService.getAllEditableFormAttributes();
-	    Assert.assertEquals("Number of form attribute rows did not match.", 2, formAttributes.size());
+	    Assertions.assertEquals(2, formAttributes.size(), "Number of form attribute rows did not match.");
 	}
 	
 	/**
@@ -294,11 +294,11 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    FormAttribute formAttribute = chirdlUtilBackportsService.getFormAttributeById(FORM_ATTRIBUTE_ID_TEST_1);
 	    List<String> formAttributeValueStrings = chirdlUtilBackportsService.getCurrentFormAttributeValueStrCollection(formAttribute);
-	    Assert.assertEquals("Number of form attribute value rows did not match.", 1, formAttributeValueStrings.size());
+	    Assertions.assertEquals(1, formAttributeValueStrings.size(), "Number of form attribute value rows did not match.");
 	    
 	    formAttributeValueStrings.clear();
         formAttributeValueStrings = chirdlUtilBackportsService.getCurrentFormAttributeValueStrCollection(null);
-        Assert.assertNull("Form attribute values were found, but not expected.", formAttributeValueStrings);
+        Assertions.assertNull(formAttributeValueStrings, "Form attribute values were found, but not expected.");
 	}
 	
 	/**
@@ -311,16 +311,16 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getPersonAttributeByValue() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    PersonAttribute personAttribute = chirdlUtilBackportsService.getPersonAttributeByValue(PERSON_ATTRIBUTE_TYPE_TEST, PERSON_ATTRIBUTE_VALUE_12344);
-	    Assert.assertNotNull("Person attribute value was not found.", personAttribute);
+	    Assertions.assertNotNull(personAttribute, "Person attribute value was not found.");
 	    
 	    personAttribute = chirdlUtilBackportsService.getPersonAttributeByValue(PERSON_ATTRIBUTE_TYPE_DOES_NOT_EXIST, PERSON_ATTRIBUTE_VALUE_12344);
-	    Assert.assertNull("Person attribute was found but was not expected.", personAttribute);
+	    Assertions.assertNull(personAttribute, "Person attribute was found but was not expected.");
 	    
 	    personAttribute = chirdlUtilBackportsService.getPersonAttributeByValue(PERSON_ATTRIBUTE_TYPE_TEST, null);
-	    Assert.assertNull("Person attribute was found but was not expected.", personAttribute);  
+	    Assertions.assertNull(personAttribute, "Person attribute was found but was not expected.");   
 	    
 	    personAttribute = chirdlUtilBackportsService.getPersonAttributeByValue(null, null);
-        Assert.assertNull("Person attribute was found but was not expected.", personAttribute);  
+	    Assertions.assertNull(personAttribute, "Person attribute was found but was not expected.");    
 	}
 	
 	/**
@@ -334,7 +334,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    FormAttribute formAttribute = chirdlUtilBackportsService.getFormAttributeById(FORM_ATTRIBUTE_ID_TEST_1);
 	    FormAttributeValue formAttributeValue = chirdlUtilBackportsService.getFormAttributeValue(FORM_ID_TEST_8970, formAttribute, LOCATION_TAG_ID_TEST_2987, LOCATION_ID_TEST_8992);
-	    Assert.assertNotNull("Form attribute value not found.", formAttributeValue);
+	    Assertions.assertNotNull(formAttributeValue, "Form attribute value not found.");
 	}
 	
 	/**
@@ -350,10 +350,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    Role role = userService.getRole(ROLE_SYSTEM_DEVELOPER);
 	    List<User> users = chirdlUtilBackportsService.getUsersByRole(role, false);
 	    
-	    Assert.assertTrue("Number of user rows was not greater than 0.", users.size() > 0);
+	    Assertions.assertTrue(users.size() > 0, "Number of user rows was not greater than 0.");
 	    
 	    users = chirdlUtilBackportsService.getUsersByRole(role, true);
-	    Assert.assertTrue("Number of user rows was not greater than 0.", users.size() > 0);
+	    Assertions.assertTrue(users.size() > 0, "Number of user rows was not greater than 0.");
 	}
 	
 	/**
@@ -366,7 +366,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getFormAttributeValues() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<FormAttributeValue> formAttributeValues = chirdlUtilBackportsService.getFormAttributeValues(FORM_ATTRIBUTE_ID_TEST_1, LOCATION_ID_TEST_8992, LOCATION_TAG_ID_TEST_2987);
-	    Assert.assertEquals("Number of form attribute value rows did not match.", 1, formAttributeValues.size());
+	    Assertions.assertEquals(1, formAttributeValues.size(), "Number of form attribute value rows did not match.");
 	}
 	
 	/**
@@ -379,11 +379,11 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getAllFormAttributeValuesByFormId() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    List<FormAttributeValue> formAttributeValues = chirdlUtilBackportsService.getAllFormAttributeValuesByFormId(FORM_ID_TEST_8970);
-	    Assert.assertEquals("Number of form attribute value rows did not match.", 2, formAttributeValues.size());
+	    Assertions.assertEquals(2, formAttributeValues.size(), "Number of form attribute value rows did not match.");
 	    
 	    // Hibernate layer catches the exception for this scenario, just check to make sure the list is empty that is returned
 	    formAttributeValues = chirdlUtilBackportsService.getAllFormAttributeValuesByFormId(null);
-	    Assert.assertTrue(formAttributeValues.isEmpty());
+	    Assertions.assertTrue(formAttributeValues.isEmpty());
 	}
 	
 	/**
@@ -396,7 +396,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getFormAttributeById() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    FormAttribute attribute = chirdlUtilBackportsService.getFormAttributeById(FORM_ATTRIBUTE_ID_TEST_1);
-	    Assert.assertEquals("Form attribute name did not match the expected form attribute name.", attribute.getName(), FORM_ATTRIBUTE_TEST);
+	    Assertions.assertEquals("Form attribute name did not match the expected form attribute name.", attribute.getName(), FORM_ATTRIBUTE_TEST);
 	}
 	
 	/**
@@ -411,7 +411,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    EncounterAttribute encounterAttribute = chirdlUtilBackportsService.getEncounterAttributeByName(ENCOUNTER_ATTRIBUTE_TEST);
 	    EncounterAttributeValue encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByAttribute(ENCOUNTER_ID_TEST_23192, encounterAttribute, false);
 	    
-	    Assert.assertNotNull("Encounter attribute value was not found.", encounterAttributeValue);
+	    Assertions.assertNotNull(encounterAttributeValue, "Encounter attribute value was not found.");
 	    
 	    // void and save
 	    encounterAttributeValue.setVoided(true);
@@ -423,7 +423,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         
         // Should no longer find the attribute since it has been voided
         encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByAttribute(ENCOUNTER_ID_TEST_23192, encounterAttribute, false);
-        Assert.assertNull("Encounter attribute value should not have been found because it should be voided.", encounterAttributeValue);
+        Assertions.assertNull(encounterAttributeValue, "Encounter attribute value should not have been found because it should be voided.");
 	}
 	
 	/**
@@ -436,11 +436,11 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getEncounterAttributeByName() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    EncounterAttribute encounterAttribute = chirdlUtilBackportsService.getEncounterAttributeByName(ENCOUNTER_ATTRIBUTE_TEST);
-	    Assert.assertNotNull("TestEncounterAttribute was not found.", encounterAttribute);
+	    Assertions.assertNotNull(encounterAttribute, "TestEncounterAttribute was not found.");
 	    
 	    // This one should not exist
 	    encounterAttribute = chirdlUtilBackportsService.getEncounterAttributeByName(ENCOUNTER_ATTRIBUTE_TEST_2);
-	    Assert.assertNull("TestEncounterAttribute2 was found but should not exist.", encounterAttribute);
+	    Assertions.assertNull(encounterAttribute, "TestEncounterAttribute2 was found but should not exist.");
 	}
 	
 	/**
@@ -453,7 +453,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getEncounterAttributeValueByName() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    EncounterAttributeValue encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByName(ENCOUNTER_ID_TEST_23189, ENCOUNTER_ATTRIBUTE_TEST);
-	    Assert.assertNotNull("Encounter attribute value was not found.", encounterAttributeValue);
+	    Assertions.assertNotNull(encounterAttributeValue, "Encounter attribute value was not found.");
 	    
 	    // This encounter has 2 encounter attribute value records and should cause a hibernate exception due to non-unique result
 	    boolean threwException = false;
@@ -464,7 +464,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	        threwException = true;
 	    }
 	    
-	    Assert.assertTrue("Method getEncounterAttributeValueByName did not throw an exception as expected.", threwException);   
+	    Assertions.assertTrue(threwException, "Method getEncounterAttributeValueByName did not throw an exception as expected.");    
 	}
 	
 	/**
@@ -479,15 +479,15 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    EncounterAttribute encounterAttribute = chirdlUtilBackportsService.getEncounterAttributeByName(ENCOUNTER_ATTRIBUTE_TEST);
 	    EncounterAttributeValue encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByAttribute(ENCOUNTER_ID_TEST_23189, encounterAttribute, false);
 	    
-	    Assert.assertNotNull("Encounter attribute value was not found.", encounterAttributeValue);
+	    Assertions.assertNotNull(encounterAttributeValue, "Encounter attribute value was not found.");
 	    
 	    // This one should only be found when we include voided
 	    encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByAttribute(ENCOUNTER_ID_TEST_23190, encounterAttribute, true);
-	    Assert.assertNotNull("Encounter attribute value was not found.", encounterAttributeValue);
+	    Assertions.assertNotNull(encounterAttributeValue, "Encounter attribute value was not found.");
 	    
 	    // Now it should be null since we are excluding voided
 	    encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByAttribute(ENCOUNTER_ID_TEST_23190, encounterAttribute, false);
-	    Assert.assertNull("A voided encounter attribute value was found but should have been excluded", encounterAttributeValue);
+	    Assertions.assertNull(encounterAttributeValue, "A voided encounter attribute value was found but should have been excluded");
 	}
 	
 	/**
@@ -503,7 +503,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         List<PatientState> currUnfinishedStates = chirdlUtilBackportsService.getLastPatientStateAllPatientsByLocation(
                 null, program.getProgramId(), program.getStartState().getName(), LOCATION_ID_TEST_8992);
         
-        Assert.assertEquals("Number of patient state rows did not match", 1, currUnfinishedStates.size());
+        Assertions.assertEquals(1, currUnfinishedStates.size(), "Number of patient state rows did not match");
 	}
 	
 	/**
@@ -518,11 +518,11 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getProgramByLocation() throws Exception{
         ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
         Program program = chirdlUtilBackportsService.getProgramByLocation(LOCATION_ID_TEST_8992);
-        Assert.assertNotNull("Program not found for location.", program);
+        Assertions.assertNotNull(program, "Program not found for location.");
         
         // Location does not exist in dataset, we should not find a program
         program = chirdlUtilBackportsService.getProgramByLocation(LOCATION_ID_TEST_9999);
-        Assert.assertNull("Program was found, but should not exist.", program);
+        Assertions.assertNull(program, "Program was found, but should not exist.");
 	}
 	
 	/**
@@ -537,11 +537,11 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
         EncounterAttributeValue encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByValue(ENCOUNTER_ATTRIBUTE_VALUE_TEST_23189, ENCOUNTER_ATTRIBUTE_TEST);
         
-        Assert.assertNotNull("Encounter attribute value not found.", encounterAttributeValue);
+        Assertions.assertNotNull(encounterAttributeValue, "Encounter attribute value not found.");
         
         // Should not find a record here because it is voided in the dataset
         encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByValue(ENCOUNTER_ATTRIBUTE_VALUE_TEST_23190, ENCOUNTER_ATTRIBUTE_TEST);
-        Assert.assertNull("Encounter attribute was found, but should not exist.", encounterAttributeValue);
+        Assertions.assertNull(encounterAttributeValue, "Encounter attribute was found, but should not exist.");
 	}
 	
 	/**
@@ -560,14 +560,14 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         // One record is retired and one is not
         Map<String, List<PatientState>> stateMap = chirdlUtilBackportsService.getPatientStatesBySessionId(SESSION_ID_TEST_23190, stateNames, false);
         List<PatientState> patientStates = stateMap.get(STATE_TEST);
-        Assert.assertEquals("Number of patient state rows did not match in should_getPatientStatesBySessionId()", 1, patientStates.size());
+        Assertions.assertEquals(1, patientStates.size(), "Number of patient state rows did not match in should_getPatientStatesBySessionId()");
         
         // Include retired
         stateMap.clear();
         patientStates.clear();
         stateMap = chirdlUtilBackportsService.getPatientStatesBySessionId(SESSION_ID_TEST_23190, stateNames, true);
         patientStates = stateMap.get(STATE_TEST);
-        Assert.assertEquals("Number of patient state rows did not match in should_getPatientStatesBySessionId()", 2, patientStates.size());
+        Assertions.assertEquals(2, patientStates.size(), "Number of patient state rows did not match in should_getPatientStatesBySessionId()");
 	}
 	
 	/**
@@ -588,10 +588,10 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
         
         // Query again and make sure the object is null
         locationTagAttributeValue = chirdlUtilBackportsService.getLocationTagAttributeValue(LOCATION_TAG_ID_TEST_2987, LOCATION_TAG_ATTRIBUTE_TEST, LOCATION_ID_TEST_8992);
-        Assert.assertNull("Location tag attribute value was not deleted.", locationTagAttributeValue);
+        Assertions.assertNull(locationTagAttributeValue, "Location tag attribute value was not deleted.");
         
         // Make sure this record still exits
         locationTagAttributeValue = chirdlUtilBackportsService.getLocationTagAttributeValue(LOCATION_TAG_ID_TEST_2988, LOCATION_TAG_ATTRIBUTE_TEST, LOCATION_ID_TEST_8992);
-        Assert.assertNotNull("Location tag attribute value was not found.", locationTagAttributeValue);
+        Assertions.assertNotNull(locationTagAttributeValue, "Location tag attribute value was not found.");
 	}
 }

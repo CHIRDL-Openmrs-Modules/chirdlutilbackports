@@ -12,8 +12,8 @@ import java.util.Set;
 
 import javax.cache.Cache;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Cohort;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
@@ -35,7 +35,7 @@ import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
 public class LogicInMemoryObsDAO implements LogicObsDAO
 {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+    protected static final Logger log = LoggerFactory.getLogger(LogicInMemoryObsDAO.class);
 	
 	public LogicInMemoryObsDAO()
 	{
