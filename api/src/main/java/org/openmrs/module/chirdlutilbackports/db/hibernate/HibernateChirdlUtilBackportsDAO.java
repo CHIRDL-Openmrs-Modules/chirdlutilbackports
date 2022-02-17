@@ -690,7 +690,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				qry.setInteger("stateId", stateId);
 			}else{
 				qry.setBoolean("retired", false);
-				qry.setInteger(4, stateId);
+				qry.setInteger("stateId", stateId);
 			}
 			
 			qry.addEntity("chirdlutilbackportsPatientState");
@@ -1544,12 +1544,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			if (pat != null) {
 				Integer personAttrTypeId = pat.getPersonAttributeTypeId();
+				
 				String sql = "select * from person_attribute where person_attribute_type_id=:personAttrTypeId and value=:personAttrValue";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
 				qry.setInteger("personAttrTypeId", personAttrTypeId);
 				qry.setString("personAttrValue", value);
 				qry.addEntity(PersonAttribute.class);
+				
 				List<PersonAttribute> list = qry.list();
+				
 				if (list != null && list.size() > 0) {
 					return list.get(0);
 				}
@@ -1762,12 +1766,15 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		if (optionalDateRestriction != null) {
 			dateRestriction = " AND aps.start_time >= :optionalDateRestriction"; 
 		}
+		
 		String sql = "SELECT aps.* FROM chirdlutilbackports_patient_state aps"
 				+ " INNER JOIN chirdlutilbackports_session cs ON aps.session_id = cs.session_id" 
 				+ " INNER JOIN encounter e ON cs.encounter_id = e.encounter_id"
 				+ " WHERE aps.retired=:retired AND aps.location_id=:locationId" + dateRestriction
 				+ " ORDER BY e.encounter_datetime DESC, aps.start_time DESC";
+		
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		
 		qry.setBoolean("retired", false);
 		qry.setInteger("locationId", locationId); 
 		if (optionalDateRestriction != null) {
@@ -1775,6 +1782,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		} 
 		qry.addEntity("chirdlutilbackportsPatientState");
 		List<PatientState> states = qry.list();
+		
 		return findLatestUnfinishedPatientStates(states, programId, startStateName);
 	}
 	
@@ -1851,6 +1859,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 				stateNameMap.clear();
 			}
+			
 			return patientStates;	
 		}
 		catch(Exception e)
