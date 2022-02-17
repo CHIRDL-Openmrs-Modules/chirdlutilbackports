@@ -396,7 +396,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	public void should_getFormAttributeById() throws Exception{
 	    ChirdlUtilBackportsService chirdlUtilBackportsService = Context.getService(ChirdlUtilBackportsService.class);
 	    FormAttribute attribute = chirdlUtilBackportsService.getFormAttributeById(FORM_ATTRIBUTE_ID_TEST_1);
-	    Assertions.assertEquals("Form attribute name did not match the expected form attribute name.", attribute.getName(), FORM_ATTRIBUTE_TEST);
+	    Assertions.assertEquals(attribute.getName(), FORM_ATTRIBUTE_TEST, "Form attribute name did not match the expected form attribute name.");
 	}
 	
 	/**

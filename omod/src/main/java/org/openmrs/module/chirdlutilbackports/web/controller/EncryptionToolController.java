@@ -6,8 +6,8 @@ package org.openmrs.module.chirdlutilbackports.web.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.Security;
@@ -31,7 +31,7 @@ public class EncryptionToolController
 {
 
    
-	protected final Log log = LogFactory.getLog(getClass());
+    private static final Logger log = LoggerFactory.getLogger(EncryptionToolController.class);
     private static final String FORM_VIEW = "/module/chirdlutilbackports/encryptionTool";
     
     /** Parameters */
@@ -99,7 +99,7 @@ public class EncryptionToolController
             }
        } catch (Exception e) {
             model.addAttribute("error", "Unable to decrypt entered value. ");
-            log.error("Unable to decrypt entered text: " + textToDecrypt, e);
+            log.error("Unable to decrypt entered text: {}", textToDecrypt, e);
         } finally {
             model.addAttribute(PARAMETER_ENCRYPTION_KEY_STRING, ""); 
             model.addAttribute(PARAMETER_ENCRYPTED_VALUE, "");
