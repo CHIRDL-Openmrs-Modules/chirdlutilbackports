@@ -537,7 +537,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public PatientState addUpdatePatientState(PatientState patientState) {
-		this.sessionFactory.getCurrentSession().saveOrUpdate(patientState);		
+		this.sessionFactory.getCurrentSession().saveOrUpdate(PATIENT_STATE_ENTITY_NAME, patientState);		
 		return patientState;
 	}
 	
@@ -1433,7 +1433,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
     public Program saveProgram(Program program) {
-		sessionFactory.getCurrentSession().saveOrUpdate(program);
+		sessionFactory.getCurrentSession().saveOrUpdate(PROGRAM_ENTITY_NAME, program);
 		return program;
     }
 
@@ -1441,7 +1441,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
     public void deleteProgram(Program program) {
-		sessionFactory.getCurrentSession().delete(program);
+		sessionFactory.getCurrentSession().delete(PROGRAM_ENTITY_NAME, program);
     }
 
 	/**
