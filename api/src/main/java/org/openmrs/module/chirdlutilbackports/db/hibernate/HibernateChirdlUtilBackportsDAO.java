@@ -69,6 +69,29 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 	private static final Logger log = LoggerFactory.getLogger(HibernateChirdlUtilBackportsDAO.class);
 	
+	private static final String PATIENT_STATE_ENTITY_NAME = "chirdlutilbackportsPatientState";
+	private static final String PROGRAM_ENTITY_NAME = "chirdlutilbackportsProgram";
+	private static final String LOCATION_TAG_ID = "locationTagId";
+	private static final String LOCATION_ID = "locationId";
+	private static final String LOCATION_TAG_ATTR_ID = "locationTagAttributeId";
+	private static final String FORM_ATTR_NAME = "formAttributeName";
+	private static final String FORM_ATTR_VALUE = "formAttributeValue";
+	private static final String FORM_ID = "formId";
+	private static final String FORM_NAME = "formName";
+	private static final String FORM_ATTR_ID = "formAttributeId";
+	private static final String FORM_INSTANCE_ID = "formInstanceId";
+	private static final String FORM_INSTANCE_ATTR_NAME = "formInstanceAttributeName";
+	private static final String FORM_INSTANCE_ATTR_ID = "formInstanceAttributeId";
+	private static final String SESSION_ID = "sessionId";
+	private static final String RETIRED = "retired";
+	private static final String PATIENT_STATE_ID = "patientStateId";
+	private static final String PROGRAM_ID = "programId";
+	private static final String ENCOUNTER_ID = "encounterId";
+	private static final String STATE_ID = "stateId";
+	private static final String START_TIME = "startTime";
+	private static final String VALUE = "value";
+	private static final String ATTR_NAME = "attributeName";
+	
 	/**
 	 * Hibernate session factory
 	 */
@@ -89,7 +112,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
+	@Override
+    public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId) {
 		try {
 			LocationTagAttribute locationTagAttribute = this.getLocationTagAttributeByName(locationTagAttributeName);
@@ -100,9 +124,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				String sql = "select * from chirdlutilbackports_location_tag_attribute_value where location_tag_id=:locationTagId and location_id=:locationId and location_tag_attribute_id=:locationTagAttributeId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
-				qry.setInteger("locationTagId", locationTagId);
-				qry.setInteger("locationId", locationId);
-				qry.setInteger("locationTagAttributeId", locationTagAttributeId);
+				qry.setInteger(LOCATION_TAG_ID, locationTagId);
+				qry.setInteger(LOCATION_ID, locationId);
+				qry.setInteger(LOCATION_TAG_ATTR_ID, locationTagAttributeId);
 				qry.addEntity(LocationTagAttributeValue.class);
 				
 				List<LocationTagAttributeValue> list = qry.list();
@@ -148,7 +172,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				String sql = "select * from chirdlutilbackports_location_attribute_value where location_id=:locationId and location_attribute_id=locationAttributeId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
-				qry.setInteger("locationId", locationId);
+				qry.setInteger(LOCATION_ID, locationId);
 				qry.setInteger("locationAttributeId", locationAttributeId);
 				qry.addEntity(ChirdlLocationAttributeValue.class);
 				
@@ -188,7 +212,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-	public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id) {
+    public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id) {
 		try {
 			String sql = "select * from chirdlutilbackports_location_tag_attribute_value "
 			        + "where location_tag_attribute_value_id=:locationTagAttrValId";
@@ -210,7 +234,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public LocationTagAttribute getLocationTagAttribute(Integer locationTagAttributeId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class).add(
-		    Restrictions.eq("locationTagAttributeId", locationTagAttributeId));
+		    Restrictions.eq(LOCATION_TAG_ATTR_ID, locationTagAttributeId));
 		
 		List<LocationTagAttribute> locations = criteria.list();
 		if (null == locations || locations.isEmpty()) {
@@ -247,7 +271,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	
 	public void deleteLocationTagAttribute(LocationTagAttribute value) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class).add(
-				Restrictions.eq("locationTagAttributeId", value.getLocationTagAttributeId()));
+				Restrictions.eq(LOCATION_TAG_ATTR_ID, value.getLocationTagAttributeId()));
 		
 		List<LocationTagAttributeValue> locations = criteria.list();
 		if (null != locations) {
@@ -278,7 +302,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_form_attribute where name=:formAttributeName";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString("formAttributeName", formAttributeName);
+			qry.setString(FORM_ATTR_NAME, formAttributeName);
 			qry.addEntity(FormAttribute.class);
 			
 			List<FormAttribute> list = qry.list();
@@ -342,10 +366,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				        + "and form_attribute_id=:formAttributeId and location_tag_id=:locationTagId and location_id=:locationId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
-				qry.setInteger("formId", formId);
-				qry.setInteger("formAttributeId", formAttributeId);
-				qry.setInteger("locationTagId", locationTagId);
-				qry.setInteger("locationId", locationId);
+                qry.setInteger(FORM_ID, formId);
+                qry.setInteger(FORM_ATTR_ID, formAttributeId);
+                qry.setInteger(LOCATION_TAG_ID, locationTagId);
+                qry.setInteger(LOCATION_ID, locationId);
 				qry.addEntity(FormAttributeValue.class);
 				
 				List<FormAttributeValue> list = qry.list();
@@ -370,10 +394,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_form_attribute_value where form_id=:formId " + "and form_attribute_id=:formAttributeId and location_tag_id=:locationTagId and location_id=:locationId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 
-			qry.setInteger("formId", formId);
-			qry.setInteger("formAttributeId", formAttributeId);
-			qry.setInteger("locationTagId", locationTagId);
-			qry.setInteger("locationId", locationId);
+			qry.setInteger(FORM_ID, formId);
+			qry.setInteger(FORM_ATTR_ID, formAttributeId);
+			qry.setInteger(LOCATION_TAG_ID, locationTagId);
+			qry.setInteger(LOCATION_ID, locationId);
 			qry.addEntity(FormAttributeValue.class);
 
 			List<FormAttributeValue> list = qry.list();
@@ -390,7 +414,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_session where session_id=:sessionId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
+			qry.setInteger(SESSION_ID, sessionId);
 			qry.addEntity(Session.class);
 			return (Session) qry.uniqueResult();
 		}
@@ -399,16 +423,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		return null;
 	}
-	
+	@SuppressWarnings("deprecation")
 	public List<PatientState> getPatientStatesWithForm(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and form_id is not null and retired=:retired order by start_time desc,end_time desc";
 			SQLQuery qry = null;
 			
 			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			return qry.list();
 		}
 		catch (Exception e) {
@@ -416,17 +440,17 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		return null;
 	}
-	
+	@SuppressWarnings("deprecation")
 	public PatientState getPrevPatientStateByAction(int sessionId, int patientStateId, String action) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and patient_state_id < :patientStateId and retired=:retired"
 			        + " order by patient_state_id desc";
 			SQLQuery qry = null;
 			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setInteger("patientStateId", patientStateId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setInteger(PATIENT_STATE_ID, patientStateId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			List<PatientState> patientStates = qry.list();
 			StateAction stateAction = null;
 			
@@ -445,13 +469,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		return null;
 	}
-	
+	@SuppressWarnings("deprecation")
 	public StateMapping getStateMapping(State initialState, Program program) {
 		try {
 			String sql = "select * from chirdlutilbackports_state_mapping where initial_state=:initialState and program_id=:programId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger("initialState", initialState.getStateId());
-			qry.setInteger("programId", program.getProgramId());
+			qry.setInteger(PROGRAM_ID, program.getProgramId());
 			qry.addEntity(StateMapping.class);
 			return (StateMapping) qry.uniqueResult();
 		}
@@ -467,7 +491,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setString("programName", name);
 			qry.setString("version", version);
-			qry.addEntity(Program.class);
+			qry.addEntity(PROGRAM_ENTITY_NAME);
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -480,8 +504,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_program where program_id=:programId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("programId", programId);
-			qry.addEntity(Program.class);
+			qry.setInteger(PROGRAM_ID, programId);
+			qry.addEntity(PROGRAM_ENTITY_NAME);
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -536,9 +560,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select a.* from chirdlutilbackports_patient_state a inner join chirdlutilbackports_session b on a.session_id=b.session_id "
 			        + " where b.encounter_id=:encounterId and " + "a.state=:stateId order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
-			qry.setInteger("stateId", stateId);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(ENCOUNTER_ID, encounterId);
+			qry.setInteger(STATE_ID, stateId);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 		}
@@ -554,10 +578,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and state=:stateId and retired=:retired order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setInteger("stateId", stateId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setInteger(STATE_ID, stateId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 			
@@ -571,11 +595,11 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public List<PatientState> getPatientStatesBySession(Integer sessionId, boolean isRetired) {
 		
 		try {
-			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and retired=:isRetired order by start_time desc, end_time desc";
+			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and retired=:retired order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setBoolean("isRetired", isRetired);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setBoolean(RETIRED, isRetired);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 			
@@ -593,10 +617,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select a.* from chirdlutilbackports_patient_state a inner join chirdlutilbackports_session b on a.session_id=b.session_id "
 			        + " where b.encounter_id=:encounterId " + "and a.form_id=:formId and a.retired=:retired order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
-			qry.setInteger("formId", formId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(ENCOUNTER_ID, encounterId);
+			qry.setInteger(FORM_ID, formId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			List<PatientState> states = qry.list();
 			
@@ -627,15 +651,15 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=:formInstanceId "
 			        + "and form_id=:formId and location_id=:locationId "+retiredString + "order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("formInstanceId", formInstance.getFormInstanceId());
-			qry.setInteger("formId", formInstance.getFormId());
-			qry.setInteger("locationId", formInstance.getLocationId());
+			qry.setInteger(FORM_INSTANCE_ID, formInstance.getFormInstanceId());
+			qry.setInteger(FORM_ID, formInstance.getFormId());
+			qry.setInteger(LOCATION_ID, formInstance.getLocationId());
 			
 			if(!includeRetired){
-			    qry.setBoolean("retired", false);
+			    qry.setBoolean(RETIRED, false);
 			}
 
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 		}
@@ -679,21 +703,21 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				retiredString = " and retired=:retired ";
 			}
 			// limit to states for the session that match the form id
-			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=:getFormInstanceId "
-			        + "and form_id=:getFormId and location_id=:getLocationId"+retiredString+"and state=:stateId "
+			String sql = "select * from chirdlutilbackports_patient_state where form_instance_id=:formInstanceId "
+			        + "and form_id=:formId and location_id=:locationId"+retiredString+"and state=:stateId "
 			        + "order by start_time desc, end_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("getFormInstanceId", formInstance.getFormInstanceId());
-			qry.setInteger("getFormId", formInstance.getFormId());
-			qry.setInteger("getLocationId", formInstance.getLocationId());
+			qry.setInteger(FORM_INSTANCE_ID, formInstance.getFormInstanceId());
+			qry.setInteger(FORM_ID, formInstance.getFormId());
+			qry.setInteger(LOCATION_ID, formInstance.getLocationId());
 			if(includeRetired){
-				qry.setInteger("stateId", stateId);
+				qry.setInteger(STATE_ID, stateId);
 			}else{
-				qry.setBoolean("retired", false);
-				qry.setInteger("stateId", stateId);
+				qry.setBoolean(RETIRED, false);
+				qry.setInteger(STATE_ID, stateId);
 			}
 			
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 		}
@@ -716,13 +740,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "(:stateId) and end_time is null and retired=:retired and location_tag_id=:locationTagId " + " and location_id=:locationId "
 			        + dateRestriction + " order by start_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("stateId", state.getStateId());
-			qry.setBoolean("retired", false);
-			qry.setInteger("locationTagId", locationTagId);
-			qry.setInteger("locationId", locationId);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(STATE_ID, state.getStateId());
+			qry.setBoolean(RETIRED, false);
+			qry.setInteger(LOCATION_TAG_ID, locationTagId);
+			qry.setInteger(LOCATION_ID, locationId);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			if (optionalDateRestriction != null) {
-				qry.setDate("startTime", optionalDateRestriction);
+				qry.setDate(START_TIME, optionalDateRestriction);
 			}
 			return qry.list();
 		}
@@ -739,10 +763,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_patient_state where state in "
 			        + "(:stateId) and end_time is null and retired=:retired and session_id=:sessionId " + " order by start_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("stateId", state.getStateId());
-			qry.setBoolean("retired", false);
-			qry.setInteger("sessionId", sessionId);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(STATE_ID, state.getStateId());
+			qry.setBoolean(RETIRED, false);
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 		}
@@ -763,12 +787,12 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "and retired=:retired and location_tag_id=:locationTagId and location_id=:locationId" + dateRestriction
 			        + " order by start_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addEntity("chirdlutilbackportsPatientState");
-			qry.setBoolean("retired", false);
-			qry.setInteger("locationTagId", locationTagId);
-			qry.setInteger("locationId", locationId);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.setBoolean(RETIRED, false);
+			qry.setInteger(LOCATION_TAG_ID, locationTagId);
+			qry.setInteger(LOCATION_ID, locationId);
 			if (optionalDateRestriction != null) {
-				qry.setDate("startTime", optionalDateRestriction);
+				qry.setDate(START_TIME, optionalDateRestriction);
 			}
 			return qry.list();
 		}
@@ -783,9 +807,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId "
 			        + " and end_time is null and retired=:retired order by start_time desc, patient_state_id desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			List<PatientState> states = qry.list();
 			if (states != null && states.size() > 0) {
 				return states.get(0);
@@ -803,9 +827,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId "
 			        + "  and retired=:retired  order by start_time desc,end_time desc, patient_state_id desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("sessionId", sessionId);
-			qry.setBoolean("retired", false);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(SESSION_ID, sessionId);
+			qry.setBoolean(RETIRED, false);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			List<PatientState> states = qry.list();
 			if (states != null && states.size() > 0) {
 				return states.get(0);
@@ -822,7 +846,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_state where state_id=:stateId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("stateId", stateId);
+			qry.setInteger(STATE_ID, stateId);
 			qry.addEntity(State.class);
 			
 			return (State) qry.uniqueResult();
@@ -839,7 +863,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		String sql = "Select * from chirdlutilbackports_state_mapping where program_id=:programId";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 		qry.addEntity(StateMapping.class);
-		qry.setInteger("programId", programId);
+		qry.setInteger(PROGRAM_ID, programId);
 		List<StateMapping> mappings = qry.list();
 		
 		HashMap<String, StateMapping> stateMap = new HashMap<String, StateMapping>();
@@ -891,13 +915,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			
-			qry.setBoolean("retired", false);
-			qry.setInteger("locationTagId", locationTagId);
-			qry.setInteger("locationId", locationId);
+			qry.setBoolean(RETIRED, false);
+			qry.setInteger(LOCATION_TAG_ID, locationTagId);
+			qry.setInteger(LOCATION_ID, locationId);
 			if (optionalDateRestriction != null) {
 				qry.setDate("optionalDateRestriction", optionalDateRestriction);
 			}
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			List<PatientState> states = qry.list();
 			
 			return findLatestUnfinishedPatientStates(states, programId, startStateName); // DWE CHICA-761 Moved code to method
@@ -918,7 +942,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "(select form_attribute_id from chirdlutilbackports_form_attribute where name=:formAttributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.addEntity(FormAttributeValue.class);
-			qry.setString("formAttributeName", attributeName);
+			qry.setString(FORM_ATTR_NAME, attributeName);
 			return qry.list();
 			
 		}
@@ -935,13 +959,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 		try {
 			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
-					Restrictions.eq("formAttributeId", attributeId));
+					Restrictions.eq(FORM_ATTR_ID, attributeId));
 			if (locationId != null) {
-				criteria = criteria.add(Restrictions.eq("locationId", locationId));
+				criteria = criteria.add(Restrictions.eq(LOCATION_ID, locationId));
 			}
 			
 			if (locationTagId != null) {
-				criteria = criteria.add(Restrictions.eq("locationTagId", locationTagId));
+				criteria = criteria.add(Restrictions.eq(LOCATION_TAG_ID, locationTagId));
 			}
 			
 			return criteria.list();
@@ -957,8 +981,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select distinct value from chirdlutilbackports_form_attribute_value where form_attribute_id in "
 			        + "(select form_attribute_id from chirdlutilbackports_form_attribute where name=:formAttributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addScalar("value");
-			qry.setString("formAttributeName", attributeName);
+			qry.addScalar(VALUE);
+			qry.setString(FORM_ATTR_NAME, attributeName);
 			List<String> list = qry.list();
 			
 			ArrayList<String> exportDirectories = new ArrayList<String>();
@@ -993,8 +1017,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where patient_state_id=:patientStateId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("stateActionName", patientStateId);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setInteger(PATIENT_STATE_ID, patientStateId);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			return (PatientState) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -1009,9 +1033,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "and retired=:retired and start_time < :startTime";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			
-			qry.setBoolean("retired", true);
-			qry.setDate("startTime", thresholdDate);
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.setBoolean(RETIRED, true);
+			qry.setDate(START_TIME, thresholdDate);
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			return qry.list();
 		}
 		catch (Exception e) {
@@ -1024,7 +1048,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_session where encounter_id=:encounterId ";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
+			qry.setInteger(ENCOUNTER_ID, encounterId);
 			qry.addEntity(Session.class);
 			return (List<Session>) qry.list();
 			
@@ -1039,8 +1063,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_program_tag_map where location_id=:locationId and location_tag_id=:locationTagId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("locationId", locationId);
-			qry.setInteger("locationTagId", locationTagId);
+			qry.setInteger(LOCATION_ID, locationId);
+			qry.setInteger(LOCATION_TAG_ID, locationTagId);
 			qry.addEntity(ProgramTagMap.class);
 			ProgramTagMap map = (ProgramTagMap) qry.uniqueResult();
 			
@@ -1064,16 +1088,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "inner join form c on a.form_id=c.form_id where " + "b.encounter_id=:encounterId and c.name=:formName and "
 			        + "form_instance_id is not null order by end_time desc";
 			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
-			qry.setString("formName", formName);
+			qry.setInteger(ENCOUNTER_ID, encounterId);
+			qry.setString(FORM_NAME, formName);
 		} else {
 			String sql = "select a.* from chirdlutilbackports_patient_state a " + "inner join chirdlutilbackports_session b on a.session_id=b.session_id "
 			        + "where b.encounter_id=:encounterId and " + "form_instance_id is not null order by end_time desc";
 			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("encounterId", encounterId);
+			qry.setInteger(ENCOUNTER_ID, encounterId);
 		}
 		
-		qry.addEntity("chirdlutilbackportsPatientState");
+		qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 		return qry.list();
 	}
 	
@@ -1098,7 +1122,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_error where level=:errorLevel and session_id=:sessionId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setString("errorLevel", errorLevel);
-			qry.setInteger("sessionId", sessionId);
+			qry.setInteger(SESSION_ID, sessionId);
 			qry.addEntity(Error.class);
 			return qry.list();
 		}
@@ -1112,7 +1136,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_form_attribute_value where value=:formAttributeValue";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString("formAttributeValue", value);
+			qry.setString(FORM_ATTR_VALUE, value);
 			qry.addEntity(FormAttributeValue.class);
 			return qry.list();
 		}
@@ -1178,7 +1202,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=:attributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.addEntity(ObsAttributeValue.class);
-			qry.setString("attributeName", attributeName);
+			qry.setString(ATTR_NAME, attributeName);
 			return qry.list();
 			
 		}
@@ -1196,8 +1220,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select distinct value from chirdlutilbackports_obs_attribute_value where obs_attribute_id in "
 			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=:attributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addScalar("value");
-			qry.setString("attributeName", attributeName);
+			qry.addScalar(VALUE);
+			qry.setString(ATTR_NAME, attributeName);
 			List<String> list = qry.list();
 			
 			ArrayList<String> attributes = new ArrayList<String>();
@@ -1252,7 +1276,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     	try {
 			String sql = "select * from chirdlutilbackports_obs_attribute_value where value=:value";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString("value", value);
+			qry.setString(VALUE, value);
 			qry.addEntity(ObsAttributeValue.class);
 			return qry.list();
 		}
@@ -1276,7 +1300,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute where name=:formInstanceAttributeName";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString("formInstanceAttributeName", formInstanceAttributeName);
+			qry.setString(FORM_INSTANCE_ATTR_NAME, formInstanceAttributeName);
 			qry.addEntity(FormInstanceAttribute.class);
 			
 			List<FormInstanceAttribute> list = qry.list();
@@ -1301,7 +1325,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "(select form_instance_attribute_id from chirdlutilbackports_form_instance_attribute where name=:formInstanceAttributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.addEntity(FormInstanceAttributeValue.class);
-			qry.setString("formInstanceAttributeName", attributeName);
+			qry.setString(FORM_INSTANCE_ATTR_NAME, attributeName);
 			return qry.list();
 			
 		}
@@ -1320,8 +1344,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 					+ "form_instance_attribute_id in "
 			        + "(select form_instance_attribute_id from chirdlutilbackports_form_instance_attribute where name=:formInstanceAttributeName)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addScalar("value");
-			qry.setString("formInstanceAttributeName", attributeName);
+			qry.addScalar(VALUE);
+			qry.setString(FORM_INSTANCE_ATTR_NAME, attributeName);
 			List<String> list = qry.list();
 			
 			ArrayList<String> attributes = new ArrayList<String>();
@@ -1352,10 +1376,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				        + "and form_instance_id=:formInstanceId and location_id=:locationId and form_instance_attribute_id=:formInstanceAttributeId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
-				qry.setInteger("formId", formId);
-				qry.setInteger("formInstanceId", formInstanceId);
-				qry.setInteger("locationId", locationId);
-				qry.setInteger("formInstanceAttributeId", formInstanceAttributeId);
+				qry.setInteger(FORM_ID, formId);
+				qry.setInteger(FORM_INSTANCE_ID, formInstanceId);
+				qry.setInteger(LOCATION_ID, locationId);
+				qry.setInteger(FORM_INSTANCE_ATTR_ID, formInstanceAttributeId);
 				qry.addEntity(FormInstanceAttributeValue.class);
 				
 				List<FormInstanceAttributeValue> list = qry.list();
@@ -1400,7 +1424,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllPrograms()
 	 */
     public List<Program> getAllPrograms() {
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Program.class);
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PROGRAM_ENTITY_NAME);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
     }
@@ -1439,7 +1463,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgram(java.lang.String)
 	 */
     public Program getProgram(String name) {
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Program.class).add(
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PROGRAM_ENTITY_NAME).add(
     			Restrictions.eq("name", name));
 		
 		List<Program> programs = criteria.list();
@@ -1522,10 +1546,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public List<String> getCurrentFormAttributeValueStrCollection(FormAttribute fa) {
 		List<String> valuesCollection;
 		try{
-			String sql = "select distinct value from chirdlutilbackports_form_attribute_value where form_attribute_id=:formAttrId ";
+			String sql = "select distinct value from chirdlutilbackports_form_attribute_value where form_attribute_id=:formAttributeId ";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setParameter("formAttrId", fa.getFormAttributeId());
-			qry.addScalar("value", new StringType());
+			qry.setParameter(FORM_ATTR_ID, fa.getFormAttributeId());
+			qry.addScalar(VALUE, new StringType());
 			valuesCollection = qry.list();
 			return valuesCollection;
 		}
@@ -1622,13 +1646,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 						 "WHERE a.form_id=:formId";
 			
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addScalar("formId");
-			qry.addScalar("formAttributeId");
-			qry.addScalar("locationTagId");
-			qry.addScalar("locationId");
-			qry.addScalar("formAttributeValue");
+			qry.addScalar(FORM_ID);
+			qry.addScalar(FORM_ATTR_ID);
+			qry.addScalar(LOCATION_TAG_ID);
+			qry.addScalar(LOCATION_ID);
+			qry.addScalar(FORM_ATTR_VALUE);
 				
-			qry.setInteger("formId", formId);
+			qry.setInteger(FORM_ID, formId);
 		
 			List<Object[]> list = qry.list();
 			
@@ -1656,9 +1680,9 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	{
 		try 
 		{
-			String sql = "SELECT * FROM chirdlutilbackports_form_attribute WHERE form_attribute_id=:formAttrId";
+			String sql = "SELECT * FROM chirdlutilbackports_form_attribute WHERE form_attribute_id=:formAttributeId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setInteger("formAttrId", formAttributeId);
+			qry.setInteger(FORM_ATTR_ID, formAttributeId);
 			qry.addEntity(FormAttribute.class);
 			
 			List<FormAttribute> list = qry.list();
@@ -1775,12 +1799,12 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 		
-		qry.setBoolean("retired", false);
-		qry.setInteger("locationId", locationId); 
+		qry.setBoolean(RETIRED, false);
+		qry.setInteger(LOCATION_ID, locationId); 
 		if (optionalDateRestriction != null) {
 			qry.setDate("optionalDateRestriction", optionalDateRestriction);
 		} 
-		qry.addEntity("chirdlutilbackportsPatientState");
+		qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 		List<PatientState> states = qry.list();
 		
 		return findLatestUnfinishedPatientStates(states, programId, startStateName);
@@ -1793,7 +1817,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public Program getProgramByLocation(Integer locationId) throws HibernateException
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ProgramTagMap.class).add(
-				Restrictions.eq("locationId", locationId));
+				Restrictions.eq(LOCATION_ID, locationId));
 		List<ProgramTagMap> list = criteria.list();
 		
 		if(list != null && list.size() > 0)
@@ -1899,7 +1923,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	@SuppressWarnings("unchecked")
     public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
-           Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria("chirdlutilbackportsPatientState", "ps");
+           Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PATIENT_STATE_ENTITY_NAME, "ps");
            Criteria nestedCriteria = criteria.createCriteria("state", "s");
            nestedCriteria.add(Restrictions.in("s.name", stateNames));
            criteria.add(Restrictions.eq("ps.sessionId", sessionId));
@@ -1918,8 +1942,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value)
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class)
-				.add(Restrictions.eq("locationTagAttributeId", locationTagAttribute.getLocationTagAttributeId()))
-				.add(Restrictions.eq("value", value));
+				.add(Restrictions.eq(LOCATION_TAG_ATTR_ID, locationTagAttribute.getLocationTagAttributeId()))
+				.add(Restrictions.eq(VALUE, value));
 		
 		List<LocationTagAttributeValue> locationTagAttributeValues = criteria.list();
 		if (locationTagAttributeValues != null) 
@@ -1978,12 +2002,12 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			if(encounterId != null)
 			{
-				qry.setInteger("encounterId", encounterId);
+				qry.setInteger(ENCOUNTER_ID, encounterId);
 			}
 			
 			if(formName != null)
 			{
-				qry.setString("formName", formName);
+				qry.setString(FORM_NAME, formName);
 			}
 			
 			if(stateNames != null && !stateNames.isEmpty())
@@ -1993,10 +2017,10 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			if(!includeRetired)
 			{
-				qry.setBoolean("retired", false);
+				qry.setBoolean(RETIRED, false);
 			}
 			
-			qry.addEntity("chirdlutilbackportsPatientState");
+			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
 			
 			return qry.list();
 		}

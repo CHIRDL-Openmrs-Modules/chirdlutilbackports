@@ -369,14 +369,14 @@ public class ApplicationCacheManager {
 		String expirationStr = Context.getAdministrationService().getGlobalProperty(
 			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY);
 		if (expirationStr == null || expirationStr.isEmpty()) {
-			log.error("Global property {} is not set. The items in the cache will expire after {}minutes", 
+			log.error("Global property {} is not set. The items in the cache will expire after {} minutes", 
 			    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY, expiration);
 		} else {
 			try {
 				expiration = Long.parseLong(expirationStr);
 			} catch (NumberFormatException e) {
 				expiration = ApplicationCacheManager.DEFAULT_EXPIRY;
-				log.error("Global property {} is not set to a valid integer.  The items in the cache will expire after {}minutes", 
+				log.error("Global property {} is not set to a valid integer.  The items in the cache will expire after {} minutes", 
 				    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY, expiration);
 			}
 		}
@@ -437,7 +437,7 @@ public class ApplicationCacheManager {
 		} else {
 			File cacheConfigFile = new File(cacheConfigFileStr);
 			if (!cacheConfigFile.exists() || !cacheConfigFile.canRead()) {
-				log.error("Cache configuration file {} define in global property {} does not exist or cannot be read.  "
+				log.error("Cache configuration file {} defined in global property {} does not exist or cannot be read.  "
 						+ "Any caches created beyond this point with be created with the global settings defined in the global properties.",
 						cacheConfigFileStr, ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE);
 			} else {
