@@ -169,7 +169,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			if (locationAttribute != null) {
 				Integer locationAttributeId = locationAttribute.getLocationAttributeId();
 				
-				String sql = "select * from chirdlutilbackports_location_attribute_value where location_id=:locationId and location_attribute_id=locationAttributeId";
+				String sql = "select * from chirdlutilbackports_location_attribute_value where location_id=:locationId and location_attribute_id=:locationAttributeId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
 				qry.setInteger(LOCATION_ID, locationId);
@@ -423,7 +423,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		return null;
 	}
-	@SuppressWarnings("deprecation")
+
 	public List<PatientState> getPatientStatesWithForm(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and form_id is not null and retired=:retired order by start_time desc,end_time desc";
@@ -1248,7 +1248,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				Integer obsAttributeId = obsAttribute.getObsAttributeId();
 				
 				String sql = "select * from chirdlutilbackports_obs_attribute_value where obs_id=:obsId "
-				        + "and obs_attribute_id=obsAttributeId";
+				        + "and obs_attribute_id=:obsAttributeId";
 				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 				
 				qry.setInteger("obsId", obsId);
