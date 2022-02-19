@@ -440,7 +440,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 		return null;
 	}
-	@SuppressWarnings("deprecation")
+
 	public PatientState getPrevPatientStateByAction(int sessionId, int patientStateId, String action) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and patient_state_id < :patientStateId and retired=:retired"
@@ -469,7 +469,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		
 		return null;
 	}
-	@SuppressWarnings("deprecation")
+
 	public StateMapping getStateMapping(State initialState, Program program) {
 		try {
 			String sql = "select * from chirdlutilbackports_state_mapping where initial_state=:initialState and program_id=:programId";
@@ -955,7 +955,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributes(java.lang.Integer, java.lang.Integer, java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 		try {
 			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
@@ -1610,7 +1609,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getUsersByRole(org.openmrs.Role, boolean)
      */
-    @SuppressWarnings("unchecked")
     public List<User> getUsersByRole(Role role, boolean includeRetired) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
     	if (!includeRetired) {
@@ -1920,7 +1918,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * CHICA-862
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesBySessionId(Integer, List, boolean)
 	 */
-	@SuppressWarnings("unchecked")
     public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
            Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PATIENT_STATE_ENTITY_NAME, "ps");
