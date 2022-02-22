@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.openmrs.CareSetting;
 import org.openmrs.Encounter;
@@ -53,7 +51,6 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
 public class ChirdlUtilBackportsServiceImpl implements ChirdlUtilBackportsService {
 	
 	private ChirdlUtilBackportsDAO dao;
-	protected final Log log = LogFactory.getLog(getClass());
 	/**
 	 * Empty constructor
 	 */

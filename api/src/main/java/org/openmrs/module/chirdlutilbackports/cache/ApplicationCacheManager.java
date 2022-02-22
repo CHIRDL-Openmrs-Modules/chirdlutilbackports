@@ -35,8 +35,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ehcache.config.CacheConfiguration;
 import org.ehcache.config.CacheRuntimeConfiguration;
 import org.ehcache.config.ResourcePools;
@@ -62,7 +62,7 @@ import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
 public class ApplicationCacheManager {
 	
 	private CacheManager cacheManager = null;
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(ApplicationCacheManager.class);
 		
 	private static final long DEFAULT_HEAP_SIZE = 20;
 	private static final long DEFAULT_EXPIRY = 480;
@@ -105,8 +105,8 @@ public class ApplicationCacheManager {
 			return cache;
 		}
 		
-		log.error("A cache with the name " + cacheName + " is not specified in the Ehcache configuration file.  "
-				+ "An in-memory cache will be created with the default cache settings.");
+		log.error("A cache with the name {} is not specified in the Ehcache configuration file.  "
+				+ "An in-memory cache will be created with the default cache settings.", cacheName);
 		return createDefaultCache(cacheName, keyType, valueType);
 	}
     
@@ -122,7 +122,7 @@ public class ApplicationCacheManager {
     public <K, V> void updateCacheHeapSize(String cacheName, Class<K> keyType, Class<V> valueType, long newHeapSize) {
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
-    		log.error("Attempt made to update the " + cacheName + " cache heap size, but the cache cannot be found.");
+    		log.error("Attempt made to update the {} cache heap size, but the cache cannot be found.", cacheName);
     	} else {
     		Eh107Configuration<K, V> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
     		CacheRuntimeConfiguration<K, V> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
@@ -142,7 +142,7 @@ public class ApplicationCacheManager {
     public <K, V> void clearCache(String cacheName, Class<K> keyType, Class<V> valueType) {
     	Cache<K, V> cache = cacheManager.getCache(cacheName, keyType, valueType);
     	if (cache == null) {
-    		log.error("Attempt made to clear the " + cacheName + " cache, but the cache cannot be found.");
+    		log.error("Attempt made to clear the {} cache, but the cache cannot be found.", cacheName);
     	} else {
     		cache.clear();
     	}
@@ -281,7 +281,7 @@ public class ApplicationCacheManager {
     	List<CacheStatistic> stats = new ArrayList<CacheStatistic>();
     	Cache<K, V> cache = getCache(cacheName, keyType, valueType);
     	if (cache == null) {
-    		log.error("Cannot retrieve statistics for cache " + cacheName + " because it does not exist.");
+    		log.error("Cannot retrieve statistics for cache {} because it does not exist.", cacheName);
     		return stats;
     	}
     	
@@ -296,7 +296,7 @@ public class ApplicationCacheManager {
 	        info = mbs.getMBeanInfo(objName);
         }
         catch (IntrospectionException | InstanceNotFoundException | ReflectionException e) {
-	        log.error("Error retrieving statistics for cache " + cacheName, e);
+	        log.error("Error retrieving statistics for cache {}", cacheName, e);
         }
         
 		if (info == null) {
@@ -316,7 +316,7 @@ public class ApplicationCacheManager {
 	            stats.add(stat);
             }
             catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException e) {
-            	log.error("Error retrieving statistics for cache " + cacheName, e);
+            	log.error("Error retrieving statistics for cache {}", cacheName, e);
             }
         }
         
@@ -353,15 +353,15 @@ public class ApplicationCacheManager {
 		String heapSizeStr = Context.getAdministrationService().getGlobalProperty(
 			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE);
 		if (heapSizeStr == null || heapSizeStr.isEmpty()) {
-			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE + " is not set.  "
-					+ "The cache heap size will be set to " + heapSize);
+			log.error("Global property {} is not set. The cache heap size will be set to {}", 
+			    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE, heapSize);
 		} else {
 			try {
 				heapSize = Long.parseLong(heapSizeStr);
 			} catch (NumberFormatException e) {
 				heapSize = ApplicationCacheManager.DEFAULT_HEAP_SIZE;
-				log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE + " is not set "
-						+ "to a valid integer.  The cache heap size will be set to " + heapSize);
+				log.error("Global property {} is not set to a valid integer. The cache heap size will be set to {}", 
+				    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_HEAP_SIZE, heapSize);
 			}
 		}
 		
@@ -369,15 +369,15 @@ public class ApplicationCacheManager {
 		String expirationStr = Context.getAdministrationService().getGlobalProperty(
 			ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY);
 		if (expirationStr == null || expirationStr.isEmpty()) {
-			log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY + " is not set.  "
-					+ "The items in the cache will expire after " + expiration + "minutes");
+			log.error("Global property {} is not set. The items in the cache will expire after {} minutes", 
+			    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY, expiration);
 		} else {
 			try {
 				expiration = Long.parseLong(expirationStr);
 			} catch (NumberFormatException e) {
 				expiration = ApplicationCacheManager.DEFAULT_EXPIRY;
-				log.error("Global property " + ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY + " is not set "
-						+ "to a valid integer.  The items in the cache will expire after " + expiration + "minutes");
+				log.error("Global property {} is not set to a valid integer.  The items in the cache will expire after {} minutes", 
+				    ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_DEFAULT_EXPIRY, expiration);
 			}
 		}
 
@@ -437,9 +437,9 @@ public class ApplicationCacheManager {
 		} else {
 			File cacheConfigFile = new File(cacheConfigFileStr);
 			if (!cacheConfigFile.exists() || !cacheConfigFile.canRead()) {
-				log.error("Cache configuration file " + cacheConfigFileStr + " define in global property " + 
-						ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE + " does not exist or cannot be read.  "
-						+ "Any caches created beyond this point with be created with the global settings defined in the global properties.");
+				log.error("Cache configuration file {} defined in global property {} does not exist or cannot be read.  "
+						+ "Any caches created beyond this point with be created with the global settings defined in the global properties.",
+						cacheConfigFileStr, ChirdlUtilBackportsConstants.GLOBAL_PROPERTY_CACHE_CONFIG_FILE);
 			} else {
 				cacheConfigURI = cacheConfigFile.toURI();
 			}
@@ -493,7 +493,7 @@ public class ApplicationCacheManager {
 	      return new ObjectName("javax.cache:type=CacheStatistics" + ",CacheManager=" + cacheManagerName + ",Cache="
 	          + cacheName);
 	    } catch (MalformedObjectNameException e) {
-	    	log.error("Error creating object name for cache " + cacheName, e);
+	    	log.error("Error creating object name for cache {}", cacheName, e);
 	    }
 	    
 	    return null;
