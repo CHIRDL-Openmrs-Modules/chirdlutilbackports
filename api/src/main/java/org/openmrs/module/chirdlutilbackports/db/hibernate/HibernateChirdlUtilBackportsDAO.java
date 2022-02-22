@@ -955,6 +955,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributes(java.lang.Integer, java.lang.Integer, java.lang.Integer)
 	 */
+	@SuppressWarnings("unchecked")
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 		try {
 			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttributeValue.class).add(
@@ -1609,16 +1610,15 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getUsersByRole(org.openmrs.Role, boolean)
      */
+    @SuppressWarnings("unchecked")
     public List<User> getUsersByRole(Role role, boolean includeRetired) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
     	if (!includeRetired) {
     		criteria.add(Restrictions.eq("u.retired", Boolean.FALSE));
     	}
     	
-		List<User> users = criteria.createCriteria("roles", "r")
+    	return criteria.createCriteria("roles", "r")
 		        .add(Restrictions.eq("r.role", role.getRole())).list();
-		
-		return users;
 	}
 	
 	/**
@@ -1918,6 +1918,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * CHICA-862
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesBySessionId(Integer, List, boolean)
 	 */
+	@SuppressWarnings("unchecked")
     public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
            Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PATIENT_STATE_ENTITY_NAME, "ps");
