@@ -55,6 +55,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateAction;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
+import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
 
 /**
  * Hibernate implementations of ChirdlUtilBackports related database functions.
@@ -69,8 +70,6 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 
 	private static final Logger log = LoggerFactory.getLogger(HibernateChirdlUtilBackportsDAO.class);
 	
-	private static final String PATIENT_STATE_ENTITY_NAME = "chirdlutilbackportsPatientState";
-	private static final String PROGRAM_ENTITY_NAME = "chirdlutilbackportsProgram";
 	private static final String LOCATION_TAG_ID = "locationTagId";
 	private static final String LOCATION_ID = "locationId";
 	private static final String LOCATION_TAG_ATTR_ID = "locationTagAttributeId";
@@ -432,7 +431,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			return qry.list();
 		}
 		catch (Exception e) {
@@ -450,7 +449,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setInteger(PATIENT_STATE_ID, patientStateId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			List<PatientState> patientStates = qry.list();
 			StateAction stateAction = null;
 			
@@ -491,7 +490,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setString("programName", name);
 			qry.setString("version", version);
-			qry.addEntity(PROGRAM_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -505,7 +504,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_program where program_id=:programId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(PROGRAM_ID, programId);
-			qry.addEntity(PROGRAM_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -537,7 +536,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	}
 	
 	public PatientState addUpdatePatientState(PatientState patientState) {
-		this.sessionFactory.getCurrentSession().saveOrUpdate(PATIENT_STATE_ENTITY_NAME, patientState);		
+		this.sessionFactory.getCurrentSession().saveOrUpdate(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY, patientState);		
 		return patientState;
 	}
 	
@@ -562,7 +561,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(ENCOUNTER_ID, encounterId);
 			qry.setInteger(STATE_ID, stateId);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 		}
@@ -581,7 +580,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setInteger(STATE_ID, stateId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 			
@@ -599,7 +598,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setBoolean(RETIRED, isRetired);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 			
@@ -620,7 +619,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setInteger(ENCOUNTER_ID, encounterId);
 			qry.setInteger(FORM_ID, formId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			List<PatientState> states = qry.list();
 			
@@ -659,7 +658,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			    qry.setBoolean(RETIRED, false);
 			}
 
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 		}
@@ -717,7 +716,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				qry.setInteger(STATE_ID, stateId);
 			}
 			
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 		}
@@ -744,7 +743,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setBoolean(RETIRED, false);
 			qry.setInteger(LOCATION_TAG_ID, locationTagId);
 			qry.setInteger(LOCATION_ID, locationId);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			if (optionalDateRestriction != null) {
 				qry.setDate(START_TIME, optionalDateRestriction);
 			}
@@ -766,7 +765,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setInteger(STATE_ID, state.getStateId());
 			qry.setBoolean(RETIRED, false);
 			qry.setInteger(SESSION_ID, sessionId);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 		}
@@ -787,7 +786,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			        + "and retired=:retired and location_tag_id=:locationTagId and location_id=:locationId" + dateRestriction
 			        + " order by start_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			qry.setBoolean(RETIRED, false);
 			qry.setInteger(LOCATION_TAG_ID, locationTagId);
 			qry.setInteger(LOCATION_ID, locationId);
@@ -809,7 +808,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			List<PatientState> states = qry.list();
 			if (states != null && states.size() > 0) {
 				return states.get(0);
@@ -829,7 +828,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(SESSION_ID, sessionId);
 			qry.setBoolean(RETIRED, false);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			List<PatientState> states = qry.list();
 			if (states != null && states.size() > 0) {
 				return states.get(0);
@@ -921,7 +920,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			if (optionalDateRestriction != null) {
 				qry.setDate("optionalDateRestriction", optionalDateRestriction);
 			}
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			List<PatientState> states = qry.list();
 			
 			return findLatestUnfinishedPatientStates(states, programId, startStateName); // DWE CHICA-761 Moved code to method
@@ -1018,7 +1017,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_patient_state where patient_state_id=:patientStateId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(PATIENT_STATE_ID, patientStateId);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			return (PatientState) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -1035,7 +1034,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			
 			qry.setBoolean(RETIRED, true);
 			qry.setDate(START_TIME, thresholdDate);
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			return qry.list();
 		}
 		catch (Exception e) {
@@ -1097,7 +1096,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			qry.setInteger(ENCOUNTER_ID, encounterId);
 		}
 		
-		qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+		qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 		return qry.list();
 	}
 	
@@ -1424,7 +1423,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllPrograms()
 	 */
     public List<Program> getAllPrograms() {
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PROGRAM_ENTITY_NAME);
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
     }
@@ -1433,7 +1432,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
     public Program saveProgram(Program program) {
-		sessionFactory.getCurrentSession().saveOrUpdate(PROGRAM_ENTITY_NAME, program);
+		sessionFactory.getCurrentSession().saveOrUpdate(ChirdlUtilBackportsConstants.PROGRAM_ENTITY, program);
 		return program;
     }
 
@@ -1441,7 +1440,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
     public void deleteProgram(Program program) {
-		sessionFactory.getCurrentSession().delete(PROGRAM_ENTITY_NAME, program);
+		sessionFactory.getCurrentSession().delete(ChirdlUtilBackportsConstants.PROGRAM_ENTITY, program);
     }
 
 	/**
@@ -1463,7 +1462,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgram(java.lang.String)
 	 */
     public Program getProgram(String name) {
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PROGRAM_ENTITY_NAME).add(
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PROGRAM_ENTITY).add(
     			Restrictions.eq("name", name));
 		
 		List<Program> programs = criteria.list();
@@ -1802,7 +1801,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		if (optionalDateRestriction != null) {
 			qry.setDate("optionalDateRestriction", optionalDateRestriction);
 		} 
-		qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+		qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 		List<PatientState> states = qry.list();
 		
 		return findLatestUnfinishedPatientStates(states, programId, startStateName);
@@ -1921,7 +1920,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	@SuppressWarnings("unchecked")
     public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
-           Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(PATIENT_STATE_ENTITY_NAME, "ps");
+           Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY, "ps");
            Criteria nestedCriteria = criteria.createCriteria("state", "s");
            nestedCriteria.add(Restrictions.in("s.name", stateNames));
            criteria.add(Restrictions.eq("ps.sessionId", sessionId));
@@ -2018,7 +2017,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 				qry.setBoolean(RETIRED, false);
 			}
 			
-			qry.addEntity(PATIENT_STATE_ENTITY_NAME);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			
 			return qry.list();
 		}
