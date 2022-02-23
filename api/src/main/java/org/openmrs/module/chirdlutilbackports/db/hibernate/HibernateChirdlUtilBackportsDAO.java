@@ -504,7 +504,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 			String sql = "select * from chirdlutilbackports_program where program_id=:programId";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(PROGRAM_ID, programId);
-			qry.addEntity(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);Program p = (Program) qry.uniqueResult(); System.out.println("PROGRAM INTEGER::::"+p.getName());
+			qry.addEntity(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);
 			return (Program) qry.uniqueResult();
 		}
 		catch (Exception e) {
@@ -1465,7 +1465,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PROGRAM_ENTITY).add(
     			Restrictions.eq("name", name));
 		
-		List<Program> programs = criteria.list();System.out.println("PROGRAM NAME::::"+programs.get(0).getName());
+		List<Program> programs = criteria.list();
 		if (null == programs || programs.isEmpty()) {
 			return null;
 		}
