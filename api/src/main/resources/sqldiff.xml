@@ -471,38 +471,41 @@ CREATE TABLE `chirdlutilbackports_error` (
               CONSTRAINT chirdlutilbackports_form_inst_fk_form FOREIGN KEY (form_id) REFERENCES form (form_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
         </sql>
-        <diff>
+    </diff>
+    <diff>
         <version>1.1.0</version>
         <author>Meena Sheley</author>
-        <date>March 2, 2022</date>
+        <date>March 3, 2022</date>
         <description>
-            CHICA-1639:  Remove 5 columns from the encounter table. Chica extends the openmrs class.
-            This added more columns to the encounter table. Goal is to move data in those columns
-            to encounter_attribute_value table, and remove columns from encounter.
+            CHICA-1639: Convert extended Encounter columns to Encounter Attribute Values. Create a new 
+            column to store a date value in chirdlutilbackports_encounter_attribute_value table
+            and add associated attributes the the attribute table.
             
         </description>
         <sql>
-            INSERT INTO chirdlutilbackports_encounter_attribute( encounter_attribute_id,name,description) VALUES (
-              "Printer Location")
-              ,"Printer location in clinic"
-            )
-            INSERT INTO chirdlutilbackports_encounter_attribute(encounter_attribute_id,name,description) VALUES (
-              "Appointment Time")
-              ,"Appointment or scheduled Time"
-            )
-            INSERT INTO chirdlutilbackports_encounter_attribute(encounter_attribute_id,name,description) VALUES (
-              "Insurance SMS Code")
-              ,"Insurance SMS Code from HL7"
-            )
-            
-            INSERT INTO chirdlutilbackports_encounter_attribute(encounter_attribute_id,name,description) VALUES (
-              "Insurance Plan Code")
-              ,"Insurance Plan Code from HL7"
-            )
-            INSERT INTO chirdlutilbackports_encounter_attribute(encounter_attribute_id,name,description) VALUES (
-               "Carrier Code")
-              ,"Insurance carrier code from HL7"
-            )
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Printer Location', "Printer location in clinic" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Printer Location');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Appointment Time', "Appointment or scheduled Time" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Appointment Time');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance SMS Code', "Insurance SMS Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance SMS Code');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance Plan Code', "Insurance Plan Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance Plan Code');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance Carrier Code', "Insurance Carrier Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance Carrier Code');
+                   
+               ALTER TABLE chirdlutilbackports_encounter_attribute_value ADD value_datetime datetime after value_text;
+                
 
 
         </sql>
