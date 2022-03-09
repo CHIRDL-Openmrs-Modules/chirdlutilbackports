@@ -1,5 +1,6 @@
 package org.openmrs.module.chirdlutilbackports.hibernateBeans;
 
+import java.util.Date;
 import org.openmrs.BaseOpenmrsData;
 
 /**
@@ -15,6 +16,7 @@ public class EncounterAttributeValue extends BaseOpenmrsData implements java.io.
 	private EncounterAttribute encounterAttribute;
 	private Integer encounterId;
 	private String valueText;
+	private Date valueDateTime;
 
 	// Constructors
 	
@@ -37,6 +39,20 @@ public class EncounterAttributeValue extends BaseOpenmrsData implements java.io.
 		this.encounterAttribute = encounterAttribute;
 		this.encounterId = encounterId;
 		this.valueText = valueText;
+	}
+	
+
+	/** Creates an encounter attribute value for Date value type.
+	 * @param encounterAttribute
+	 * @param encounterId
+	 * @param valueDateTime
+	 */
+	public EncounterAttributeValue(EncounterAttribute encounterAttribute, Integer encounterId, Date valueDateTime)
+	{
+		super();
+		this.encounterAttribute = encounterAttribute;
+		this.encounterId = encounterId;
+		this.valueDateTime = valueDateTime;
 	}
 	
 	// Methods
@@ -116,4 +132,13 @@ public class EncounterAttributeValue extends BaseOpenmrsData implements java.io.
 	{
 		setEncounterAttributeValueId(id);
 	}
+	
+	public Date getValueDateTime() {
+		return this.valueDateTime;
+	}
+
+	public void setValueDateTime(Date valueDateTime) {
+		this.valueDateTime = valueDateTime;
+	}
+
 }
