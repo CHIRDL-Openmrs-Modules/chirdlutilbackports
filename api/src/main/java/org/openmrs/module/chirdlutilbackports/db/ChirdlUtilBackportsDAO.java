@@ -467,14 +467,14 @@ public interface ChirdlUtilBackportsDAO {
 	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
 	
 	/**
-	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
 	 * @param encounterId
 	 * @param encounterAttributeName
+	 * @param includeVoided
 	 * @return EncounterAttributeValue
 	 */
-	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
-
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName, boolean includeVoided) throws HibernateException;
+	
 	/**
 	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute

@@ -32,8 +32,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Program;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
-import org.openmrs.test.jupiter.BaseModuleContextSensitiveTest;
 import org.openmrs.test.SkipBaseSetup;
+import org.openmrs.test.jupiter.BaseModuleContextSensitiveTest;
 
 public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTest {
     
@@ -458,7 +458,7 @@ public class TestChirdlUtilBackportsService extends BaseModuleContextSensitiveTe
 	    // This encounter has 2 encounter attribute value records and should cause a hibernate exception due to non-unique result
 	    boolean threwException = false;
 	    try{
-	        encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByName(ENCOUNTER_ID_TEST_23191, ENCOUNTER_ATTRIBUTE_TEST);
+	        encounterAttributeValue = chirdlUtilBackportsService.getEncounterAttributeValueByName(ENCOUNTER_ID_TEST_23191, ENCOUNTER_ATTRIBUTE_TEST,true);
 	    }catch(HibernateException e){
 	        // We are expecting this exception to be generated because the result is non-unique
 	        threwException = true;

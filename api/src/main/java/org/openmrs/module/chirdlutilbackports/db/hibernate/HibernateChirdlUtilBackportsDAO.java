@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.HibernateException;
@@ -16,6 +14,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.type.StringType;
 import org.openmrs.CareSetting;
 import org.openmrs.Encounter;
@@ -56,6 +55,8 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateAction;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate implementations of ChirdlUtilBackports related database functions.
@@ -161,6 +162,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName) {
 		try {
 			ChirdlLocationAttribute locationAttribute = this.getLocationAttribute(locationAttributeName);
@@ -192,6 +194,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getLocationAttribute(java.lang.String)
 	 */
+	@Override
 	public ChirdlLocationAttribute getLocationAttribute(String locationAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_location_attribute " + "where name=:locationAttributeName";
@@ -211,7 +214,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
-    public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id) {
+    @Override
+	public LocationTagAttributeValue getLocationTagAttributeValueById(Integer location_tag_attribute_value_id) {
 		try {
 			String sql = "select * from chirdlutilbackports_location_tag_attribute_value "
 			        + "where location_tag_attribute_value_id=:locationTagAttrValId";
@@ -231,6 +235,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public LocationTagAttribute getLocationTagAttribute(Integer locationTagAttributeId) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class).add(
 		    Restrictions.eq(LOCATION_TAG_ATTR_ID, locationTagAttributeId));
@@ -242,6 +247,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return locations.get(0);
 	}
 	
+	@Override
 	public LocationTagAttribute getLocationTagAttribute(String locationTagAttributeName) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class).add(
 				Restrictions.eq("name", locationTagAttributeName));
@@ -253,21 +259,25 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return locations.get(0);
 	}
 	
+	@Override
 	public LocationTagAttribute saveLocationTagAttribute(LocationTagAttribute value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;
 	}
 	
+	@Override
 	public LocationTagAttributeValue saveLocationTagAttributeValue(LocationTagAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;
 	}
 	
+	@Override
 	public ChirdlLocationAttributeValue saveLocationAttributeValue(ChirdlLocationAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;
 	}
 	
+	@Override
 	public void deleteLocationTagAttribute(LocationTagAttribute value) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class).add(
 				Restrictions.eq(LOCATION_TAG_ATTR_ID, value.getLocationTagAttributeId()));
@@ -282,6 +292,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		sessionFactory.getCurrentSession().delete(value);
 	}
 	
+	@Override
 	public void deleteLocationTagAttributeValue(LocationTagAttributeValue value) {
 		sessionFactory.getCurrentSession().delete(value);
 	}
@@ -297,6 +308,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return formInstance;
 	}
 	
+	@Override
 	public FormAttribute getFormAttributeByName(String formAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_attribute where name=:formAttributeName";
@@ -316,6 +328,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public State getStateByName(String stateName) {
 		try {
 			String sql = "select * from chirdlutilbackports_state where name=:stateName";
@@ -409,6 +422,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 
+	@Override
 	public Session getSession(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_session where session_id=:sessionId";
@@ -423,6 +437,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 
+	@Override
 	public List<PatientState> getPatientStatesWithForm(int sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and form_id is not null and retired=:retired order by start_time desc,end_time desc";
@@ -440,6 +455,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 
+	@Override
 	public PatientState getPrevPatientStateByAction(int sessionId, int patientStateId, String action) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId and patient_state_id < :patientStateId and retired=:retired"
@@ -469,6 +485,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 
+	@Override
 	public StateMapping getStateMapping(State initialState, Program program) {
 		try {
 			String sql = "select * from chirdlutilbackports_state_mapping where initial_state=:initialState and program_id=:programId";
@@ -484,6 +501,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public Program getProgramByNameVersion(String name, String version) {
 		try {
 			String sql = "select * from chirdlutilbackports_program where name=:programName and version=:version";
@@ -499,6 +517,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public Program getProgram(Integer programId) {
 		try {
 			String sql = "select * from chirdlutilbackports_program where program_id=:programId";
@@ -513,6 +532,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public Session addSession(Session session) {
 		try {
 			this.sessionFactory.getCurrentSession().save(session);
@@ -524,6 +544,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public Session updateSession(Session session) {
 		try {
 			this.sessionFactory.getCurrentSession().save(session);
@@ -535,11 +556,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public PatientState addUpdatePatientState(PatientState patientState) {
 		this.sessionFactory.getCurrentSession().saveOrUpdate(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY, patientState);		
 		return patientState;
 	}
 	
+	@Override
 	public StateAction getStateActionByName(String action) {
 		try {
 			String sql = "select * from chirdlutilbackports_state_action where action_name=:action";
@@ -554,6 +577,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStateByEncounterState(Integer encounterId, Integer stateId) {
 		try {
 			String sql = "select a.* from chirdlutilbackports_patient_state a inner join chirdlutilbackports_session b on a.session_id=b.session_id "
@@ -572,6 +596,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStateBySessionState(Integer sessionId, Integer stateId) {
 		
 		try {
@@ -591,6 +616,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStatesBySession(Integer sessionId, boolean isRetired) {
 		
 		try {
@@ -609,6 +635,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public PatientState getPatientStateByEncounterFormAction(Integer encounterId, Integer formId, String action) {
 		
 		try {
@@ -637,6 +664,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStatesByFormInstance(FormInstance formInstance, boolean includeRetired) {
 		
 		try {
@@ -668,6 +696,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public PatientState getPatientStateByFormInstanceAction(FormInstance formInstance, String action, boolean includeRetired) {
 		
 		try {
@@ -688,11 +717,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state) {
 		return getPatientStateByFormInstanceState(formInstance,state,false);
 	}
 
 	
+	@Override
 	public List<PatientState> getPatientStateByFormInstanceState(FormInstance formInstance, State state, boolean includeRetired) {
 		try {
 			Integer stateId = state.getStateId();
@@ -727,6 +758,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getUnfinishedPatientStateByStateName(String stateName, Date optionalDateRestriction,
 	                                                               Integer locationTagId, Integer locationId) {
 		try {
@@ -755,12 +787,13 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getUnfinishedPatientStateByStateSession(String stateName, Integer sessionId) {
 		try {
 			State state = this.getStateByName(stateName);
 			
 			String sql = "select * from chirdlutilbackports_patient_state where state in "
-			        + "(:stateId) and end_time is null and retired=:retired and session_id=:sessionId " + " order by start_time desc";
+			        + "(:stateId) and end_time is null and retired=:retired and session_id=:sessionId order by start_time desc";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(STATE_ID, state.getStateId());
 			qry.setBoolean(RETIRED, false);
@@ -775,6 +808,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getUnfinishedPatientStatesAllPatients(Date optionalDateRestriction, Integer locationTagId,
 	                                                                Integer locationId) {
 		try {
@@ -821,6 +855,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public PatientState getLastPatientState(Integer sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where session_id=:sessionId "
@@ -841,6 +876,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public State getState(Integer stateId) {
 		try {
 			String sql = "select * from chirdlutilbackports_state where state_id=:stateId";
@@ -896,6 +932,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @param locationTagId
 	 * @return
 	 */
+	@Override
 	public List<PatientState> getLastPatientStateAllPatients(Date optionalDateRestriction, Integer programId,
 	                                                         String startStateName, Integer locationTagId, Integer locationId) {
 		LinkedHashMap<Integer, LinkedHashMap<String, PatientState>> patientStateMap = new LinkedHashMap<Integer, LinkedHashMap<String, PatientState>>();
@@ -935,6 +972,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<FormAttributeValue> getFormAttributesByName(String attributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_attribute_value where form_attribute_id = "
@@ -954,6 +992,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormAttributes(java.lang.Integer, java.lang.Integer, java.lang.Integer)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
     public List<FormAttributeValue> getFormAttributeValues(Integer attributeId, Integer locationId, Integer locationTagId) {
 		try {
@@ -997,6 +1036,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<State> getStatesByActionName(String actionName) {
 		try {
 			String sql = "select * from chirdlutilbackports_state where state_action_id="
@@ -1012,6 +1052,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public PatientState getPatientState(Integer patientStateId) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where patient_state_id=:patientStateId";
@@ -1026,6 +1067,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getAllRetiredPatientStatesWithForm(Date thresholdDate) {
 		try {
 			String sql = "select * from chirdlutilbackports_patient_state where form_id is not null and form_instance_id is not null "
@@ -1043,13 +1085,14 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<Session> getSessionsByEncounter(int encounterId) {
 		try {
 			String sql = "select * from chirdlutilbackports_session where encounter_id=:encounterId ";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setInteger(ENCOUNTER_ID, encounterId);
 			qry.addEntity(Session.class);
-			return (List<Session>) qry.list();
+			return qry.list();
 			
 		}
 		catch (Exception e) {
@@ -1058,6 +1101,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public Program getProgram(Integer locationTagId, Integer locationId) {
 		try {
 			String sql = "select * from chirdlutilbackports_program_tag_map where location_id=:locationId and location_tag_id=:locationTagId";
@@ -1078,6 +1122,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<PatientState> getPatientStatesWithFormInstances(String formName, Integer encounterId) {
 		
 		SQLQuery qry = null;
@@ -1100,6 +1145,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return qry.list();
 	}
 	
+	@Override
 	public void saveError(Error error) {
 		try {
 			//MESHELEY - CHICA-659: limit error message string size to less than size of message column
@@ -1116,6 +1162,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		}
 	}
 	
+	@Override
 	public List<Error> getErrorsByLevel(String errorLevel, Integer sessionId) {
 		try {
 			String sql = "select * from chirdlutilbackports_error where level=:errorLevel and session_id=:sessionId";
@@ -1131,6 +1178,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public List<FormAttributeValue> getFormAttributeValuesByValue(String value) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_attribute_value where value=:formAttributeValue";
@@ -1145,10 +1193,12 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 		return null;
 	}
 	
+	@Override
 	public void saveFormAttributeValue(FormAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 	}
 	
+	@Override
 	public Integer getErrorCategoryIdByName(String name) {
 		
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ErrorCategory.class).add(
@@ -1173,7 +1223,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeByName(java.lang.String)
 	 */
-    public ObsAttribute getObsAttributeByName(String obsAttributeName) {
+    @Override
+	public ObsAttribute getObsAttributeByName(String obsAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_obs_attribute where name=:obsAttributeName";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
@@ -1195,7 +1246,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributesByName(java.lang.String)
 	 */
-    public List<ObsAttributeValue> getObsAttributesByName(String attributeName) {
+    @Override
+	public List<ObsAttributeValue> getObsAttributesByName(String attributeName) {
     	try {
 			String sql = "select * from chirdlutilbackports_obs_attribute_value where obs_attribute_id in "
 			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=:attributeName)";
@@ -1214,7 +1266,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributesByNameAsString(java.lang.String)
 	 */
-    public List<String> getObsAttributesByNameAsString(String attributeName) {
+    @Override
+	public List<String> getObsAttributesByNameAsString(String attributeName) {
     	try {
 			String sql = "select distinct value from chirdlutilbackports_obs_attribute_value where obs_attribute_id in "
 			        + "(select obs_attribute_id from chirdlutilbackports_obs_attribute where name=:attributeName)";
@@ -1239,7 +1292,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeValue(java.lang.Integer, java.lang.String)
 	 */
-    public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName) {
+    @Override
+	public ObsAttributeValue getObsAttributeValue(Integer obsId, String obsAttributeName) {
     	try {
 			ObsAttribute obsAttribute = this.getObsAttributeByName(obsAttributeName);
 			
@@ -1271,7 +1325,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getObsAttributeValuesByValue(java.lang.String)
 	 */
-    public List<ObsAttributeValue> getObsAttributeValuesByValue(String value) {
+    @Override
+	public List<ObsAttributeValue> getObsAttributeValuesByValue(String value) {
     	try {
 			String sql = "select * from chirdlutilbackports_obs_attribute_value where value=:value";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
@@ -1288,14 +1343,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveObsAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttributeValue)
 	 */
-    public void saveObsAttributeValue(ObsAttributeValue value) {
+    @Override
+	public void saveObsAttributeValue(ObsAttributeValue value) {
     	sessionFactory.getCurrentSession().saveOrUpdate(value);
     }
 
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeByName(java.lang.String)
      */
-    public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
+    @Override
+	public FormInstanceAttribute getFormInstanceAttributeByName(String formInstanceAttributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute where name=:formInstanceAttributeName";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
@@ -1317,6 +1374,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributesByName(java.lang.String)
      */
+	@Override
 	public List<FormInstanceAttributeValue> getFormInstanceAttributesByName(String attributeName) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where "
@@ -1337,7 +1395,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributesByNameAsString(java.lang.String)
 	 */
-    public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
+    @Override
+	public List<String> getFormInstanceAttributesByNameAsString(String attributeName) {
 		try {
 			String sql = "select distinct value from chirdlutilbackports_form_instance_attribute_value where "
 					+ "form_instance_attribute_id in "
@@ -1363,7 +1422,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeValue(java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.String)
      */
-    public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
+    @Override
+	public FormInstanceAttributeValue getFormInstanceAttributeValue(Integer formId, Integer formInstanceId,
                                                                     Integer locationId, String formInstanceAttributeName) {
 		try {
 			FormInstanceAttribute formInstanceAttribute = this.getFormInstanceAttributeByName(formInstanceAttributeName);
@@ -1398,7 +1458,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormInstanceAttributeValuesByValue(java.lang.String)
      */
-    public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
+    @Override
+	public List<FormInstanceAttributeValue> getFormInstanceAttributeValuesByValue(String value) {
 		try {
 			String sql = "select * from chirdlutilbackports_form_instance_attribute_value where value=:formInstanceAttributeValue";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
@@ -1415,14 +1476,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveFormInstanceAttributeValue(org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue)
      */
-    public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
+    @Override
+	public void saveFormInstanceAttributeValue(FormInstanceAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
     }
 
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllPrograms()
 	 */
-    public List<Program> getAllPrograms() {
+    @Override
+	public List<Program> getAllPrograms() {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PROGRAM_ENTITY);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
@@ -1431,7 +1494,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
-    public Program saveProgram(Program program) {
+    @Override
+	public Program saveProgram(Program program) {
 		sessionFactory.getCurrentSession().saveOrUpdate(ChirdlUtilBackportsConstants.PROGRAM_ENTITY, program);
 		return program;
     }
@@ -1439,14 +1503,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgram(org.openmrs.module.chirdlutilbackports.hibernateBeans.Program)
 	 */
-    public void deleteProgram(Program program) {
+    @Override
+	public void deleteProgram(Program program) {
 		sessionFactory.getCurrentSession().delete(ChirdlUtilBackportsConstants.PROGRAM_ENTITY, program);
     }
 
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#saveProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
 	 */
-    public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap) {
+    @Override
+	public ProgramTagMap saveProgramTagMap(ProgramTagMap programTagMap) {
 		sessionFactory.getCurrentSession().saveOrUpdate(programTagMap);
 		return programTagMap;
     }
@@ -1454,14 +1520,16 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteProgramTagMap(org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap)
 	 */
-    public void deleteProgramTagMap(ProgramTagMap programTagMap) {
+    @Override
+	public void deleteProgramTagMap(ProgramTagMap programTagMap) {
 		sessionFactory.getCurrentSession().delete(programTagMap);
     }
 
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgram(java.lang.String)
 	 */
-    public Program getProgram(String name) {
+    @Override
+	public Program getProgram(String name) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlUtilBackportsConstants.PROGRAM_ENTITY).add(
     			Restrictions.eq("name", name));
 		
@@ -1475,7 +1543,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllLocationAttributes()
 	 */
-    public List<ChirdlLocationAttribute> getAllLocationAttributes() {
+    @Override
+	public List<ChirdlLocationAttribute> getAllLocationAttributes() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ChirdlLocationAttribute.class);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
@@ -1484,7 +1553,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllLocationTagAttributes()
 	 */
-    public List<LocationTagAttribute> getAllLocationTagAttributes() {
+    @Override
+	public List<LocationTagAttribute> getAllLocationTagAttributes() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttribute.class);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
@@ -1493,7 +1563,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getAllFormAttributes()
 	 */
-    public List<FormAttribute> getAllFormAttributes() {
+    @Override
+	public List<FormAttribute> getAllFormAttributes() {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(FormAttribute.class);
 		criteria.addOrder(Order.asc("name"));
 		return criteria.list();
@@ -1502,6 +1573,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getFormFields(org.openmrs.Form, java.util.List, boolean)
      */
+	@Override
 	public List<FormField> getFormFields(Form form, List<FieldType> fieldTypes, boolean ordered) {
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(FormField.class, "formField");
 		criteria.createAlias("formField.field", "field");
@@ -1561,7 +1633,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	/**
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPersonAttributeByValue(java.lang.String, java.lang.String)
 	 */
-    public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {		
+    @Override
+	public PersonAttribute getPersonAttributeByValue(String personAttributeTypeName, String value) {		
 		try {
 			PersonAttributeType pat = Context.getPersonService().getPersonAttributeTypeByName(personAttributeTypeName);
 			
@@ -1597,7 +1670,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @param locationId the location id
 	 * @return FormAttributeValue value of the attribute for the given form
 	 */
-    public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
+    @Override
+	public FormAttributeValue getFormAttributeValue(Integer formId, FormAttribute formAttribute, Integer locationTagId,
                                                     Integer locationId) {
     	if (formId == null || formAttribute == null || locationTagId == null || locationId == null) {
 	    	return null;
@@ -1609,7 +1683,8 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
     /**
      * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getUsersByRole(org.openmrs.Role, boolean)
      */
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public List<User> getUsersByRole(Role role, boolean includeRetired) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class, "u");
     	if (!includeRetired) {
@@ -1733,16 +1808,19 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getEncounterAttributeValueByEncounterAttributeName(Integer, String)
 	 */
 	@Override
-	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException 
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName, boolean includeVoided) throws HibernateException 
 	{
 		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(EncounterAttributeValue.class, "encounterAttributeValue");
 		Criteria nestedCriteria = criteria.createCriteria("encounterAttribute", "encounterAttribute");
 		nestedCriteria.add(Restrictions.eq("encounterAttribute.name", encounterAttributeName));
 		criteria.add(Restrictions.eq("encounterAttributeValue.encounterId", encounterId));
-		
+		if(!includeVoided)
+		{
+			criteria.add(Restrictions.eq("encounterAttributeValue.voided", false));
+		}
 		List<EncounterAttributeValue> list = criteria.list();
 
-		if (list != null && list.size() > 0) 
+		if (list != null && !list.isEmpty()) 
 		{
 			return (EncounterAttributeValue)criteria.uniqueResult();
 		}
@@ -1811,6 +1889,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * DWE CHICA-761
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getProgramByLocation(Integer)
 	 */
+	@Override
 	public Program getProgramByLocation(Integer locationId) throws HibernateException
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ProgramTagMap.class).add(
@@ -1917,6 +1996,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * CHICA-862
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesBySessionId(Integer, List, boolean)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
     public List<PatientState> getPatientStatesBySessionId(Integer sessionId, List<String> stateNames, boolean includeRetired) throws HibernateException
     {
@@ -1936,6 +2016,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * CHICA-993
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#deleteLocationTagAttributeValueByValue(LocationTagAttribute, String)
 	 */
+	@Override
 	public void deleteLocationTagAttributeValueByValue(LocationTagAttribute locationTagAttribute, String value)
 	{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(LocationTagAttributeValue.class)
@@ -1956,6 +2037,7 @@ public class HibernateChirdlUtilBackportsDAO implements ChirdlUtilBackportsDAO {
 	 * CHICA-1169
 	 * @see org.openmrs.module.chirdlutilbackports.db.ChirdlUtilBackportsDAO#getPatientStatesByFormNameAndState(java.lang.String, java.util.List, java.lang.Integer, boolean)
 	 */
+	@Override
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws DAOException
 	{
 		try
