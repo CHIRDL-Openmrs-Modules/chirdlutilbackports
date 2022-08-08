@@ -567,6 +567,16 @@ public interface ChirdlUtilBackportsService {
 	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
 	
 	/**
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
+	 * @param encounterId
+	 * @param encounterAttributeName
+	 * @param includeVoided
+	 * @return EncounterAttributeValue
+	 */
+	@Authorized()
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName, boolean includeVoided) throws HibernateException;
+	
+	/**
 	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
 	 * @param encounterId

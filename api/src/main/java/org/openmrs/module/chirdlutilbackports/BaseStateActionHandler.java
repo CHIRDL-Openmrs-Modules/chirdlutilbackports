@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
@@ -27,7 +27,7 @@ import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService
  */
 public class BaseStateActionHandler implements StateActionHandler {
 	
-	private static Log log = LogFactory.getLog(BaseStateActionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseStateActionHandler.class);
 	
 	private static BaseStateActionHandler stateActionHandler = null;
 	
@@ -70,7 +70,7 @@ public class BaseStateActionHandler implements StateActionHandler {
 		}
 		catch (Exception e) {
 			log.error(e.getMessage());
-			log.error(e);
+			log.error("Error processing state action: ", e);
 		}
 		return processStateAction;
 	}

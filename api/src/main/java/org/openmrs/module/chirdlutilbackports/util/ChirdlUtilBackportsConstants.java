@@ -43,4 +43,10 @@ public class ChirdlUtilBackportsConstants {
 	/*
 	 * 
 	 */
+	
+	/*
+	 * Constants for hibernate mapping entity names
+	 */
+	public static final String PATIENT_STATE_ENTITY= "chirdlutilbackportsPatientState";
+	public static final String PROGRAM_ENTITY= "chirdlutilbackportsProgram";
 }
