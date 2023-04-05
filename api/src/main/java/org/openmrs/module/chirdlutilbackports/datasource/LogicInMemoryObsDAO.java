@@ -12,8 +12,8 @@ import java.util.Set;
 
 import javax.cache.Cache;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Cohort;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
@@ -35,15 +35,16 @@ import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
 public class LogicInMemoryObsDAO implements LogicObsDAO
 {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+    protected static final Logger log = LoggerFactory.getLogger(LogicInMemoryObsDAO.class);
 	
 	public LogicInMemoryObsDAO()
 	{
 	}
 
+	@Override
 	public List<Obs> getObservations(Cohort who, LogicCriteria logicCriteria, LogicContext logicContext)
 	{
-		List<Obs> results = new ArrayList<Obs>();
+		List<Obs> results = new ArrayList<>();
 		HashMap<String, Set<Obs>> obsByConceptName = null;
 
 		// look up the obs for each patient in the set
@@ -64,7 +65,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		return results;
 	}
 
-	private List<Obs> evaluateLogicCriteria(
+	protected List<Obs> evaluateLogicCriteria(
 			HashMap<String, Set<Obs>> obsByConceptName,
 			LogicExpression expression)
 	{
@@ -79,7 +80,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		}
 		
 		if(numResults == null){
-			numResults = 1;
+			numResults = Integer.valueOf(1);
 		}
 		List<Obs> resultObs = this.getCriterion(obsByConceptName, expression,
 				indexDate);
@@ -96,8 +97,8 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		{
 			Collections.sort(resultObs, new ObsComparator());
 		}else if (transformOperator == Operator.DISTINCT) {
-			Set<Obs> distinctElements = new HashSet<Obs>(resultObs);
-			resultObs = new ArrayList<Obs>(distinctElements);			
+			Set<Obs> distinctElements = new HashSet<>(resultObs);
+			resultObs = new ArrayList<>(distinctElements);			
 		} 
 		
 		//make the default sort order in reverse
@@ -108,24 +109,24 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 					.reverseOrder(new ObsComparator()));
 		}else
 		{
-			resultObs = new ArrayList<Obs>();
+			resultObs = new ArrayList<>();
 		}
 		
 		//return a single result per patient for these operators
 		//I don't see an easy way to do this in hibernate so I am
 		//doing some postprocessing
 		if(transformOperator == Operator.FIRST || transformOperator == Operator.LAST){
-			HashMap<Integer,ArrayList<Obs>> nResultMap = new HashMap<Integer,ArrayList<Obs>>();
+			HashMap<Integer,ArrayList<Obs>> nResultMap = new HashMap<>();
 			
 			for(Obs currResult:resultObs){
 				Integer currPersonId = currResult.getPersonId();
 				ArrayList<Obs> prevResults = nResultMap.get(currPersonId);
 				if(prevResults == null){
-					prevResults = new ArrayList<Obs>();
+					prevResults = new ArrayList<>();
 					nResultMap.put(currPersonId, prevResults);
 				}
 				
-				if(prevResults.size()<numResults){
+				if(prevResults.size()<numResults.intValue()){
 					prevResults.add(currResult);
 				}
 			}
@@ -153,8 +154,8 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 					getLeftOperand();
 		}
 		Object rightOperand = expression.getRightOperand();
-		ArrayList<Obs> results = new ArrayList<Obs>();
-		ArrayList<Obs> leftOperandResults = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
+		ArrayList<Obs> leftOperandResults = new ArrayList<>();
 
 		String rootToken = expression.getRootToken();
 	
@@ -343,7 +344,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareBetweenObsDateTime(Date firstDate,
 			Date lastDate, ArrayList<Obs> prevResults)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -429,7 +430,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareValueConcept(Concept comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -451,7 +452,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareObsDateTime(Date comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -514,7 +515,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareValueNumeric(Double comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -563,7 +564,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareValueText(String comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -583,7 +584,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> compareValueDate(Date comparisonOperand,
 			ArrayList<Obs> prevResults, String comparator)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 
 		for (Obs currObs : prevResults)
 		{
@@ -632,7 +633,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> and(ArrayList<Obs> leftResults,
 			ArrayList<Obs> rightResults)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 		results.addAll(leftResults);
 		results.retainAll(rightResults);
 
@@ -642,7 +643,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	private ArrayList<Obs> or(ArrayList<Obs> leftResults,
 			ArrayList<Obs> rightResults)
 	{
-		ArrayList<Obs> results = new ArrayList<Obs>();
+		ArrayList<Obs> results = new ArrayList<>();
 		results.addAll(leftResults);
 		results.addAll(rightResults);
 
@@ -654,7 +655,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	{
 		if (patientId == null)
 		{
-			return new HashSet<Obs>();
+			return new HashSet<>();
 		}
 
 		HashMap<String, Set<Obs>> obsById = getObs(patientId);
@@ -662,9 +663,31 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		if (obsById == null)
 		{
 			// TODO call query kite
-			return new HashSet<Obs>();
+			return new HashSet<>();
 		}
 
+		return obsById.get(conceptName);
+	}
+	
+	/**
+	 * Retrieves a set of observations for the provided patient ID and concept name.  This will return null if there 
+	 * are no observations found for the concept.
+	 * 
+	 * @param patientId The patient identifier
+	 * @param conceptName The concept name
+	 * @return Set of observations for the patient and concept name or null if the values have yet to be set
+	 */
+	public Set<Obs> getExistingObsByConceptName(Integer patientId, String conceptName) {
+		// Return null when patient or obs is null to indicate we haven't queried the FHIR service yet.
+		if (patientId == null) {
+			return null;
+		}
+		
+		HashMap<String, Set<Obs>> obsById = getObs(patientId);
+		if (obsById == null) {
+			return null;
+		}
+		
 		return obsById.get(conceptName);
 	}
 	
@@ -689,7 +712,7 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 		try {
 			return obsCache.get(patientId);
 		} catch (Exception e) {
-			log.error("Error retrieving data from in memory cache", e);
+			this.log.error("Error retrieving data from in memory cache", e);
 			return null;
 		}
 	}
@@ -718,7 +741,8 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	/**
      * @see org.openmrs.logic.db.LogicObsDAO#getAllQuestionConceptIds()
      */
-    public List<Integer> getAllQuestionConceptIds() {
+    @Override
+	public List<Integer> getAllQuestionConceptIds() {
 	    // TODO Auto-generated method stub
 	    return null;
     }
@@ -741,6 +765,25 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
 	}
     
     /**
+     * Saves observations for a specified concept to the specified patient.
+     * 
+     * @param patientId The patient identifier
+     * @param conceptName The concept Name
+     * @param obs The observations to save for the concept name and patient.
+     */
+    public void saveObs(Integer patientId, String conceptName, Set<Obs> obs) {
+    	if (patientId != null && conceptName != null && obs != null) {
+    		HashMap<String, Set<Obs>> patientObs = getObs(patientId);
+    		if (patientObs == null) {
+	    		patientObs = new HashMap<>();
+    		}
+    		
+    		patientObs.put(conceptName, obs);
+    		saveObs(patientId, patientObs);
+    	}
+    }
+    
+    /**
 	 * Saves an observation with the given patient ID and concept name.
 	 * 
 	 * @param patientId The patient identifier
@@ -761,12 +804,12 @@ public class LogicInMemoryObsDAO implements LogicObsDAO
     	
     	HashMap<String, Set<Obs>> conceptObs = obsCache.get(patientId);
     	if (conceptObs == null) {
-    		conceptObs = new HashMap<String, Set<Obs>>();
+    		conceptObs = new HashMap<>();
     	}
     	
     	Set<Obs> obs = conceptObs.get(conceptName);
     	if (obs == null) {
-    		obs = new HashSet<Obs>();
+    		obs = new HashSet<>();
     	}
     	
     	obs.add(observation);

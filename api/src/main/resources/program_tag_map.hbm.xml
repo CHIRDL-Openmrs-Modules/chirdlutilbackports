@@ -14,7 +14,7 @@
 		<property name="locationId" type="java.lang.Integer" column="location_id"  />
 		<property name="locationTagId" type="java.lang.Integer" column="location_tag_id"  />
 	
-		<many-to-one name="program" class="org.openmrs.module.chirdlutilbackports.hibernateBeans.Program" column="program_id" insert="false" update="false"/>
+		<many-to-one name="program" entity-name="chirdlutilbackportsProgram" column="program_id" insert="false" update="false"/>
 		
 	</class>	
 </hibernate-mapping>

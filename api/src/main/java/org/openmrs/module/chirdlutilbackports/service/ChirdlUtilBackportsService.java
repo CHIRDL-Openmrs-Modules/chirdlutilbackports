@@ -2,20 +2,26 @@ package org.openmrs.module.chirdlutilbackports.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -24,8 +30,6 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -36,6 +40,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.ProgramTagMap;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Session;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.State;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.StateMapping;
+import org.openmrs.util.PrivilegeConstants;
 
 /**
  * Defines services used by this module
@@ -51,7 +56,7 @@ public interface ChirdlUtilBackportsService {
 	public LocationTagAttributeValue getLocationTagAttributeValue(Integer locationTagId, String locationTagAttributeName,
 	                                                              Integer locationId);
 	
-	@Authorized()
+	@Authorized(PrivilegeConstants.GET_LOCATIONS)
 	public ChirdlLocationAttributeValue getLocationAttributeValue(Integer locationId, String locationAttributeName);
 	
 	@Authorized()
@@ -562,6 +567,16 @@ public interface ChirdlUtilBackportsService {
 	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
 	
 	/**
+	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
+	 * @param encounterId
+	 * @param encounterAttributeName
+	 * @param includeVoided
+	 * @return EncounterAttributeValue
+	 */
+	@Authorized()
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName, boolean includeVoided) throws HibernateException;
+	
+	/**
 	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
 	 * @param encounterId
@@ -643,4 +658,28 @@ public interface ChirdlUtilBackportsService {
 	 */
 	@Authorized()
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws APIException;
+	
+	/**
+	 * Get a list of people by birth date
+	 * 
+	 * @param birthDate The birth date to match
+	 * @param includeVoided Whether or not to include voided people in the result
+	 * @return List of people having the provided birth date
+	 */
+	@Authorized( { PrivilegeConstants.GET_PATIENTS })
+	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
+	
+	/**
+	 * Returns a list of orders filtered by the criteria specified.
+	 * 
+	 * @param patient The patient
+	 * @param careSettings List of care settings
+	 * @param orderTypes List of orderTypes
+	 * @param encounters List of encounters
+	 * @param includeVoided whether or not to include voided orders
+	 * @return List of Order objects
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDERS)
+	public List<Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes, 
+			List<Encounter> encounters, boolean includeVoided);
 }

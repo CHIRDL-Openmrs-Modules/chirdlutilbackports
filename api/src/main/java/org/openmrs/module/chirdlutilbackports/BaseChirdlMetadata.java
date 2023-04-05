@@ -16,13 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.Field;
 import org.openmrs.Auditable;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.OpenmrsMetadata;
 import org.openmrs.Retireable;
 import org.openmrs.User;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * In OpenMRS, we distinguish between data and metadata within our data model. Metadata represent

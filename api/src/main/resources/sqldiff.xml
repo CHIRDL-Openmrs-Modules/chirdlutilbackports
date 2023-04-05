@@ -449,4 +449,63 @@ CREATE TABLE `chirdlutilbackports_error` (
 			Values('Manage CHIRDLUTILBACKPORTS', 'CHIRDLUTILBACKPORTS Module privilege', UUID());
         </sql>
     </diff>
+    <diff>
+        <version>1.0.9</version>
+        <author>Steve McKee</author>
+        <date>February 2, 2021</date>
+        <description>
+            CHICA-1461 Convert the chirdlutilbackports_form_instance and chirdlutilbackports_form_instance_attribute_value tables to InnoDB.
+            Warning: This command will remove all form instance attribute values and all form instance information.
+        </description>
+        <sql>
+            delete from chirdlutilbackports_form_instance_attribute_value;
+            alter table chirdlutilbackports_form_instance_attribute_value ENGINE=InnoDB;
+            drop table chirdlutilbackports_form_instance;
+            
+            CREATE TABLE chirdlutilbackports_form_instance (
+              `form_instance_id` int(11) NOT NULL AUTO_INCREMENT,
+              `form_id` int(11) NOT NULL,
+              `location_id` int(11) NOT NULL DEFAULT '1',
+              PRIMARY KEY (`form_instance_id`),
+              CONSTRAINT chirdlutilbackports_form_inst_fk_loc FOREIGN KEY (location_id) REFERENCES location (location_id),
+              CONSTRAINT chirdlutilbackports_form_inst_fk_form FOREIGN KEY (form_id) REFERENCES form (form_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        </sql>
+    </diff>
+    <diff>
+        <version>1.1.0</version>
+        <author>Meena Sheley</author>
+        <date>March 3, 2022</date>
+        <description>
+            CHICA-1639: In order to move extended encounter columns to encounter attribute values, create a new 
+            column to enable storing a date value in chirdlutilbackports_encounter_attribute_value table
+            and add associated attributes the attribute table.
+            
+        </description>
+        <sql>
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Printer Location', "Printer location in clinic" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Printer Location');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Appointment Time', "Appointment Time" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Appointment Time');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance SMS Code', "Insurance SMS Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance SMS Code');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance Plan Code', "Insurance Plan Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance Plan Code');
+            INSERT INTO chirdlutilbackports_encounter_attribute (name,description)
+                SELECT 'Insurance Carrier Code', "Insurance Carrier Code" from dual
+                WHERE NOT EXISTS ( select name FROM chirdlutilbackports_encounter_attribute 
+                WHERE name = 'Insurance Carrier Code');
+                   
+               ALTER TABLE chirdlutilbackports_encounter_attribute_value ADD value_datetime datetime after value_text;
+                
+        </sql>
+    </diff>
 </sqldiff>

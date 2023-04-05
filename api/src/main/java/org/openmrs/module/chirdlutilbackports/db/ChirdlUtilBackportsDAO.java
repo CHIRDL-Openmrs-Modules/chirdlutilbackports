@@ -5,14 +5,21 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.openmrs.CareSetting;
+import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
+import org.openmrs.Order;
+import org.openmrs.OrderType;
+import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.EncounterAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.Error;
@@ -21,8 +28,6 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstanceAttributeValue;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttribute;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttribute;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationTagAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.ObsAttribute;
@@ -462,14 +467,14 @@ public interface ChirdlUtilBackportsDAO {
 	public EncounterAttributeValue saveEncounterAttributeValue(EncounterAttributeValue encounterAttributeValue) throws HibernateException;
 	
 	/**
-	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttributeName
 	 * @param encounterId
 	 * @param encounterAttributeName
+	 * @param includeVoided
 	 * @return EncounterAttributeValue
 	 */
-	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName) throws HibernateException;
-
+	public EncounterAttributeValue getEncounterAttributeValueByName(Integer encounterId, String encounterAttributeName, boolean includeVoided) throws HibernateException;
+	
 	/**
 	 * DWE CHICA-633
 	 * Gets a EncounterAttributeValue for the encounterId and encounterAttribute
@@ -545,4 +550,26 @@ public interface ChirdlUtilBackportsDAO {
 	 * @throws DAOException
 	 */
 	public List<PatientState> getPatientStatesByFormNameAndState(String formName, List<String> stateNames, Integer encounterId, boolean includeRetired) throws DAOException;
+	
+	/**
+	 * Get a list of people by birth date
+	 * 
+	 * @param birthDate The birth date to match
+	 * @param includeVoided Whether or not to include voided people in the result
+	 * @return List of people having the provided birth date
+	 */
+	public List<Person> getPeopleByBirthDate(Date birthDate, boolean includeVoided);
+	
+	/**
+	 * Returns a list of orders filtered by the criteria specified.
+	 * 
+	 * @param patient The patient
+	 * @param careSettings List of care settings
+	 * @param orderTypes List of orderTypes
+	 * @param encounters List of encounters
+	 * @param includeVoided whether or not to include voided orders
+	 * @return List of Order objects
+	 */
+	public List<Order> getOrders(Patient patient, List<CareSetting> careSettings, List<OrderType> orderTypes, 
+			List<Encounter> encounters, boolean includeVoided);
 }
